@@ -7,6 +7,7 @@ public class MainActivity extends AppCompatActivity {
 
     String test = "testing push";
     String testForPhil = "YAY FOR LYNDA VIDEOS";
+    String testForAl = "AL";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
