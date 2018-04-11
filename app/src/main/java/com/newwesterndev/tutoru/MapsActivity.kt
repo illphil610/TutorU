@@ -48,6 +48,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             override fun onLocationResult(p0: LocationResult) {
                 super.onLocationResult(p0)
 
+                map.clear()
                 lastLocation = p0.lastLocation
                 placeMarkerOnMap(LatLng(lastLocation.latitude, lastLocation.longitude))
             }
@@ -123,7 +124,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
         val client = LocationServices.getSettingsClient(this)
-        var task = client.checkLocationSettings(builder.build())
+        val task = client.checkLocationSettings(builder.build())
 
         task.addOnSuccessListener {
             locationUpdateState = true
@@ -136,7 +137,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 } catch (sendEx:IntentSender.SendIntentException) {
 
                 }
-
         }
     }
 
