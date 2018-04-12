@@ -1,7 +1,8 @@
-package com.newwesterndev.tutoru
+package com.newwesterndev.tutoru.activities
 
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import com.newwesterndev.tutoru.R
 
 class LoginActivity : AppCompatActivity() {
 

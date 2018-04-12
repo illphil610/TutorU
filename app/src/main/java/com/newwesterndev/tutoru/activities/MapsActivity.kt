@@ -1,4 +1,4 @@
-package com.newwesterndev.tutoru
+package com.newwesterndev.tutoru.activities
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -25,6 +25,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.newwesterndev.tutoru.R
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private lateinit var map: GoogleMap
