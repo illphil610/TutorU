@@ -4,4 +4,54 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.TuteeRegisterActivity"></android.support.constraint.ConstraintLayout>
+    tools:context=".activities.TuteeRegisterActivity">
+
+    <TextView
+        android:id="@+id/text_view_tutee_reg_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Please Enter Your Information"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="28dp" />
+
+    <EditText
+        android:id="@+id/edit_text_tutee_reg_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Email address"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="92dp" />
+
+    <EditText
+        android:id="@+id/edit_text_tutee_reg_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="166dp" />
+
+    <EditText
+        android:id="@+id/edit_text_tutee_reg_confirm_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Confirm password"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="246dp" />
+
+    <Button
+        android:id="@+id/button_tutee_reg_submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="427dp" />
+
+    <Button
+        android:id="@+id/button_tutee_reg_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cancel"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="511dp" />
+
+</android.support.constraint.ConstraintLayout>

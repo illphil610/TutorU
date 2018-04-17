@@ -6,6 +6,60 @@
     android:layout_height="match_parent"
     tools:context=".activities.TutorRegisterActivity">
 
+    <TextView
+        android:id="@+id/text_view_tutor_reg_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Please Enter Your Information"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="28dp" />
 
+    <EditText
+        android:id="@+id/edit_text_tutor_reg_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Email address"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="67dp" />
+
+    <EditText
+        android:id="@+id/edit_text_tutor_reg_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="135dp" />
+
+    <EditText
+        android:id="@+id/edit_text_tutor_reg_confirm_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Confirm password"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="207dp" />
+
+    <Button
+        android:id="@+id/button_tutor_reg_submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Submit"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="422dp" />
+
+    <Button
+        android:id="@+id/button_tutor_reg_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Cancel"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="514dp" />
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="289dp">
+
+    </Spinner>
 
 </android.support.constraint.ConstraintLayout>
