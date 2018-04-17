@@ -14,4 +14,18 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="let_s_tutoru">Let\'s TutorU!</string>
+    <string name="password">Password</string>
+    <string name="email">Email</string>
+    <string name="don_t_have_an_account">Don\'t have an account?</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="enter_email">Enter Email</string>
+    <string name="tutoru">TutorU</string>
+    <string name="log_in">Log in</string>
+    <string name="logo">Logo</string>
+    <string name="tutee">Tutee</string>
+    <string name="tutor">Tutor</string>
+    <string name="please_select_your_user_type">Please Select Your User Type</string>
+    <string name="registration">Registration</string>
 </resources>
