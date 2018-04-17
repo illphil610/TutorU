@@ -20,8 +20,8 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        email = findViewById(R.id.edit_text_email)
-        password = findViewById(R.id.edit_text_password)
+        email = findViewById(R.id.edit_text_signin_email)
+        password = findViewById(R.id.edit_text_signin_password)
         loginButton = findViewById(R.id.button_login)
         signupButton = findViewById(R.id.button_signup)
 
@@ -36,8 +36,8 @@ class LoginActivity : AppCompatActivity() {
         val dialogView = inflater.inflate(R.layout.custom_register_dialog, null)
         dialogBuilder.setView(dialogView)
 
-        tutorButton = dialogView.findViewById(R.id.button_tutor) as Button
-        tuteeButton = dialogView.findViewById(R.id.button_tutee) as Button
+        tutorButton = dialogView.findViewById(R.id.button_dialog_tutor) as Button
+        tuteeButton = dialogView.findViewById(R.id.button_dialog_tutee) as Button
 
         tutorButton.setOnClickListener {
             val tutorIntent = Intent(this, TutorRegisterActivity::class.java)

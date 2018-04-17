@@ -8,7 +8,7 @@
     tools:context=".activities.LoginActivity">
 
     <TextView
-        android:id="@+id/text_view_title"
+        android:id="@+id/text_view_dialog_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -17,12 +17,11 @@
         android:text="@string/tutoru" />
 
     <ImageView
-        android:id="@+id/image_view_logo"
+        android:id="@+id/image_view_login_logo"
         android:layout_width="300dp"
         android:layout_height="150dp"
         android:layout_gravity="center"
         android:layout_marginTop="20dp"
-        android:layout_marginStart="-55dp"
         android:src="@drawable/logo"
         android:contentDescription="@string/logo" />
 
@@ -33,7 +32,7 @@
         android:layout_marginTop="40dp">
 
         <EditText
-            android:id="@+id/edit_text_email"
+            android:id="@+id/edit_text_signin_email"
             android:hint="@string/enter_email"
             android:layout_width="275dp"
             android:layout_height="wrap_content"
@@ -41,7 +40,7 @@
             android:inputType="textEmailAddress" />
 
         <EditText
-            android:id="@+id/edit_text_password"
+            android:id="@+id/edit_text_signin_password"
             android:inputType="textPassword"
             android:hint="@string/enter_password"
             android:layout_width="275dp"

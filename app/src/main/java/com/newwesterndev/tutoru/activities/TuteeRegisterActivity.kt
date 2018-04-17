@@ -16,5 +16,11 @@ class TuteeRegisterActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tutee_register)
+
+        email = findViewById(R.id.edit_text_tutee_reg_email)
+        password = findViewById(R.id.edit_text_tutee_reg_password)
+        confirmPassword = findViewById(R.id.edit_text_tutee_reg_password)
+        submitButton = findViewById(R.id.button_tutee_reg_submit)
+        cancelButton = findViewById(R.id.button_tutee_reg_cancel)
     }
 }

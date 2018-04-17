@@ -1,65 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.TutorRegisterActivity">
+    tools:context=".activities.TutorRegisterActivity" >
+
+    <ImageView
+        android:id="@+id/image_view_login_logo"
+        android:layout_width="300dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/logo"
+        android:contentDescription="@string/logo" />
 
     <TextView
         android:id="@+id/text_view_tutor_reg_title"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="120sp"
+        android:layout_centerHorizontal="true"
         android:text="Please Enter Your Information"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="28dp" />
+        android:textSize="24sp"/>
 
-    <EditText
-        android:id="@+id/edit_text_tutor_reg_email"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Email address"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="67dp" />
+        android:layout_marginTop="180dp"
+        android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/edit_text_tutor_reg_password"
+        <EditText
+            android:id="@+id/edit_text_tutor_reg_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress" />
+
+        <EditText
+            android:id="@+id/edit_text_tutor_reg_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8sp"
+            android:layout_marginStart="8sp"
+            android:layout_marginTop="10sp"
+            android:hint="@string/password"
+            android:inputType="textPassword"/>
+
+        <EditText
+            android:id="@+id/edit_text_tutor_reg_confirm_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8sp"
+            android:layout_marginStart="8sp"
+            android:layout_marginTop="10sp"
+            android:hint="@string/confirm_password"
+            android:inputType="textPassword"/>
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Password"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="135dp" />
+        android:layout_marginBottom="8sp"
+        android:layout_marginEnd="8sp"
+        android:layout_marginStart="8sp"
+        android:layout_marginTop="380sp"
+        android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/edit_text_tutor_reg_confirm_password"
+        <TextView
+            android:id="@+id/text_view_tutor_reg_spinner_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="32sp"
+            android:layout_marginEnd="8sp"
+            android:layout_marginStart="8sp"
+            android:textSize="16sp"
+            android:text="Select subjects and courses you are availble to tutor" />
+
+        <Spinner
+            android:id="@+id/spinner_subject"
+            android:layout_width="match_parent"
+            android:layout_height="30sp"
+            android:layout_marginEnd="8sp"
+            android:layout_marginStart="8sp" />
+
+        <Spinner
+            android:id="@+id/spinner_course"
+            android:layout_width="match_parent"
+            android:layout_height="30sp"
+            android:layout_marginTop="20sp"
+            android:layout_marginEnd="8sp"
+            android:layout_marginStart="8sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Confirm password"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="207dp" />
+        android:layout_marginBottom="5dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/button_tutor_reg_submit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Submit"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="422dp" />
+        <Button
+            android:id="@+id/button_tutor_reg_submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8sp"
+            android:layout_marginStart="8sp"
+            android:text="@string/register_account" />
 
-    <Button
-        android:id="@+id/button_tutor_reg_cancel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Cancel"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="514dp" />
+        <Button
+            android:id="@+id/button_tutor_reg_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8sp"
+            android:layout_marginStart="8sp"
+            android:layout_marginTop="5dp"
+            android:text="@string/cancel" />
 
-    <Spinner
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="289dp">
+    </LinearLayout>
 
-    </Spinner>
-
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>

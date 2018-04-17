@@ -1,57 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.TuteeRegisterActivity">
 
+    <ImageView
+        android:id="@+id/image_view_login_logo"
+        android:layout_width="300dp"
+        android:layout_height="100dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/logo"
+        android:contentDescription="@string/logo" />
+
     <TextView
         android:id="@+id/text_view_tutee_reg_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="120dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_centerHorizontal="true"
+        android:textSize="24sp"
+        android:text="@string/please_enter_your_information"/>
+
+    <LinearLayout
+        android:id="@+id/linear_layout_tutee_reg_edit_text_fields"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Please Enter Your Information"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="28dp" />
+        android:layout_marginTop="200dp"
+        android:orientation="vertical" >
 
-    <EditText
-        android:id="@+id/edit_text_tutee_reg_email"
+        <EditText
+            android:id="@+id/edit_text_tutee_reg_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="12dp"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress" />
+
+        <EditText
+            android:id="@+id/edit_text_tutee_reg_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="12sp"
+            android:hint="@string/password"
+            android:inputType="textPassword" />
+
+        <EditText
+            android:id="@+id/edit_text_tutee_reg_confirm_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="12dp"
+            android:hint="@string/confirm_password"
+            android:inputType="" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_layout_tutee_reg_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Email address"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="92dp" />
+        android:orientation="vertical"
+        android:layout_marginBottom="5dp"
+        android:layout_alignParentBottom="true">
 
-    <EditText
-        android:id="@+id/edit_text_tutee_reg_password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Password"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="166dp" />
+        <Button
+            android:id="@+id/button_tutee_reg_submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:text="@string/register_account" />
 
-    <EditText
-        android:id="@+id/edit_text_tutee_reg_confirm_password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Confirm password"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="246dp" />
+        <Button
+            android:id="@+id/button_tutee_reg_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="@string/cancel" />
 
-    <Button
-        android:id="@+id/button_tutee_reg_submit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Submit"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="427dp" />
+    </LinearLayout>
 
-    <Button
-        android:id="@+id/button_tutee_reg_cancel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Cancel"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="511dp" />
-
-</android.support.constraint.ConstraintLayout>
+</RelativeLayout>

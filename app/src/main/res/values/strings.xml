@@ -28,4 +28,10 @@
     <string name="tutor">Tutor</string>
     <string name="please_select_your_user_type">Please Select Your User Type</string>
     <string name="registration">Registration</string>
+    <string name="please_enter_your_information">Please Enter Your Information</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="register_account">Register Account</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm_password">Confirm password</string>
+    <string name="password">Password</string>
 </resources>
