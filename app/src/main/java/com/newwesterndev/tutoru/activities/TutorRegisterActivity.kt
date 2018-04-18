@@ -1,8 +1,8 @@
 package com.newwesterndev.tutoru.activities
 
 import android.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -32,18 +32,27 @@ class TutorRegisterActivity : AppCompatActivity() {
     }
 
     private fun showSubjectCourseSelectionAlertDialog() {
-        val dialogBuilder = AlertDialog.Builder(this)
-        dialogBuilder.setTitle("Select Subjects")
-        dialogBuilder.setIcon(R.mipmap.ic_books)
+        //Temporary static selection items
+        val subjects = arrayOf<CharSequence>(" Programming ", " Math ", " Science ", " Writing ")
+        var selectedSubjects = arrayListOf<Int>()
 
-        dialogBuilder.setPositiveButton("Now Select Courses") {dialog, which ->
-            Toast.makeText(this, "Subjects Selected", Toast.LENGTH_LONG).show()
-        }
-
-        dialogBuilder.setNegativeButton("Cancel") {dialog, which ->
-            Toast.makeText(this, "Canceled", Toast.LENGTH_LONG).show()
-        }
-
-        dialogBuilder.create().show()
+        AlertDialog.Builder(this)
+            .setTitle("Select Subjects")
+            .setIcon(R.mipmap.ic_books)
+            .setMultiChoiceItems(subjects, null) { _, indexSelected, isChecked ->
+                if (isChecked) {
+                    selectedSubjects.add(indexSelected)
+                } else if (selectedSubjects.contains(indexSelected)) {
+                    selectedSubjects.remove(Integer.valueOf(indexSelected))
+                }
+            }
+            .setPositiveButton("Now Select Courses") { _, _ ->
+                Toast.makeText(this, "Subjects Selected", Toast.LENGTH_LONG).show()
+            }
+            .setNegativeButton("Cancel") { _, _ ->
+                Toast.makeText(this, "Canceled", Toast.LENGTH_LONG).show()
+            }
+            .create()
+            .show()
     }
 }

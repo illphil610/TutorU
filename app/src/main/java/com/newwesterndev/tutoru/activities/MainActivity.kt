@@ -24,12 +24,12 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun startMap() {
+    private fun startMap() {
         val mapIntent = Intent(this, MapsActivity::class.java)
         startActivity(mapIntent)
     }
 
-    fun startLogin() {
+    private fun startLogin() {
         val loginIntent = Intent(this, LoginActivity::class.java)
         startActivity(loginIntent)
     }
