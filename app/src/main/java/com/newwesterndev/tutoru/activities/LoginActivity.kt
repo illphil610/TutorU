@@ -7,12 +7,14 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.Button
 import android.widget.EditText
 import com.newwesterndev.tutoru.R
+import com.newwesterndev.tutoru.R.id.signupButton
+import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
+
     private lateinit var tutorButton: Button
     private lateinit var tuteeButton: Button
     private lateinit var loginButton: Button
-    private lateinit var signupButton: Button
     private lateinit var email: EditText
     private lateinit var password: EditText
 
@@ -23,7 +25,6 @@ class LoginActivity : AppCompatActivity() {
         email = findViewById(R.id.edit_text_signin_email)
         password = findViewById(R.id.edit_text_signin_password)
         loginButton = findViewById(R.id.button_login)
-        signupButton = findViewById(R.id.button_signup)
 
         signupButton.setOnClickListener {
             showRegisterAlertDialog()

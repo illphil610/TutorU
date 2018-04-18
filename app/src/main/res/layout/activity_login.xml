@@ -79,7 +79,7 @@
                 android:text="@string/don_t_have_an_account"/>
 
             <Button
-                android:id="@+id/button_signup"
+                android:id="@+id/signupButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#00ADEF"
