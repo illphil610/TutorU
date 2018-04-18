@@ -15,7 +15,6 @@
         completions."
     </string>
     <string name="let_s_tutoru">Let\'s TutorU!</string>
-    <string name="password">Password</string>
     <string name="email">Email</string>
     <string name="don_t_have_an_account">Don\'t have an account?</string>
     <string name="sign_up">Sign Up</string>
@@ -28,10 +27,15 @@
     <string name="tutor">Tutor</string>
     <string name="please_select_your_user_type">Please Select Your User Type</string>
     <string name="registration">Registration</string>
-    <string name="please_enter_your_information">Please Enter Your Information</string>
-    <string name="confirm_password">Confirm password</string>
+    <string name="confirm_password">Confirm Password</string>
     <string name="register_account">Register Account</string>
     <string name="cancel">Cancel</string>
-    <string name="confirm_password">Confirm password</string>
     <string name="password">Password</string>
+    <string name="please_enter_your_information">Please Enter Your Information</string>
+    <string name="select_subject_s">Select Subject(s)</string>
+    <string name="select_course_s">Select Course(s)</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="create_account">Create Account</string>
+    <string name="select_subjects_courses">Select Subjects / Courses</string>
 </resources>

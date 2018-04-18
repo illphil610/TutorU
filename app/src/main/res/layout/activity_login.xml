@@ -4,7 +4,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#CACACA"
     tools:context=".activities.LoginActivity">
 
     <TextView
@@ -52,7 +51,7 @@
             android:id="@+id/button_login"
             android:layout_width="275dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="30dp"
             android:layout_gravity="center"
             android:textColor="#00ADEF"
             android:text="@string/log_in"/>

@@ -1,37 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.TuteeRegisterActivity">
 
-    <ImageView
-        android:id="@+id/image_view_login_logo"
-        android:layout_width="300dp"
-        android:layout_height="100dp"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:src="@drawable/logo"
-        android:contentDescription="@string/logo" />
-
     <TextView
         android:id="@+id/text_view_tutee_reg_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="120dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_centerHorizontal="true"
         android:textSize="24sp"
-        android:text="@string/please_enter_your_information"/>
+        android:textColor="#00ADEF"
+        android:text="@string/create_account"/>
 
     <LinearLayout
         android:id="@+id/linear_layout_tutee_reg_edit_text_fields"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="200dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="80dp"
         android:orientation="vertical" >
+
+        <EditText
+            android:id="@+id/edit_text_tutor_reg_firstname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:hint="@string/first_name"
+            android:inputType="text" />
+
+        <EditText
+            android:id="@+id/edit_text_tutor_reg_lastname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:hint="@string/last_name"
+            android:inputType="text" />
 
         <EditText
             android:id="@+id/edit_text_tutee_reg_email"
@@ -62,34 +76,41 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="12dp"
             android:hint="@string/confirm_password"
-            android:inputType="" />
+            android:inputType="textPassword" />
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/linear_layout_tutee_reg_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginBottom="5dp"
-        android:layout_alignParentBottom="true">
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="15dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/button_tutee_reg_submit"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:text="@string/register_account" />
+            android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/button_tutee_reg_cancel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:text="@string/cancel" />
+            <Button
+                android:id="@+id/button_tutee_reg_cancel"
+                android:layout_width="150dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="8dp"
+                android:layout_alignParentStart="true"
+                android:background="#CACACA"
+                android:text="@string/cancel" />
+
+            <Button
+                android:id="@+id/button_tutee_reg_submit"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="8dp"
+                android:layout_alignParentEnd="true"
+                android:background="#00ADEF"
+                android:text="@string/register_account" />
+
+        </RelativeLayout>
 
     </LinearLayout>
 
