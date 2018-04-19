@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.newwesterndev.tutoru">
+
     <!--
          The ACCESS_COARSE/FINE_LOCATION permissions are not required to use
          Google Maps Android API v2, but you must specify either coarse or fine
@@ -11,6 +12,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.NFC" />
 
     <application
         android:allowBackup="true"
@@ -22,6 +24,7 @@
         <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -32,9 +35,10 @@
              You need a different API key for each encryption key, including the release key that is used to
              sign the APK for publishing.
              You can define the keys for the debug and release targets in src/debug/ and src/release/. 
-        --><meta-data
-        android:name="com.google.android.geo.API_KEY"
-        android:value="@string/google_maps_key" />
+        -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
 
         <activity
             android:name=".activities.MapsActivity"
@@ -42,5 +46,16 @@
         <activity
             android:name=".activities.LoginActivity"
             android:label="@string/title_activity_login" />
+        <activity
+            android:name=".activities.TutorSessionActivity"
+            android:label="@string/title_activity_tutor_session"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.TuteeSessionActivity"
+            android:label="TuteeSessionActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+
+
     </application>
+
 </manifest>

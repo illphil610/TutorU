@@ -14,4 +14,11 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="tutor_display">Tutor is:</string>
+    <string name="tutee_display">Tutee is:</string>
+    <string name="tutor_id">Tutor ID</string>
+    <string name="end_session">End session</string>
+    <string name="rating_display">How would you rate this session?</string>
+    <string name="title_activity_tutor_session">TutorSessionActivity</string>
+    <string name="title_activity_java_tutor_session">JavaTutorSessionActivity</string>
 </resources>
