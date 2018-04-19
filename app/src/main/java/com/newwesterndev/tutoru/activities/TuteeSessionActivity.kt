@@ -19,12 +19,12 @@ class TuteeSessionActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_java_tutor_session)
 
+
         val intent = Intent(this@TuteeSessionActivity, TuteeSessionActivity::class.java)
         mPendingIntent = PendingIntent.getActivity(this@TuteeSessionActivity, 0, intent, 0)
 
         (findViewById(R.id.endSessionButton) as Button)
     }
-
     override fun onResume() {
         super.onResume()
         NfcAdapter.getDefaultAdapter(this).enableForegroundDispatch(this, mPendingIntent, null, null)
