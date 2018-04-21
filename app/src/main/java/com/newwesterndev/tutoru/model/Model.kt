@@ -1,29 +1,32 @@
 package com.newwesterndev.tutoru.model
 
 import com.google.android.gms.maps.model.LatLng
+import java.time.LocalDate
+import java.time.LocalDateTime
 import java.util.*
 
 class Model {
     data class User(var id: Int,
                     var name: String,
-                    var mUserName: String,
+                    var userName: String,
                     var locaton: LatLng)
 
     data class Tutor(var id: Int,
                 var name: String,
-                var mUserName: String,
+                var userName: String,
                 var isAvailable: Boolean)
 
     data class Tutee(var id: Int,
                      var name: String,
-                     var mUserName: String,
-                     var requestingHelp: Boolean,
-                     var subjectRequested: Course)
+                     var userName: String,
+                     var requestingHelp: Boolean)
 
     data class HelpBroadCast(var tutee: Model.Tutee,
                              var courseList: ArrayList<Course>,
                              var stillAwaitingHelp: Boolean,
-                             var date: Date)
+                             var questionDetails: String?,
+                             var date: Long,
+                             var location: LatLng)
 
     data class TutorSession(var course: Course,
                             var tutor: Tutor,

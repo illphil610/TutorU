@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.widget.Button
 import com.newwesterndev.tutoru.R
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -17,9 +18,14 @@ class MainActivity : AppCompatActivity() {
         button = findViewById(R.id.button2)
         button.setOnClickListener { startMap() }
 
+        // Just a temp solution to get to the HelpRequestActivity
+        helpBroadcastButton.setOnClickListener {
+            val intent = Intent(this, HelpRequestActivity::class.java)
+            startActivity(intent)
+        }
     }
 
-    fun startMap() {
+    private fun startMap() {
         val mapIntent = Intent(this, MapsActivity::class.java)
         startActivity(mapIntent)
     }
