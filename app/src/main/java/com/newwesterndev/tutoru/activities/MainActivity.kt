@@ -7,16 +7,15 @@ import android.widget.Button
 import com.newwesterndev.tutoru.R
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
 
-    lateinit var button: Button
+import org.jetbrains.anko.find
+
+
+class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        button = findViewById(R.id.button2)
-        button.setOnClickListener { startMap() }
 
         // Just a temp solution to get to the HelpRequestActivity
         helpBroadcastButton.setOnClickListener {
@@ -24,9 +23,14 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
     }
+        buttonMap.setOnClickListener {
+            val mapIntent = Intent(this, MapsActivity::class.java)
+            startActivity(mapIntent)
+        }
 
-    private fun startMap() {
-        val mapIntent = Intent(this, MapsActivity::class.java)
-        startActivity(mapIntent)
+        buttonLogin.setOnClickListener {
+            val loginIntent = Intent(this, LoginActivity::class.java)
+            startActivity(loginIntent)
+        }
     }
 }
