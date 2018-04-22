@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".activities.LoginActivity">
+    tools:context=".activities.Auth.LoginActivity">
 
     <TextView
         android:id="@+id/text_view_dialog_title"
@@ -36,7 +36,9 @@
             android:layout_width="275dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:inputType="textEmailAddress" />
+            android:inputType="textEmailAddress"
+            android:imeOptions="actionDone"
+            android:singleLine="true"/>
 
         <EditText
             android:id="@+id/edit_text_signin_password"
@@ -45,7 +47,9 @@
             android:layout_width="275dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="20dp"/>
+            android:layout_marginTop="20dp"
+            android:imeOptions="actionDone"
+            android:singleLine="true"/>
 
         <Button
             android:id="@+id/button_login"

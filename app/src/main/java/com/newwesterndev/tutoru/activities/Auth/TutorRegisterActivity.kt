@@ -1,8 +1,10 @@
-package com.newwesterndev.tutoru.activities
+package com.newwesterndev.tutoru.activities.Auth
 
 import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -26,6 +28,7 @@ class TutorRegisterActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tutor_register)
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
         email = findViewById(R.id.edit_text_tutor_reg_email)
         password = findViewById(R.id.edit_text_tutor_reg_password)
@@ -35,6 +38,13 @@ class TutorRegisterActivity : AppCompatActivity() {
         cancelButton = findViewById(R.id.button_tutor_reg_cancel)
 
         subjectCourseButton.setOnClickListener { openSubjectSelectDialog() }
+
+        cancelButton.setOnClickListener {
+            val intent = Intent(this, LoginActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK)
+            startActivity(intent)
+            finish()
+        }
     }
 
     private fun openSubjectSelectDialog() {
@@ -80,4 +90,7 @@ class TutorRegisterActivity : AppCompatActivity() {
             .create()
             .show()
     }
+
+    // disables back button so the user has to click cancel (life cycle stuff)
+    override fun onBackPressed() {}
 }

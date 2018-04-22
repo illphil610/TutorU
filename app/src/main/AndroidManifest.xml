@@ -30,20 +30,19 @@
         <activity
             android:name=".activities.MapsActivity"
             android:label="@string/title_activity_maps" />
+
         <activity
-            android:name=".activities.LoginActivity"
-
-            android:label="@string/title_activity_login" />
-        <activity android:name=".activities.HelpRequestActivity" />
-        <activity android:name=".activities.TutorProfileActivity">
-        </activity>
-
-            android:windowSoftInputMode="adjustResize"
+            android:name=".activities.Auth.LoginActivity"
             android:label="@string/title_activity_login"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.TutorRegisterActivity" />
-        <activity android:name=".activities.TuteeRegisterActivity"/>
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activities.HelpRequestActivity" />
+        <activity android:name=".activities.TutorProfileActivity" />
+
+        <activity android:name=".activities.Auth.TutorRegisterActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity android:name=".activities.Auth.TuteeRegisterActivity"
+            android:screenOrientation="portrait"/>
 
     </application>
-
 </manifest>

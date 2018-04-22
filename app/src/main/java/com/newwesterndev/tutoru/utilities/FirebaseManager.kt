@@ -1,5 +1,6 @@
 package com.newwesterndev.tutoru.utilities
 
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -25,6 +26,11 @@ class FirebaseManager private constructor() {
     fun sendHelpBroadcastRequest(helpBroadCast: Model.HelpBroadCast) {
         val newHelpBroadcast = mDatabaseReference.child(Contract.HELP_BROADCAST).push()
         newHelpBroadcast.setValue(helpBroadCast)
+    }
+
+    fun createTutee(tutee: Model.Tutee) {
+        val newTutee = mDatabaseReference.child(Contract.TUTEE)
+        newTutee.child(mAuth.currentUser?.uid).setValue(tutee)
     }
 
     companion object {
