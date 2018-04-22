@@ -1,11 +1,10 @@
 package com.newwesterndev.tutoru.utilities
 
-import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
-import com.newwesterndev.tutoru.model.Constants
+import com.newwesterndev.tutoru.model.Contract
 import com.newwesterndev.tutoru.model.Model
 
 class FirebaseManager private constructor() {
@@ -24,7 +23,7 @@ class FirebaseManager private constructor() {
     }
 
     fun sendHelpBroadcastRequest(helpBroadCast: Model.HelpBroadCast) {
-        val newHelpBroadcast = mDatabaseReference.child(Constants.HELP_BROADCAST).push()
+        val newHelpBroadcast = mDatabaseReference.child(Contract.HELP_BROADCAST).push()
         newHelpBroadcast.setValue(helpBroadCast)
     }
 

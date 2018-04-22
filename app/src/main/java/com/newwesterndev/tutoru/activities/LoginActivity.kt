@@ -11,7 +11,6 @@ import com.newwesterndev.tutoru.R.id.signupButton
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
-
     private lateinit var tutorButton: Button
     private lateinit var tuteeButton: Button
     private lateinit var loginButton: Button

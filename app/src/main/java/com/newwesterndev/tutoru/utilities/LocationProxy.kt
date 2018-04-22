@@ -26,7 +26,7 @@ class LocationProxy(val context: Context, val locationManager: LocationManager) 
 
     private val locationListener: LocationListener = object : LocationListener {
         override fun onLocationChanged(location: Location) {
-            Log.e("LOCAL", location.latitude.toString() + " " + location.longitude.toString())
+            Log.e("LOCAL_Proxy", location.latitude.toString() + " " + location.longitude.toString())
             mLocation = Location(location)
         }
         override fun onStatusChanged(provider: String, status: Int, extras: Bundle) {}
