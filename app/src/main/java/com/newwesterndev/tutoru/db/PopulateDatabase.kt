@@ -2,10 +2,11 @@ package com.newwesterndev.tutoru.db
 
 import android.content.Context
 import android.graphics.ColorSpace
+import com.newwesterndev.tutoru.model.Contract
 import com.newwesterndev.tutoru.model.Model
 import com.newwesterndev.tutoru.model.SQLModel
 
-class PopulateDatabase(context: Context) {
+class PopulateDatabase(val context: Context) {
     fun populateDataWithSubjects(dbManager: DbManager) {
         val subjects = ArrayList<Model.Subject>()
 
