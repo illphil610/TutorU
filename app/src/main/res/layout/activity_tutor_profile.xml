@@ -6,4 +6,123 @@
     android:layout_height="match_parent"
     tools:context=".activities.TutorProfileActivity">
 
+    <LinearLayout
+        android:id="@+id/linearlayout_image_availibility"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="horizontal">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginStart="10dp"
+                android:src="@drawable/ic_launcher_background"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:textSize="26sp"
+                android:text="Tutor name"/>
+
+            <TextView
+                android:id="@+id/textview_availibility"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="90dp"
+                android:text="@string/availible_to_tutor"
+                android:textSize="20sp"/>
+
+            <RelativeLayout
+                android:id="@+id/relativelayout_toggle_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+
+                <android.support.v7.widget.SwitchCompat
+                    android:id="@+id/togglebutton_availibility"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="90dp"
+                    android:checked="true"
+                    android:layout_marginEnd="10dp"
+                    android:layout_alignParentEnd="true"
+                    android:theme="@style/MySwitch"/>
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layout_course_subject_lists"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/linearlayout_image_availibility"
+        android:orientation="vertical" >
+
+        <Spinner
+            android:id="@+id/textview_subject_list"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="8dp" />
+
+        <Spinner
+            android:id="@+id/textview_course_list"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="8dp" />
+
+        <RelativeLayout
+            android:id="@+id/relativelayout_add_subject_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp">
+
+            <Button
+                android:id="@+id/button_add_subject"
+                android:layout_width="160dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="10dp"
+                android:layout_alignParentEnd="true"
+                android:textSize="10sp"
+                android:textColor="@android:color/white"
+                android:background="#00ADEF"
+                android:text="@string/add_new_subject_courses" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/layout_course_subject_lists">
+
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/profile_map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".activities.MapsActivity" />
+
+    </RelativeLayout>
+
 </android.support.constraint.ConstraintLayout>

@@ -27,6 +27,8 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.newwesterndev.tutoru.R
+import kotlinx.android.synthetic.main.activity_login.view.*
+import kotlinx.android.synthetic.main.activity_maps.*
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private lateinit var map: GoogleMap
@@ -63,11 +65,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         map.uiSettings.isZoomControlsEnabled = true
         map.setOnMarkerClickListener(this)
-
-        //Call placeMarkerOnMap and include a loop to add available tutor pins to the map
-//        val placeHolder = LatLng(39.980944, -75.157837)
-//        map.addMarker(MarkerOptions().position(placeHolder).title("Tutor Shulmoney"))
-//        map.moveCamera(CameraUpdateFactory.newLatLngZoom(placeHolder, 12.0f))
 
         setupMap()
     }
@@ -167,5 +164,4 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1
         private const val REQUEST_CHECK_SETTINGS = 2
     }
-    
 }

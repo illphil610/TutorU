@@ -24,7 +24,7 @@ class HelpRequestActivity : AppCompatActivity() {
         val firebaseManager = FirebaseManager.instance
         locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         val locationProxy = LocationProxy(this, locationManager!!)
-        locationProxy.getCurrentUsersLocation()
+//        locationProxy.getCurrentUsersLocation()
 
         // This needs to be created dynamically but set as this for name
         val tutee = Model.Tutee(1, "Phil", "illphil215", true)

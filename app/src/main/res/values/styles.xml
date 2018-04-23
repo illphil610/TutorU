@@ -19,4 +19,10 @@
         <item name="colorAccent">@color/colorPrimary</item>
     </style>
 
+    <style name="MySwitch" parent="Theme.AppCompat.Light">
+        <item name="colorControlActivated">@color/tealBlue</item>
+        <item name="colorSwitchThumbNormal">#eeeeee</item>
+        <item name="android:colorForeground">@color/tealBlue</item>
+    </style>
+
 </resources>

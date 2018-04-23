@@ -7,6 +7,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import com.newwesterndev.tutoru.R
+import com.newwesterndev.tutoru.utilities.SubjectCourseSelection
+import javax.security.auth.Subject
 
 class TutorRegisterActivity : AppCompatActivity() {
 
