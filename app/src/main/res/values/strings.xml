@@ -39,4 +39,6 @@
     <string name="create_account">Create Account</string>
     <string name="select_subjects_courses">Select Subjects / Courses</string>
     <string name="sign_out">Sign Out</string>
+    <string name="add_new_subject_courses">Add New Subject / Courses</string>
+    <string name="availible_to_tutor">Available to Tutor:</string>
 </resources>
