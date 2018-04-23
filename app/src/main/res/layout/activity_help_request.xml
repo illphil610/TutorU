@@ -10,11 +10,12 @@
     <TextView
         android:id="@+id/textView2"
         android:layout_width="match_parent"
-        android:layout_height="41dp"
+        android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:fontFamily="monospace"
+        android:padding="10dp"
         android:text="Hello, Username!"
         android:textAlignment="center"
         android:textSize="30sp"
@@ -23,29 +24,49 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/subject_text_view"
         android:layout_width="match_parent"
-        android:layout_height="25dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:padding="5dp"
         android:text="What subject do you need help with?"
         app:layout_constraintTop_toBottomOf="@+id/textView2"
         tools:layout_editor_absoluteX="0dp" />
 
     <Spinner
+        android:id="@+id/subject_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="20dp"
         tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="90dp">
-    </Spinner>
+        tools:layout_editor_absoluteY="90dp"></Spinner>
+
+    <TextView
+        android:id="@+id/course_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="34dp"
+        android:text="Select specific course name" />
+
+    <Spinner
+        android:id="@+id/course_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"></Spinner>
+
+    <TextView
+        android:id="@+id/question_text_view"
+        android:text="What issue are you having?"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/question_edit_text"
         android:layout_width="match_parent"
         android:layout_height="207dp"
         android:ems="10"
         android:gravity="top"
         android:inputType="textPersonName"
-        android:text="Type your question here..."
+        android:hint="Type your question here..."
         tools:layout_editor_absoluteX="9dp"
         tools:layout_editor_absoluteY="134dp" />
 

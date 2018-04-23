@@ -4,6 +4,7 @@ import com.google.android.gms.maps.model.LatLng
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
+import kotlin.collections.ArrayList
 
 class Model {
     data class User(var id: Int,
@@ -11,14 +12,12 @@ class Model {
                     var userName: String,
                     var locaton: LatLng)
 
-    data class Tutor(var id: Int,
-                var name: String,
-                var userName: String,
-                var isAvailable: Boolean)
+    data class Tutor(var name: String,
+                     var isAvailable: Boolean,
+                     var subjectList: ArrayList<String>,
+                     var courseList : ArrayList<String>)
 
-    data class Tutee(var id: Int,
-                     var name: String,
-                     var userName: String,
+    data class Tutee(var name: String,
                      var requestingHelp: Boolean)
 
     data class HelpBroadCast(var tutee: Model.Tutee,

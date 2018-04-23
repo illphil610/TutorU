@@ -1,4 +1,4 @@
-package com.newwesterndev.tutoru.activities
+package com.newwesterndev.tutoru.activities.Auth
 
 import android.app.AlertDialog
 import android.content.Intent
@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.Button
 import android.widget.EditText
 import com.newwesterndev.tutoru.R
-import com.newwesterndev.tutoru.R.id.signupButton
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {

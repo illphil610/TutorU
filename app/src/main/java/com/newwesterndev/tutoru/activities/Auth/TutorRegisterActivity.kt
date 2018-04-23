@@ -1,4 +1,4 @@
-package com.newwesterndev.tutoru.activities
+package com.newwesterndev.tutoru.activities.Auth
 
 import android.app.AlertDialog
 import android.os.Bundle

@@ -1,4 +1,4 @@
-package com.newwesterndev.tutoru.activities
+package com.newwesterndev.tutoru.activities.Auth
 
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
