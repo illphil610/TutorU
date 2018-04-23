@@ -78,9 +78,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginStart="90dp"
-                android:textColor="#00ADEF"
-                android:textSize="15sp"
-                android:text="@string/don_t_have_an_account"/>
+                android:text="@string/don_t_have_an_account"
+                android:textColor="@android:color/white"
+                android:textSize="15sp" />
 
             <Button
                 android:id="@+id/signupButton"
