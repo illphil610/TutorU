@@ -30,7 +30,6 @@ class TuteeRegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
-
         // set content view and find xml values variables
         setContentView(R.layout.activity_tutee_register)
         name = findViewById(R.id.edit_text_tutee_reg_firstname)
@@ -47,6 +46,7 @@ class TuteeRegisterActivity : AppCompatActivity() {
 
         submitButton.setOnClickListener { view ->
             if (!TextUtils.isEmpty(email.text.toString()) && !TextUtils.isEmpty(password.text.toString())) {
+                mUtility?.showMessage(view, "Creating your account, Mr. Tutee!")
                 mAuth?.createUserWithEmailAndPassword(email.text.toString(),
                         password.text.toString())?.addOnCompleteListener(this, { task ->
                             if (task.isSuccessful) {

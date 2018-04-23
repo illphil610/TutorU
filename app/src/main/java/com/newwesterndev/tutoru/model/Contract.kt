@@ -6,8 +6,5 @@ object Contract {
     @JvmStatic val APP_LAUNCHED: String = "appLaunched"
     @JvmStatic val APP_HASNT_LAUNCHED: String = "appHasntLaunchedYet"
     @JvmStatic val TUTEE: String = "Tutee"
-
-
-
-
+    @JvmStatic val TUTOR: String = "Tutor"
 }

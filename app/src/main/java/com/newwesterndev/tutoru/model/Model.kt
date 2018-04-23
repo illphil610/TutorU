@@ -14,8 +14,8 @@ class Model {
 
     data class Tutor(var name: String,
                      var isAvailable: Boolean,
-                     var subjectList: ArrayList<Model.Subject>,
-                     var courseList : ArrayList<Model.Course>)
+                     var subjectList: ArrayList<String>,
+                     var courseList : ArrayList<String>)
 
     data class Tutee(var name: String,
                      var requestingHelp: Boolean)

@@ -33,6 +33,11 @@ class FirebaseManager private constructor() {
         newTutee.child(mAuth.currentUser?.uid).setValue(tutee)
     }
 
+    fun createTutor(tutor: Model.Tutor) {
+        val newTutor = mDatabaseReference.child(Contract.TUTOR)
+        newTutor.child(mAuth.currentUser?.uid).setValue(tutor)
+    }
+
     companion object {
         val instance: FirebaseManager by lazy { Holder.INSTANCE }
     }
