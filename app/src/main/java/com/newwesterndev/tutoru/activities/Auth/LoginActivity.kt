@@ -3,13 +3,11 @@ package com.newwesterndev.tutoru.activities.Auth
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
-import android.widget.EditText
 import com.google.firebase.auth.FirebaseAuth
 import com.newwesterndev.tutoru.R
 import com.newwesterndev.tutoru.activities.MainActivity
@@ -20,11 +18,6 @@ class LoginActivity : AppCompatActivity() {
 
     private var fbAuth: FirebaseAuth? = null
     private var mUtil: Utility? = null
-
-    private lateinit var tutorButton: Button
-    private lateinit var tuteeButton: Button
-    private lateinit var email: EditText
-    private lateinit var password: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,6 +65,7 @@ class LoginActivity : AppCompatActivity() {
                     var intent = Intent(this, MainActivity::class.java)
                     intent.putExtra("email", fbAuth?.currentUser?.email)
                     startActivity(intent)
+                    finishAffinity()
                 } else {
                     mUtil?.showMessage(view, "Error: ${task.exception?.message}")
                 }
@@ -80,5 +74,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     // disables back button
-    override fun onBackPressed() {}
+    override fun onBackPressed() {
+        finish()
+    }
 }

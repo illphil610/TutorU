@@ -1,36 +1,35 @@
 package com.newwesterndev.tutoru.activities
 
-import android.app.FragmentManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.view.View
 import com.google.firebase.auth.FirebaseAuth
 import com.newwesterndev.tutoru.R
 import com.newwesterndev.tutoru.activities.Auth.LoginActivity
 import com.newwesterndev.tutoru.db.DbManager
 import com.newwesterndev.tutoru.db.PopulateDatabase
 import com.newwesterndev.tutoru.model.Contract
+import com.newwesterndev.tutoru.utilities.Utility
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
     private var fbAuth = FirebaseAuth.getInstance()
+    private var mUtil: Utility? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-
+        mUtil = Utility()
 
         fbAuth.addAuthStateListener {
             if (fbAuth.currentUser == null) {
                 val loginIntent = Intent(this, LoginActivity::class.java)
-                loginIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 startActivity(loginIntent)
+                finish()
             } else {
                 Log.e("TUTEE_ID", fbAuth?.currentUser?.uid)
             }
@@ -68,12 +67,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         sign_out_button.setOnClickListener { view ->
-            showMessage(view, "Logging Out...")
+            mUtil?.showMessage(view, "Logging Out...")
             fbAuth.signOut()
+            finishAffinity()
         }
-    }
-
-    fun showMessage(view: View, message: String){
-        Snackbar.make(view, message, Snackbar.LENGTH_INDEFINITE).setAction("Action", null).show()
     }
 }

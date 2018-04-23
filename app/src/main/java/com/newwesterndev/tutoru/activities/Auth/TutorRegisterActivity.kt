@@ -37,8 +37,11 @@ class TutorRegisterActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_tutor_register)
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+        setContentView(R.layout.activity_tutor_register)
+
+        mAuth = FirebaseAuth.getInstance()
+        mUtility = Utility()
 
         email = findViewById(R.id.edit_text_tutor_reg_email)
         password = findViewById(R.id.edit_text_tutor_reg_password)
@@ -48,21 +51,14 @@ class TutorRegisterActivity : AppCompatActivity() {
         cancelButton = findViewById(R.id.button_tutor_reg_cancel)
         val name = findViewById<EditText>(R.id.edit_text_tutor_reg_firstname)
 
-        mAuth = FirebaseAuth.getInstance()
-        mUtility = Utility()
-        //val nameString = name.text.toString()
 
         subjectCourseButton.setOnClickListener { openSubjectSelectDialog() }
 
         submitButton.setOnClickListener { view ->
-            val nameString = name.text.toString()
             if (!TextUtils.isEmpty(email.text.toString()) && !TextUtils.isEmpty(password.text.toString())) {
                 mUtility?.showMessage(view, "Creating your account, Mr. Tutor!")
-                mAuth?.createUserWithEmailAndPassword(email.text.toString(),
-                        password.text.toString())?.addOnCompleteListener(this, { task ->
+                mAuth?.createUserWithEmailAndPassword(email.text.toString(), password.text.toString())?.addOnCompleteListener(this, { task ->
                     if (task.isSuccessful) {
-                        // Create / Save the Tutee in Firebase RD
-
                         // this will include the necessary course / subject lists but for right now its nothing but blank lists
                         FirebaseManager.instance.createTutor(Model.Tutor(name.text.toString(), false, ArrayList(), ArrayList()))
 
