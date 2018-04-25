@@ -96,7 +96,7 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
         togglebutton_availibility.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
                 // Set tutor as active by placing them in the TutorsAvailable db table
-                var mDatabaseReference = mFirebaseDatabase.getReference(Contract.AVAILABLE_TUTORS)
+                val mDatabaseReference = mFirebaseDatabase.getReference(Contract.AVAILABLE_TUTORS)
                 val geoFireHelpRequest = GeoFire(mDatabaseReference)
                 geoFireHelpRequest.setLocation(fbAuth.currentUser?.uid, GeoLocation(-1.3904519, -48.4673761), { key, error ->
                     if (error != null) {
@@ -108,7 +108,7 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
                     }
                 })
 
-                val geoQuery = geoFireHelpRequest.queryAtLocation(GeoLocation(-1.3904519, -48.4673761), 100.0)
+                val geoQuery = geoFireHelpRequest.queryAtLocation(GeoLocation(-1.3904519, -48.4673761), 10.0)
                 geoQuery.addGeoQueryEventListener(object : GeoQueryEventListener {
                     override fun onKeyEntered(key: String, location: GeoLocation) {
                         Log.e("TAG", String.format("Provider %s is within your search range [%f,%f]", key, location.latitude, location.longitude))
