@@ -16,6 +16,9 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
 import android.widget.Toast
+import com.firebase.geofire.GeoFire
+import com.firebase.geofire.GeoLocation
+import com.firebase.geofire.GeoQueryEventListener
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -27,9 +30,12 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
 import com.newwesterndev.tutoru.R
 import com.newwesterndev.tutoru.activities.Auth.LoginActivity
 import com.newwesterndev.tutoru.db.DbManager
+import com.newwesterndev.tutoru.model.Contract
 import kotlinx.android.synthetic.main.activity_tutor_profile.*
 import kotlinx.android.synthetic.main.custom_add_subject_dialog.*
 
@@ -48,6 +54,7 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
 
     // Firebase Stuff
     private lateinit var fbAuth: FirebaseAuth
+    private lateinit var mFirebaseDatabase: FirebaseDatabase
     private lateinit var dbManager: DbManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,6 +62,7 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
         setContentView(R.layout.activity_tutor_profile)
 
         fbAuth = FirebaseAuth.getInstance()
+        mFirebaseDatabase = FirebaseDatabase.getInstance()
         dbManager = DbManager(this)
         fbAuth.addAuthStateListener {
             if (fbAuth.currentUser == null) {
@@ -84,6 +92,46 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
         createLocationRequest()
 
         button_add_subject.setOnClickListener { openSubjectSelectDialog() }
+
+        togglebutton_availibility.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                // Set tutor as active by placing them in the TutorsAvailable db table
+                val mDatabaseReference = mFirebaseDatabase.getReference(Contract.AVAILABLE_TUTORS)
+                val geoFireHelpRequest = GeoFire(mDatabaseReference)
+                geoFireHelpRequest.setLocation(fbAuth.currentUser?.uid, GeoLocation(-1.3904519, -48.4673761), { key, error ->
+                    if (error != null) {
+                        // fails omg no
+                        Log.e("GEOFIRE", error.details)
+                    } else {
+                        // success
+                        Log.e("GEOFIRE", "yahhhhhhhhh")
+                    }
+                })
+
+                val geoQuery = geoFireHelpRequest.queryAtLocation(GeoLocation(-1.3904519, -48.4673761), 10.0)
+                geoQuery.addGeoQueryEventListener(object : GeoQueryEventListener {
+                    override fun onKeyEntered(key: String, location: GeoLocation) {
+                        Log.e("TAG", String.format("Provider %s is within your search range [%f,%f]", key, location.latitude, location.longitude))
+                    }
+
+                    override fun onKeyExited(key: String) {
+                        Log.i("TAG", String.format("Provider %s is no longer in the search area", key))
+                    }
+
+                    override fun onKeyMoved(key: String, location: GeoLocation) {
+                        Log.i("TAG", String.format("Provider %s moved within the search area to [%f,%f]", key, location.latitude, location.longitude))
+                    }
+
+                    override fun onGeoQueryReady() {
+                        Log.i("TAG", "onGeoQueryReady")
+                    }
+
+                    override fun onGeoQueryError(error: DatabaseError) {
+                        Log.e("TAG", "error: " + error)
+                    }
+                })
+            }
+        }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
