@@ -1,7 +1,9 @@
 package com.newwesterndev.tutoru.activities.Auth
 
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
@@ -13,6 +15,8 @@ import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.newwesterndev.tutoru.R
 import com.newwesterndev.tutoru.activities.MainActivity
+import com.newwesterndev.tutoru.db.DbManager
+import com.newwesterndev.tutoru.model.Contract
 import com.newwesterndev.tutoru.model.Model
 import com.newwesterndev.tutoru.utilities.FirebaseManager
 import com.newwesterndev.tutoru.utilities.Utility
@@ -26,14 +30,9 @@ class TutorRegisterActivity : AppCompatActivity() {
     private lateinit var submitButton: Button
     private lateinit var cancelButton: Button
 
-    //Temporary static selection items
-    private val subjects = arrayOf(" Programming ", " Math ", " Science ", " Writing ")
-    private val selectedSubjects = arrayListOf<Int>()
-    private val courses = arrayOf(" Java 1 ", " Calculus 1 ", " Biology ", " Technical Writing ")
-    private val selectedCourses = arrayListOf<Int>()
-
     private var mAuth: FirebaseAuth? = null
     private var mUtility: Utility? = null
+    private val dbManager = DbManager(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,8 +48,7 @@ class TutorRegisterActivity : AppCompatActivity() {
         subjectCourseButton = findViewById(R.id.button_subject_course)
         submitButton = findViewById(R.id.button_tutor_reg_submit)
         cancelButton = findViewById(R.id.button_tutor_reg_cancel)
-        val name = findViewById<EditText>(R.id.edit_text_tutor_reg_firstname)
-
+        val name = findViewById<EditText>(R.id.edit_text_tutor_reg_name)
 
         subjectCourseButton.setOnClickListener { openSubjectSelectDialog() }
 
@@ -83,19 +81,39 @@ class TutorRegisterActivity : AppCompatActivity() {
     }
 
     private fun openSubjectSelectDialog() {
+        val subjectsFromDB = dbManager.getSubjects()
+        val subjectNames = ArrayList<String>()
+
+        for (subject in subjectsFromDB) {
+            subjectNames.add(subject.name)
+        }
+
         AlertDialog.Builder(this)
             .setTitle("Select Subjects")
             .setIcon(R.mipmap.ic_books)
-            .setMultiChoiceItems(subjects, null) { _, indexSelected, isChecked ->
+            .setMultiChoiceItems(subjectNames.toTypedArray(), null) { _, indexSelected, isChecked ->
+                val checkedSubject: String = subjectNames[indexSelected]
+
                 if (isChecked) {
-                    selectedSubjects.add(indexSelected)
-                } else if (selectedSubjects.contains(indexSelected)) {
-                    selectedSubjects.remove(Integer.valueOf(indexSelected))
+                    Toast.makeText(this, "Checked", Toast.LENGTH_SHORT).show()
+
+                    val sharedPreferences: SharedPreferences by lazy {
+                        this.getSharedPreferences(Contract.SHARED_PREF_SUBJECTS, Context.MODE_PRIVATE)
+                    }
+                    val editor = sharedPreferences.edit()
+                    editor.putString("subject", checkedSubject)
+                    editor.apply()
+
+//                    val fromPref = sharedPreferences.getString("subject", checkedSubject)
+//                    println(fromPref)
+
+                } else {
+                    return@setMultiChoiceItems
                 }
             }
             .setPositiveButton("Now Select Courses") { _, _ ->
                 Toast.makeText(this, "Subjects Selected", Toast.LENGTH_LONG).show()
-                openCourseSelectDialog()
+//                openCourseSelectDialog()
 
             }
             .setNegativeButton("Cancel") { _, _ ->
@@ -105,15 +123,24 @@ class TutorRegisterActivity : AppCompatActivity() {
             .show()
     }
 
-    private fun openCourseSelectDialog() {
+    private fun openCourseSelectDialog(listOfCourses: ArrayList<String>) {
+//        Pass in items selected from subject selection dialog to getCourses
+//        val coursesFromDB = dbManager.getCourses(checkedItems)
+        val courseNames = ArrayList<String>()
+
+//        for (course in coursesFromDB) {
+//            courseNames.add(course.name)
+//        }
+
+
         AlertDialog.Builder(this)
             .setTitle("Select Courses")
             .setIcon(R.mipmap.ic_books)
-            .setMultiChoiceItems(courses, null) { _, indexSelected, isChecked ->
+            .setMultiChoiceItems(courseNames.toTypedArray(), null) { dialogInterface, indexSelected, isChecked ->
                 if (isChecked) {
-                    selectedCourses.add(indexSelected)
-                } else if (selectedCourses.contains(indexSelected)) {
-                    selectedCourses.remove(Integer.valueOf(indexSelected))
+
+                } else {
+
                 }
             }
             .setPositiveButton("Ok") { _, _ ->

@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
         // Just showing you how you can use the methods from dbManager to easily grab data
         val mathList = dbManager.getCourses("Mathematics")
         val compSciList = dbManager.getCourses("Computer Science")
-        Log.e("MATH_IST", mathList.toString())
+        Log.e("MATH_LIST", mathList.toString())
         Log.e("COMP_LIST", compSciList.toString())
 
         // Just a temp solution to get to the HelpRequestActivity
@@ -70,6 +70,11 @@ class MainActivity : AppCompatActivity() {
             mUtil?.showMessage(view, "Logging Out...")
             fbAuth.signOut()
             finishAffinity()
+        }
+
+        button_tutor_profile.setOnClickListener {
+            val profileIntent = Intent(this, TutorProfileActivity::class.java)
+            startActivity(profileIntent)
         }
     }
 }

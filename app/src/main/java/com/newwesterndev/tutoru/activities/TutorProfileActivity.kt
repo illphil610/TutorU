@@ -3,15 +3,16 @@ package com.newwesterndev.tutoru.activities
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.location.Location
-import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
-import android.widget.Button
+import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
@@ -24,21 +25,20 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.newwesterndev.tutoru.R
+import com.newwesterndev.tutoru.db.DbManager
+import com.newwesterndev.tutoru.model.Contract
+import com.newwesterndev.tutoru.model.Model
 import kotlinx.android.synthetic.main.activity_tutor_profile.*
-import kotlinx.android.synthetic.main.custom_add_subject_dialog.*
 
 class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
-    //Temporary static selection items
-    private val subjects = arrayOf(" Programming ", " Math ", " Science ", " Writing ")
-    private val selectedSubjects = arrayListOf<Int>()
-    private val courses = arrayOf(" Java 1 ", " Calculus 1 ", " Biology ", " Technical Writing ")
-    private val selectedCourses = arrayListOf<Int>()
     private lateinit var map: GoogleMap
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var lastLocation: Location
     private lateinit var locationCallback: LocationCallback
     private lateinit var locationRequest: LocationRequest
     private var locationUpdateState = false
+
+    private val dbManager = DbManager(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -165,14 +165,35 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
     }
 
     private fun openSubjectSelectDialog() {
+        val subjectsFromDB = dbManager.getSubjects()
+        val subjectNames = ArrayList<String>()
+
+        for (subject in subjectsFromDB) {
+            subjectNames.add(subject.name)
+        }
+
         AlertDialog.Builder(this)
                 .setTitle("Select Subjects")
                 .setIcon(R.mipmap.ic_books)
-                .setMultiChoiceItems(subjects, null) { _, indexSelected, isChecked ->
+                .setMultiChoiceItems(subjectNames.toTypedArray(), null) { _, indexSelected, isChecked ->
+                    val checkedSubject: String = subjectNames[indexSelected]
+
                     if (isChecked) {
-                        selectedSubjects.add(indexSelected)
-                    } else if (selectedSubjects.contains(indexSelected)) {
-                        selectedSubjects.remove(Integer.valueOf(indexSelected))
+                        Toast.makeText(this, "Checked", Toast.LENGTH_SHORT).show()
+
+                        val sharedPreferences: SharedPreferences by lazy {
+                            this.getSharedPreferences(Contract.SHARED_PREF_SUBJECTS, Context.MODE_PRIVATE)
+                        }
+                        val editor = sharedPreferences.edit()
+                        editor.putString("subject", checkedSubject)
+                        editor.apply()
+
+                        val fromPref = sharedPreferences.getString("subject", checkedSubject)
+                        println(fromPref)
+
+                    } else {
+//                    tutorSubjects!!.removeAt(Integer.valueOf(indexSelected))
+                        return@setMultiChoiceItems
                     }
                 }
                 .setPositiveButton("Now Select Courses") { _, _ ->
@@ -188,14 +209,23 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
     }
 
     private fun openCourseSelectDialog() {
+//        Pass in items selected from subject selection dialog to getCourses
+//        val coursesFromDB = dbManager.getCourses(checkedItems)
+        val courseNames = ArrayList<String>()
+
+//        for (course in coursesFromDB) {
+//            courseNames.add(course.name)
+//        }
+
+
         AlertDialog.Builder(this)
                 .setTitle("Select Courses")
                 .setIcon(R.mipmap.ic_books)
-                .setMultiChoiceItems(courses, null) { _, indexSelected, isChecked ->
+                .setMultiChoiceItems(courseNames.toTypedArray(), null) { dialogInterface, indexSelected, isChecked ->
                     if (isChecked) {
-                        selectedCourses.add(indexSelected)
-                    } else if (selectedCourses.contains(indexSelected)) {
-                        selectedCourses.remove(Integer.valueOf(indexSelected))
+
+                    } else {
+
                     }
                 }
                 .setPositiveButton("Ok") { _, _ ->
