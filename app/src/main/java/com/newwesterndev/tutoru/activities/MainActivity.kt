@@ -1,20 +1,17 @@
 package com.newwesterndev.tutoru.activities
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.newwesterndev.tutoru.R
 import com.newwesterndev.tutoru.activities.Auth.LoginActivity
-import com.newwesterndev.tutoru.db.DbManager
-import com.newwesterndev.tutoru.db.PopulateDatabase
-import com.newwesterndev.tutoru.model.Contract
 import com.newwesterndev.tutoru.utilities.Utility
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : Activity() {
 
     private lateinit var fbAuth: FirebaseAuth
     private lateinit var mUtil: Utility
@@ -25,7 +22,6 @@ class MainActivity : AppCompatActivity() {
 
         fbAuth = FirebaseAuth.getInstance()
         mUtil = Utility()
-
         fbAuth.addAuthStateListener {
             if (fbAuth.currentUser == null) {
                 val loginIntent = Intent(this, LoginActivity::class.java)
@@ -34,6 +30,23 @@ class MainActivity : AppCompatActivity() {
             } else {
                 Log.e("USER_ID", fbAuth.currentUser?.uid)
             }
+        }
+
+        //check if the user is a tutor/tutee and route accordingly
+        // check the type of user and route to either HelpBroadcast or TutorProfile
+        val preferences = getSharedPreferences(getString(R.string.sharedPrefs), Context.MODE_PRIVATE)
+        val user = preferences.getString("user_type", "unknown")
+
+        if (user == "tutee") {
+            val intent = Intent(this, HelpRequestActivity::class.java)
+            intent.putExtra("email", fbAuth.currentUser?.email)
+            startActivity(intent)
+            finishAffinity()
+        } else if (user == "tutor") {
+            val intent = Intent(this, TutorProfileActivity::class.java)
+            intent.putExtra("email", fbAuth.currentUser?.email)
+            startActivity(intent)
+            finishAffinity()
         }
 
         // Just a temp solution to get to the HelpRequestActivity

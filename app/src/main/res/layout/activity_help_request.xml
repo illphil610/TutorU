@@ -39,7 +39,8 @@
         android:layout_height="wrap_content"
         android:padding="20dp"
         tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="90dp"></Spinner>
+        tools:layout_editor_absoluteY="90dp">
+    </Spinner>
 
     <TextView
         android:id="@+id/course_text_view"
@@ -51,7 +52,8 @@
         android:id="@+id/course_spinner"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="20dp"></Spinner>
+        android:padding="20dp">
+    </Spinner>
 
     <TextView
         android:id="@+id/question_text_view"
@@ -71,7 +73,7 @@
         tools:layout_editor_absoluteY="134dp" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/submit_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Submit" />

@@ -54,6 +54,17 @@ class HelpRequestActivity : AppCompatActivity() {
         val spinnerJawn = findViewById<Spinner>(R.id.subject_spinner)
         val spinnerAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, subjectList)
         spinnerJawn.adapter = spinnerAdapter
+
+        submit_button.setOnClickListener {
+            var list = ArrayList<Model.Course>()
+            list.add(Model.Course("Geometry", "Math"))
+            fbManager.sendHelpBroadcastRequest(
+                    Model.HelpBroadCast(
+                    // change this!!!!! just hacking it with the ! but check this please
+                            Model.Tutee(fbAuth.currentUser!!.uid, "Phil McKracken", true),
+                            list, true, "I have a math question because i suck at math"))
+
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -67,9 +78,7 @@ class HelpRequestActivity : AppCompatActivity() {
             fbAuth.signOut()
             true
         }
-        else -> {
-            super.onOptionsItemSelected(item)
-        }
+        else -> { super.onOptionsItemSelected(item) }
     }
 
     override fun onBackPressed() {
