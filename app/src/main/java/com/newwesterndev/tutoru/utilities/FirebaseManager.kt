@@ -1,5 +1,6 @@
 package com.newwesterndev.tutoru.utilities
 
+import android.location.Location
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
@@ -35,6 +36,11 @@ class FirebaseManager private constructor() {
     fun createTutor(tutor: Model.Tutor) {
         val newTutor = mDatabaseReference.child(Contract.TUTOR)
         newTutor.child(mAuth.currentUser?.uid).setValue(tutor)
+    }
+
+    // save the Tutees location to the Geofire table
+    fun saveGeoFireDataForTutee(uid: String, location: Location) {
+
     }
 
     companion object {
