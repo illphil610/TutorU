@@ -25,12 +25,14 @@ class TuteeRegisterActivity : AppCompatActivity() {
     private lateinit var submitButton: Button
     private lateinit var cancelButton: Button
 
-    private var mAuth:FirebaseAuth? = null
+    private lateinit var mAuth:FirebaseAuth
     private var mUtility: Utility? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+
+        mAuth = FirebaseAuth.getInstance()
 
         // set content view and find xml values variables
         setContentView(R.layout.activity_tutee_register)
@@ -61,7 +63,7 @@ class TuteeRegisterActivity : AppCompatActivity() {
                                 }
 
                                 // Create / Save the Tutee in Firebase RD
-                                FirebaseManager.instance.createTutee(Model.Tutee(name.text.toString(), false))
+                                FirebaseManager.instance.createTutee(Model.Tutee(mAuth.currentUser?.uid!!, name.text.toString(), true))
 
                                 // Send the user to the MainScreen for now
                                 val intent = Intent(this, HelpRequestActivity::class.java)

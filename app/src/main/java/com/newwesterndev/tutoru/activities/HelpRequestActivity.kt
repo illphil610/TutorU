@@ -13,11 +13,16 @@ import android.util.Log
 import android.view.*
 import android.widget.ArrayAdapter
 import android.widget.Spinner
+import com.firebase.geofire.GeoFire
+import com.firebase.geofire.GeoLocation
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import com.newwesterndev.tutoru.R
 import com.newwesterndev.tutoru.activities.Auth.LoginActivity
 import com.newwesterndev.tutoru.db.DbManager
+import com.newwesterndev.tutoru.model.Contract
 import com.newwesterndev.tutoru.model.Model
 import com.newwesterndev.tutoru.utilities.FirebaseManager
 import com.newwesterndev.tutoru.utilities.LocationProxy
@@ -63,6 +68,11 @@ class HelpRequestActivity : AppCompatActivity() {
                     // change this!!!!! just hacking it with the ! but check this please
                             Model.Tutee(fbAuth.currentUser!!.uid, "Phil McKracken", true),
                             list, true, "I have a math question because i suck at math"))
+
+            //val mFirebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
+            //var mDatabaseReference: DatabaseReference = mFirebaseDatabase.reference.child(Contract.REQUESTING_HELP)
+            //val geoFire = GeoFire(mDatabaseReference)
+            //geoFire.setLocation(fbAuth.currentUser?.uid, GeoLocation(0.0, 0.0))
 
         }
     }
