@@ -1,6 +1,7 @@
 package com.newwesterndev.tutoru.activities.Auth
 
 import android.app.AlertDialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -59,6 +60,14 @@ class TutorRegisterActivity : AppCompatActivity() {
                 mUtility?.showMessage(view, "Creating your account, Mr. Tutor!")
                 mAuth?.createUserWithEmailAndPassword(email.text.toString(), password.text.toString())?.addOnCompleteListener(this, { task ->
                     if (task.isSuccessful) {
+
+                        // save user type to shared preferences to use throughout the application
+                        val sharedPref = getSharedPreferences(getString(R.string.sharedPrefs), Context.MODE_PRIVATE)
+                        with (sharedPref.edit()) {
+                            putString("user_type", "tutor")
+                            apply()
+                        }
+
                         // this will include the necessary course / subject lists but for right now its nothing but blank lists
                         FirebaseManager.instance.createTutor(Model.Tutor(name.text.toString(), false, ArrayList(), ArrayList()))
 

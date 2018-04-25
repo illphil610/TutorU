@@ -1,5 +1,6 @@
 package com.newwesterndev.tutoru.activities.Auth
 
+import android.content.Context
 import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
@@ -50,6 +51,14 @@ class TuteeRegisterActivity : AppCompatActivity() {
                 mAuth?.createUserWithEmailAndPassword(email.text.toString(),
                         password.text.toString())?.addOnCompleteListener(this, { task ->
                             if (task.isSuccessful) {
+
+                                // save user type to shared preferences to use throughout the application
+                                val sharedPref = getSharedPreferences(getString(R.string.sharedPrefs), Context.MODE_PRIVATE)
+                                with (sharedPref.edit()) {
+                                    putString("user_type", "tutee")
+                                    apply()
+                                }
+
                                 // Create / Save the Tutee in Firebase RD
                                 FirebaseManager.instance.createTutee(Model.Tutee(name.text.toString(), false))
 
