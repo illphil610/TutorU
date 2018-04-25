@@ -8,4 +8,5 @@ object Contract {
     @JvmStatic val TUTEE: String = "Tutee"
     @JvmStatic val TUTOR: String = "Tutor"
     @JvmStatic val REQUESTING_HELP = "RequestingHelp"
+    @JvmStatic val AVAILABLE_TUTORS = "AvailableTutors"
 }

@@ -15,8 +15,11 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import com.firebase.geofire.GeoFire
 import com.firebase.geofire.GeoLocation
+import com.firebase.geofire.GeoQuery
+import com.firebase.geofire.GeoQueryEventListener
 import com.google.android.gms.maps.model.LatLng
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.newwesterndev.tutoru.R
@@ -61,6 +64,9 @@ class HelpRequestActivity : AppCompatActivity() {
         spinnerJawn.adapter = spinnerAdapter
 
         submit_button.setOnClickListener {
+
+            // need to grab info from edit texts and spinners
+
             var list = ArrayList<Model.Course>()
             list.add(Model.Course("Geometry", "Math"))
             fbManager.sendHelpBroadcastRequest(
@@ -69,10 +75,47 @@ class HelpRequestActivity : AppCompatActivity() {
                             Model.Tutee(fbAuth.currentUser!!.uid, "Phil McKracken", true),
                             list, true, "I have a math question because i suck at math"))
 
-            //val mFirebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
-            //var mDatabaseReference: DatabaseReference = mFirebaseDatabase.reference.child(Contract.REQUESTING_HELP)
-            //val geoFire = GeoFire(mDatabaseReference)
-            //geoFire.setLocation(fbAuth.currentUser?.uid, GeoLocation(0.0, 0.0))
+            val mFirebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
+            var mDatabaseReference = mFirebaseDatabase.getReference(Contract.REQUESTING_HELP)
+            val geoFireHelpRequest = GeoFire(mDatabaseReference)
+            geoFireHelpRequest.setLocation(fbAuth.currentUser?.uid, GeoLocation(-1.4580218, -48.4968418), { key, error ->
+                if (error != null) {
+                    // fails omg no
+                    Log.e("GEOFIRE", error.details)
+                } else {
+                    // success
+                    Log.e("GEOFIRE", "yahhhhhhhhh")
+                }
+            })
+
+
+            // Query the Tutor Geofire table to find tutprs withtin 5 miles of the current users location
+            var mAvailTutorDatabaseReference = mFirebaseDatabase.getReference(Contract.AVAILABLE_TUTORS)
+            val geofireAvailableTutor = GeoFire(mAvailTutorDatabaseReference)
+            val geoQuery = geofireAvailableTutor.queryAtLocation(GeoLocation(-1.4580218, -48.4968418), 7.0)
+
+            geoQuery.addGeoQueryEventListener(object : GeoQueryEventListener {
+                override fun onKeyEntered(key: String, location: GeoLocation) {
+                    Log.i("TAG", String.format("Provider %s is within your search range [%f,%f]", key, location.latitude, location.longitude))
+                }
+
+                override fun onKeyExited(key: String) {
+                    Log.i("TAG", String.format("Provider %s is no longer in the search area", key))
+                }
+
+                override fun onKeyMoved(key: String, location: GeoLocation) {
+                    Log.i("TAG", String.format("Provider %s moved within the search area to [%f,%f]", key, location.latitude, location.longitude))
+                }
+
+                override fun onGeoQueryReady() {
+                    Log.i("TAG", "onGeoQueryReady")
+                }
+
+                override fun onGeoQueryError(error: DatabaseError) {
+                    Log.e("TAG", "error: " + error)
+                }
+
+            })
 
         }
     }
