@@ -185,7 +185,7 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
                             this.getSharedPreferences(Contract.SHARED_PREF_SUBJECTS, Context.MODE_PRIVATE)
                         }
                         val editor = sharedPreferences.edit()
-                        editor.putString("subject", checkedSubject)
+                        editor.putString(checkedSubject, checkedSubject)
                         editor.apply()
 
                         val fromPref = sharedPreferences.getString("subject", checkedSubject)

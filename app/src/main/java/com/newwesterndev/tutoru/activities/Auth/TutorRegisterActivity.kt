@@ -34,6 +34,8 @@ class TutorRegisterActivity : AppCompatActivity() {
     private var mUtility: Utility? = null
     private val dbManager = DbManager(this)
 
+    private val listOfCheckedSubjects = ArrayList<String>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
@@ -92,20 +94,25 @@ class TutorRegisterActivity : AppCompatActivity() {
             .setTitle("Select Subjects")
             .setIcon(R.mipmap.ic_books)
             .setMultiChoiceItems(subjectNames.toTypedArray(), null) { _, indexSelected, isChecked ->
-                val checkedSubject: String = subjectNames[indexSelected]
 
                 if (isChecked) {
                     Toast.makeText(this, "Checked", Toast.LENGTH_SHORT).show()
 
+                    val checkedSubject: String = subjectNames[indexSelected]
+                    Log.e("CHECKED SUBJECT", checkedSubject)
+                    listOfCheckedSubjects.add(checkedSubject)
+
                     val sharedPreferences: SharedPreferences by lazy {
                         this.getSharedPreferences(Contract.SHARED_PREF_SUBJECTS, Context.MODE_PRIVATE)
                     }
-                    val editor = sharedPreferences.edit()
-                    editor.putString("subject", checkedSubject)
-                    editor.apply()
 
-//                    val fromPref = sharedPreferences.getString("subject", checkedSubject)
-//                    println(fromPref)
+                    with (sharedPreferences.edit()) {
+                        putString(checkedSubject, checkedSubject)
+                        apply()
+                    }
+                    
+                    val fromPref = sharedPreferences.getString(checkedSubject, checkedSubject)
+                    println(fromPref)
 
                 } else {
                     return@setMultiChoiceItems
@@ -113,7 +120,7 @@ class TutorRegisterActivity : AppCompatActivity() {
             }
             .setPositiveButton("Now Select Courses") { _, _ ->
                 Toast.makeText(this, "Subjects Selected", Toast.LENGTH_LONG).show()
-//                openCourseSelectDialog()
+//                openCourseSelectDialog(listOfCheckedSubjects)
 
             }
             .setNegativeButton("Cancel") { _, _ ->
@@ -123,9 +130,12 @@ class TutorRegisterActivity : AppCompatActivity() {
             .show()
     }
 
-    private fun openCourseSelectDialog(listOfCourses: ArrayList<String>) {
+    private fun openCourseSelectDialog(listOfCourses: ArrayList<String>?) {
 //        Pass in items selected from subject selection dialog to getCourses
-//        val coursesFromDB = dbManager.getCourses(checkedItems)
+//        for (course in 0..listOfCourses!!.size) {
+//            val coursesFromDB = dbManager.getCourses(course)
+//
+//        }
         val courseNames = ArrayList<String>()
 
 //        for (course in coursesFromDB) {
