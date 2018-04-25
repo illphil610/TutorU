@@ -16,44 +16,25 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    private var fbAuth = FirebaseAuth.getInstance()
-    private var mUtil: Utility? = null
+    private lateinit var fbAuth: FirebaseAuth
+    private lateinit var mUtil: Utility
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        fbAuth = FirebaseAuth.getInstance()
         mUtil = Utility()
 
         fbAuth.addAuthStateListener {
             if (fbAuth.currentUser == null) {
                 val loginIntent = Intent(this, LoginActivity::class.java)
                 startActivity(loginIntent)
-                finish()
+                finishAffinity()
             } else {
-                Log.e("TUTEE_ID", fbAuth?.currentUser?.uid)
+                Log.e("USER_ID", fbAuth.currentUser?.uid)
             }
         }
-
-        // This just fills the database when the app is first installed
-        val dbManager = DbManager(this)
-        val prefs = getSharedPreferences(Contract.DB_FIRST_APP_LAUNCH, Context.MODE_PRIVATE)
-        val isDataseFilled = prefs.getString(Contract.APP_LAUNCHED, Contract.APP_HASNT_LAUNCHED)
-        // This just makes sure the database is only filled once.
-        if (isDataseFilled == Contract.APP_HASNT_LAUNCHED) {
-            val populate = PopulateDatabase(this)
-            populate.populateDataWithSubjects(dbManager)
-            with (prefs.edit()) {
-                putString(Contract.APP_LAUNCHED, "true")
-                apply()
-            }
-        }
-
-        // Just showing you how you can use the methods from dbManager to easily grab data
-        val mathList = dbManager.getCourses("Mathematics")
-        val compSciList = dbManager.getCourses("Computer Science")
-        Log.e("MATH_IST", mathList.toString())
-        Log.e("COMP_LIST", compSciList.toString())
 
         // Just a temp solution to get to the HelpRequestActivity
         helpButton.setOnClickListener {
@@ -67,9 +48,14 @@ class MainActivity : AppCompatActivity() {
         }
 
         sign_out_button.setOnClickListener { view ->
-            mUtil?.showMessage(view, "Logging Out...")
+            mUtil.showMessage(view, "Logging Out...")
             fbAuth.signOut()
             finishAffinity()
+        }
+
+        tutor_profile_button.setOnClickListener {
+            val tutorProfileIntent = Intent(this, TutorProfileActivity::class.java)
+            startActivity(tutorProfileIntent)
         }
     }
 }
