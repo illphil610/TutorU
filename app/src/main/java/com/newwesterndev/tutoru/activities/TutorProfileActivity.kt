@@ -13,6 +13,7 @@ import android.location.Location
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.widget.Toast
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
@@ -39,6 +40,8 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
     private var locationUpdateState = false
 
     private val dbManager = DbManager(this)
+
+    private val listOfCheckedSubjects = ArrayList<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -176,29 +179,33 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
                 .setTitle("Select Subjects")
                 .setIcon(R.mipmap.ic_books)
                 .setMultiChoiceItems(subjectNames.toTypedArray(), null) { _, indexSelected, isChecked ->
-                    val checkedSubject: String = subjectNames[indexSelected]
 
                     if (isChecked) {
                         Toast.makeText(this, "Checked", Toast.LENGTH_SHORT).show()
 
+                        val checkedSubject: String = subjectNames[indexSelected]
+                        Log.e("CHECKED SUBJECT", checkedSubject)
+                        listOfCheckedSubjects.add(checkedSubject)
+
                         val sharedPreferences: SharedPreferences by lazy {
                             this.getSharedPreferences(Contract.SHARED_PREF_SUBJECTS, Context.MODE_PRIVATE)
                         }
-                        val editor = sharedPreferences.edit()
-                        editor.putString(checkedSubject, checkedSubject)
-                        editor.apply()
 
-                        val fromPref = sharedPreferences.getString("subject", checkedSubject)
+                        with (sharedPreferences.edit()) {
+                            putString(checkedSubject, checkedSubject)
+                            apply()
+                        }
+
+                        val fromPref = sharedPreferences.getString(checkedSubject, checkedSubject)
                         println(fromPref)
 
                     } else {
-//                    tutorSubjects!!.removeAt(Integer.valueOf(indexSelected))
                         return@setMultiChoiceItems
                     }
                 }
                 .setPositiveButton("Now Select Courses") { _, _ ->
                     Toast.makeText(this, "Subjects Selected", Toast.LENGTH_LONG).show()
-                    openCourseSelectDialog()
+//                openCourseSelectDialog(listOfCheckedSubjects)
 
                 }
                 .setNegativeButton("Cancel") { _, _ ->

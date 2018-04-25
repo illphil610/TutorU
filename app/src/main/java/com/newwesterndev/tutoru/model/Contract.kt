@@ -8,5 +8,5 @@ object Contract {
     @JvmStatic val TUTEE: String = "Tutee"
     @JvmStatic val TUTOR: String = "Tutor"
     @JvmStatic val SHARED_PREF_SUBJECTS = "Subjects"
-    @JvmStatic val SHARES_PREF_COURSES = "Courses"
+    @JvmStatic val SHARED_PREF_COURSES = "Courses"
 }
