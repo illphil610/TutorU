@@ -7,6 +7,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
@@ -72,12 +73,13 @@ class LoginActivity : Activity() {
 
     private fun signIn(view: View, email: String, password: String) {
         if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
-            mUtil.showMessage(view, "Authenticating...")
-            fbAuth.signInWithEmailAndPassword(email, password)?.addOnCompleteListener(this, { task ->
+            mUtil.showMessage(view, "Preparing your dashboard. Please wait...")
+            fbAuth.signInWithEmailAndPassword(email.toLowerCase(), password).addOnCompleteListener(this, { task ->
                 if (task.isSuccessful) {
                     // check the type of user and route to either HelpBroadcast or TutorProfile
                     val preferences = getSharedPreferences(getString(R.string.sharedPrefs), Context.MODE_PRIVATE)
-                    val user = preferences.getString("user_type", "unknown")
+                    val user = preferences.getString(email, "unknown")
+                    Log.e("USER ACCT", user)
 
                     when (user) {
                         "tutee" -> {
