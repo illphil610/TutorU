@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.EditText
 import com.google.firebase.auth.FirebaseAuth
 import com.newwesterndev.tutoru.R
+import com.newwesterndev.tutoru.activities.HelpRequestActivity
 import com.newwesterndev.tutoru.activities.MainActivity
 import com.newwesterndev.tutoru.model.Model
 import com.newwesterndev.tutoru.utilities.FirebaseManager
@@ -63,9 +64,10 @@ class TuteeRegisterActivity : AppCompatActivity() {
                                 FirebaseManager.instance.createTutee(Model.Tutee(name.text.toString(), false))
 
                                 // Send the user to the MainScreen for now
-                                val intent = Intent(this, MainActivity::class.java)
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                val intent = Intent(this, HelpRequestActivity::class.java)
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                                 startActivity(intent)
+                                finish()
                             } else {
                                 mUtility?.showMessage(view, task.exception.toString())
                                 Log.e("Sign up error", task.exception.toString())
