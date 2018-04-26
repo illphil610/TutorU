@@ -70,7 +70,7 @@ class TutorRegisterActivity : AppCompatActivity() {
                         }
 
                         // this will include the necessary course / subject lists but for right now its nothing but blank lists
-                        FirebaseManager.instance.createTutor(Model.Tutor(name.text.toString(), false, ArrayList(), ArrayList()))
+                        FirebaseManager.instance.createTutor(Model.Tutor(mAuth?.currentUser!!.uid, name.text.toString(), false))
 
                         // Send the user to the MainScreen for now
                         val intent = Intent(this, TutorProfileActivity::class.java)
@@ -129,7 +129,6 @@ class TutorRegisterActivity : AppCompatActivity() {
 
             }
             .setNegativeButton("Cancel") { _, _ ->
-                finish()
                 Toast.makeText(this, "Canceled", Toast.LENGTH_SHORT).show()
             }
             .create()
@@ -147,19 +146,6 @@ class TutorRegisterActivity : AppCompatActivity() {
                 courseNames.add(course.name)
             }
         }
-        //Loop through the subjects and pass in subject name to getCourses
-        //Add courses to coursesFromDb array
-//        for (subjectName in subjects) {
-//            val coursesFromDB = dbManager.getCourses(subjectName)
-//        }
-
-//        val coursesFromDB = dbManager.getCourses("Computer Science")
-//        val courseNames = ArrayList<String>()
-
-//        for (course in coursesFromDB) {
-//            courseNames.add(course.name)
-//            Log.e("COURSENAME", course.name)
-//        }
 
         AlertDialog.Builder(this)
             .setTitle("Select Courses")
@@ -189,11 +175,10 @@ class TutorRegisterActivity : AppCompatActivity() {
                 }
             }
             .setPositiveButton("Ok") { _, _ ->
-                finish()
                 Toast.makeText(this, "Courses Selected", Toast.LENGTH_SHORT).show()
             }
             .setNegativeButton("Cancel") { _, _ ->
-                finish()
+                courseNames.clear()
                 Toast.makeText(this, "Canceled", Toast.LENGTH_SHORT).show()
             }
             .create()
