@@ -98,7 +98,7 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
                 // Set tutor as active by placing them in the TutorsAvailable db table
                 val mDatabaseReference = mFirebaseDatabase.getReference(Contract.AVAILABLE_TUTORS)
                 val geoFireHelpRequest = GeoFire(mDatabaseReference)
-                geoFireHelpRequest.setLocation(fbAuth.currentUser?.uid, GeoLocation(-1.3904519, -48.4673761), { key, error ->
+                geoFireHelpRequest.setLocation(fbAuth.currentUser?.uid, GeoLocation(39.9819964, -75.1532245), { key, error ->
                     if (error != null) {
                         // fails omg no
                         Log.e("GEOFIRE", error.details)

@@ -65,7 +65,7 @@ class TutorRegisterActivity : AppCompatActivity() {
                         // save user type to shared preferences to use throughout the application
                         val sharedPref = getSharedPreferences(getString(R.string.sharedPrefs), Context.MODE_PRIVATE)
                         with (sharedPref.edit()) {
-                            putString("user_type", "tutor")
+                            putString(mAuth?.currentUser?.email.toString(), "tutor")
                             apply()
                         }
 

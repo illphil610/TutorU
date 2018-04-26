@@ -51,14 +51,14 @@ class TuteeRegisterActivity : AppCompatActivity() {
         submitButton.setOnClickListener { view ->
             if (!TextUtils.isEmpty(email.text.toString()) && !TextUtils.isEmpty(password.text.toString())) {
                 mUtility?.showMessage(view, "Creating your account, Mr. Tutee!")
-                mAuth?.createUserWithEmailAndPassword(email.text.toString(),
+                mAuth.createUserWithEmailAndPassword(email.text.toString(),
                         password.text.toString())?.addOnCompleteListener(this, { task ->
                             if (task.isSuccessful) {
 
                                 // save user type to shared preferences to use throughout the application
                                 val sharedPref = getSharedPreferences(getString(R.string.sharedPrefs), Context.MODE_PRIVATE)
                                 with (sharedPref.edit()) {
-                                    putString("user_type", "tutee")
+                                    putString(mAuth.currentUser?.email.toString(), "tutee")
                                     apply()
                                 }
 
