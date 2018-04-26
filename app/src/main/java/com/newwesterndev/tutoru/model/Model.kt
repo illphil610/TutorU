@@ -17,15 +17,14 @@ class Model {
                      var subjectList: ArrayList<String>,
                      var courseList : ArrayList<String>)
 
-    data class Tutee(var name: String,
+    data class Tutee(var uid: String,
+                     var name: String,
                      var requestingHelp: Boolean)
 
     data class HelpBroadCast(var tutee: Model.Tutee,
                              var courseList: ArrayList<Course>,
                              var stillAwaitingHelp: Boolean,
-                             var questionDetails: String?,
-                             var date: Long,
-                             var location: LatLng)
+                             var questionDetails: String)
 
     data class TutorSession(var course: Course,
                             var tutor: Tutor,

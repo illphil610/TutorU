@@ -17,6 +17,7 @@ import com.newwesterndev.tutoru.R
 import com.newwesterndev.tutoru.activities.MainActivity
 import com.newwesterndev.tutoru.db.DbManager
 import com.newwesterndev.tutoru.model.Contract
+import com.newwesterndev.tutoru.activities.TutorProfileActivity
 import com.newwesterndev.tutoru.model.Model
 import com.newwesterndev.tutoru.utilities.FirebaseManager
 import com.newwesterndev.tutoru.utilities.Utility
@@ -60,13 +61,22 @@ class TutorRegisterActivity : AppCompatActivity() {
                 mUtility?.showMessage(view, "Creating your account, Mr. Tutor!")
                 mAuth?.createUserWithEmailAndPassword(email.text.toString(), password.text.toString())?.addOnCompleteListener(this, { task ->
                     if (task.isSuccessful) {
+
+                        // save user type to shared preferences to use throughout the application
+                        val sharedPref = getSharedPreferences(getString(R.string.sharedPrefs), Context.MODE_PRIVATE)
+                        with (sharedPref.edit()) {
+                            putString(mAuth?.currentUser?.email.toString(), "tutor")
+                            apply()
+                        }
+
                         // this will include the necessary course / subject lists but for right now its nothing but blank lists
                         FirebaseManager.instance.createTutor(Model.Tutor(name.text.toString(), false, ArrayList(), ArrayList()))
 
                         // Send the user to the MainScreen for now
-                        val intent = Intent(this, MainActivity::class.java)
+                        val intent = Intent(this, TutorProfileActivity::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent)
+                        finish()
                     } else {
                         mUtility?.showMessage(view, task.exception.toString())
                         Log.e("Sign up error", task.exception.toString())

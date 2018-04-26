@@ -10,11 +10,17 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.location.Location
+import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
-import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.Button
 import android.widget.Toast
+import com.firebase.geofire.GeoFire
+import com.firebase.geofire.GeoLocation
+import com.firebase.geofire.GeoQueryEventListener
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -25,11 +31,15 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
 import com.newwesterndev.tutoru.R
+import com.newwesterndev.tutoru.activities.Auth.LoginActivity
 import com.newwesterndev.tutoru.db.DbManager
 import com.newwesterndev.tutoru.model.Contract
-import com.newwesterndev.tutoru.model.Model
 import kotlinx.android.synthetic.main.activity_tutor_profile.*
+import kotlinx.android.synthetic.main.custom_add_subject_dialog.*
 
 class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private lateinit var map: GoogleMap
@@ -38,14 +48,29 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
     private lateinit var locationCallback: LocationCallback
     private lateinit var locationRequest: LocationRequest
     private var locationUpdateState = false
-
-    private val dbManager = DbManager(this)
-
     private val listOfCheckedSubjects = ArrayList<String>()
+
+    // Firebase Stuff
+    private lateinit var fbAuth: FirebaseAuth
+    private lateinit var mFirebaseDatabase: FirebaseDatabase
+    private lateinit var dbManager: DbManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tutor_profile)
+
+        fbAuth = FirebaseAuth.getInstance()
+        mFirebaseDatabase = FirebaseDatabase.getInstance()
+        dbManager = DbManager(this)
+        fbAuth.addAuthStateListener {
+            if (fbAuth.currentUser == null) {
+                val loginIntent = Intent(this, LoginActivity::class.java)
+                startActivity(loginIntent)
+                finishAffinity()
+            } else {
+                Log.e("USER_ID", fbAuth.currentUser?.uid)
+            }
+        }
 
         val mapFragment = supportFragmentManager.findFragmentById(R.id.profile_map) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -65,6 +90,46 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
         createLocationRequest()
 
         button_add_subject.setOnClickListener { openSubjectSelectDialog() }
+
+        togglebutton_availibility.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                // Set tutor as active by placing them in the TutorsAvailable db table
+                val mDatabaseReference = mFirebaseDatabase.getReference(Contract.AVAILABLE_TUTORS)
+                val geoFireHelpRequest = GeoFire(mDatabaseReference)
+                geoFireHelpRequest.setLocation(fbAuth.currentUser?.uid, GeoLocation(39.9819964, -75.1532245), { key, error ->
+                    if (error != null) {
+                        // fails omg no
+                        Log.e("GEOFIRE", error.details)
+                    } else {
+                        // success
+                        Log.e("GEOFIRE", "yahhhhhhhhh")
+                    }
+                })
+
+                val geoQuery = geoFireHelpRequest.queryAtLocation(GeoLocation(-1.3904519, -48.4673761), 10.0)
+                geoQuery.addGeoQueryEventListener(object : GeoQueryEventListener {
+                    override fun onKeyEntered(key: String, location: GeoLocation) {
+                        Log.e("TAG", String.format("Provider %s is within your search range [%f,%f]", key, location.latitude, location.longitude))
+                    }
+
+                    override fun onKeyExited(key: String) {
+                        Log.i("TAG", String.format("Provider %s is no longer in the search area", key))
+                    }
+
+                    override fun onKeyMoved(key: String, location: GeoLocation) {
+                        Log.i("TAG", String.format("Provider %s moved within the search area to [%f,%f]", key, location.latitude, location.longitude))
+                    }
+
+                    override fun onGeoQueryReady() {
+                        Log.i("TAG", "onGeoQueryReady")
+                    }
+
+                    override fun onGeoQueryError(error: DatabaseError) {
+                        Log.e("TAG", "error: " + error)
+                    }
+                })
+            }
+        }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -83,7 +148,6 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
                     LOCATION_PERMISSION_REQUEST_CODE)
-
             return
         }
 
@@ -205,7 +269,7 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
                 }
                 .setPositiveButton("Now Select Courses") { _, _ ->
                     Toast.makeText(this, "Subjects Selected", Toast.LENGTH_LONG).show()
-//                openCourseSelectDialog(listOfCheckedSubjects)
+                    openCourseSelectDialog()
 
                 }
                 .setNegativeButton("Cancel") { _, _ ->
@@ -216,14 +280,7 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
     }
 
     private fun openCourseSelectDialog() {
-//        Pass in items selected from subject selection dialog to getCourses
-//        val coursesFromDB = dbManager.getCourses(checkedItems)
         val courseNames = ArrayList<String>()
-
-//        for (course in coursesFromDB) {
-//            courseNames.add(course.name)
-//        }
-
 
         AlertDialog.Builder(this)
                 .setTitle("Select Courses")
@@ -243,6 +300,26 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
                 }
                 .create()
                 .show()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.action_signout -> {
+            fbAuth.signOut()
+            true
+        }
+        else -> {
+            super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onBackPressed() {
+        finishAffinity()
     }
 
     companion object {
