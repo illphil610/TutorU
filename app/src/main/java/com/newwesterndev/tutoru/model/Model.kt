@@ -12,10 +12,11 @@ class Model {
                     var userName: String,
                     var locaton: LatLng)
 
-    data class Tutor(var name: String,
-                     var isAvailable: Boolean,
-                     var subjectList: ArrayList<String>,
-                     var courseList : ArrayList<String>)
+    data class Tutor(var uid: String,
+                     var name: String,
+                     var isAvailable: Boolean)
+                     //var subjectList: ArrayList<String>,
+                     //var courseList : ArrayList<String>)
 
     data class Tutee(var uid: String,
                      var name: String,
