@@ -38,13 +38,14 @@ import com.newwesterndev.tutoru.R
 import com.newwesterndev.tutoru.activities.Auth.LoginActivity
 import com.newwesterndev.tutoru.db.DbManager
 import com.newwesterndev.tutoru.model.Contract
+import com.newwesterndev.tutoru.utilities.FirebaseManager
 import kotlinx.android.synthetic.main.activity_tutor_profile.*
 import kotlinx.android.synthetic.main.custom_add_subject_dialog.*
 
 class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private lateinit var map: GoogleMap
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    private lateinit var lastLocation: Location
+    private  var lastLocation: Location? = null
     private lateinit var locationCallback: LocationCallback
     private lateinit var locationRequest: LocationRequest
     private var locationUpdateState = false
@@ -53,15 +54,36 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
     // Firebase Stuff
     private lateinit var fbAuth: FirebaseAuth
     private lateinit var mFirebaseDatabase: FirebaseDatabase
+    private lateinit var firebaseManager: FirebaseManager
     private lateinit var dbManager: DbManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tutor_profile)
 
-        fbAuth = FirebaseAuth.getInstance()
-        mFirebaseDatabase = FirebaseDatabase.getInstance()
+        val mapFragment = supportFragmentManager.findFragmentById(R.id.profile_map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+
+        // Firebase and local db stuff and things...
         dbManager = DbManager(this)
+        fbAuth = FirebaseAuth.getInstance()
+        firebaseManager = FirebaseManager.instance
+        mFirebaseDatabase = FirebaseDatabase.getInstance()
+
+        // avail tutors reference
+        val mDatabaseReference = mFirebaseDatabase.getReference(Contract.AVAILABLE_TUTORS)
+        val geoFireSaveAvailTutor = GeoFire(mDatabaseReference)
+
+        // tutees requesting help
+        val mRequestingHelpReference = mFirebaseDatabase.getReference(Contract.REQUESTING_HELP)
+        val geoFireHelpRequest = GeoFire(mRequestingHelpReference)
+
+
+        val sharedPreferences = getSharedPreferences(getString(R.string.sharedPrefs), Context.MODE_PRIVATE)
+        val isAvailToggleChecked = sharedPreferences.getString("isChecked", "false")!!.toBoolean()
+        togglebutton_availibility.isChecked = isAvailToggleChecked
+
+        // checking if the user is logged in or not.............MEEK IS FREE!
         fbAuth.addAuthStateListener {
             if (fbAuth.currentUser == null) {
                 val loginIntent = Intent(this, LoginActivity::class.java)
@@ -72,18 +94,16 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
             }
         }
 
-        val mapFragment = supportFragmentManager.findFragmentById(R.id.profile_map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
+        //val mapFragment = supportFragmentManager.findFragmentById(R.id.profile_map) as SupportMapFragment
+        //mapFragment.getMapAsync(this)
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(p0: LocationResult) {
                 super.onLocationResult(p0)
-
-                map.clear()
+                //map.clear()
                 lastLocation = p0.lastLocation
-                placeMarkerOnMap(LatLng(lastLocation.latitude, lastLocation.longitude))
+                //placeMarkerOnMap(LatLng(p0.lastLocation.latitude, p0.lastLocation.longitude ))
             }
         }
 
@@ -93,51 +113,70 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
 
         togglebutton_availibility.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
-                // Set tutor as active by placing them in the TutorsAvailable db table
-                val mDatabaseReference = mFirebaseDatabase.getReference(Contract.AVAILABLE_TUTORS)
-                val geoFireHelpRequest = GeoFire(mDatabaseReference)
-                geoFireHelpRequest.setLocation(fbAuth.currentUser?.uid, GeoLocation(39.9819964, -75.1532245), { key, error ->
-                    if (error != null) {
-                        // fails omg no
-                        Log.e("GEOFIRE", error.details)
+                // save that the toggle is set to checked in shared prefs
+                val sharedPref = getSharedPreferences(getString(R.string.sharedPrefs), Context.MODE_PRIVATE)
+                with (sharedPref.edit()) {
+                    putString("isChecked", "true")
+                    apply()
+                }
+
+                if (lastLocation != null) {
+                    geoFireSaveAvailTutor.setLocation(fbAuth.currentUser?.uid,
+                            GeoLocation(lastLocation!!.latitude, lastLocation!!.longitude), { key, error ->
+                        if (error != null) {
+                            // fails omg no
+                            Log.e("GEOFIRE", error.details)
+                        } else {
+                            Log.e("GEOFIRE", "geofire worked fam")
+                        }
+                    })
+
+                    val geoQuery = geoFireHelpRequest.queryAtLocation(GeoLocation(lastLocation!!.latitude, lastLocation!!.longitude), 100.0)
+                    geoQuery.addGeoQueryEventListener(object : GeoQueryEventListener {
+                        override fun onKeyEntered(key: String, location: GeoLocation) {
+                            Log.e("TAG", String.format("Provider %s is within your search range [%f,%f]", key, location.latitude, location.longitude))
+                            firebaseManager.getTutee(key) { tutee ->
+                                placeMarkerOnMap(LatLng(location.latitude, location.longitude))
+                            }
+                        }
+
+                        override fun onKeyExited(key: String) {
+                            Log.i("TAG", String.format("Provider %s is no longer in the search area", key))
+                        }
+
+                        override fun onKeyMoved(key: String, location: GeoLocation) {
+                            Log.i("TAG", String.format("Provider %s moved within the search area to [%f,%f]", key, location.latitude, location.longitude))
+                        }
+
+                        override fun onGeoQueryReady() {
+                            Log.i("TAG", "onGeoQueryReady")
+                        }
+
+                        override fun onGeoQueryError(error: DatabaseError) {
+                            Log.e("TAG", "error: " + error)
+                        }
+                    })
+                }
+            }
+            if (!isChecked) {
+                geoFireSaveAvailTutor.removeLocation(fbAuth.currentUser?.uid) { key, error ->
+                    if (error == null) {
+                        with (sharedPreferences.edit()) {
+                            putString("isChecked", "false")
+                            apply()
+                        }
                     } else {
-                        // success
-                        Log.e("GEOFIRE", "yahhhhhhhhh")
+                        Log.e("Error", error.details)
                     }
-                })
-
-                val geoQuery = geoFireHelpRequest.queryAtLocation(GeoLocation(-1.3904519, -48.4673761), 10.0)
-                geoQuery.addGeoQueryEventListener(object : GeoQueryEventListener {
-                    override fun onKeyEntered(key: String, location: GeoLocation) {
-                        Log.e("TAG", String.format("Provider %s is within your search range [%f,%f]", key, location.latitude, location.longitude))
-                    }
-
-                    override fun onKeyExited(key: String) {
-                        Log.i("TAG", String.format("Provider %s is no longer in the search area", key))
-                    }
-
-                    override fun onKeyMoved(key: String, location: GeoLocation) {
-                        Log.i("TAG", String.format("Provider %s moved within the search area to [%f,%f]", key, location.latitude, location.longitude))
-                    }
-
-                    override fun onGeoQueryReady() {
-                        Log.i("TAG", "onGeoQueryReady")
-                    }
-
-                    override fun onGeoQueryError(error: DatabaseError) {
-                        Log.e("TAG", "error: " + error)
-                    }
-                })
+                }
             }
         }
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
         map = googleMap
-
         map.uiSettings.isZoomControlsEnabled = true
         map.setOnMarkerClickListener(this)
-
         setupMap()
     }
 
@@ -156,8 +195,7 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
             if (location != null) {
                 lastLocation = location
                 val currentLatLng = LatLng(location.latitude, location.longitude)
-
-                placeMarkerOnMap(currentLatLng)
+                //placeMarkerOnMap(currentLatLng)
                 map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 16.0f))
             }
         }
@@ -179,14 +217,12 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
                     LOCATION_PERMISSION_REQUEST_CODE)
             return
         }
-
         fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null)
     }
 
     @SuppressLint("RestrictedApi")
     private fun createLocationRequest() {
         locationRequest = LocationRequest()
-
         locationRequest.interval = 10000
         locationRequest.fastestInterval = 5000
         locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
@@ -203,9 +239,7 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
             if(e is ResolvableApiException)
                 try{
                     e.startResolutionForResult(this@TutorProfileActivity, REQUEST_CHECK_SETTINGS)
-                } catch (sendEx: IntentSender.SendIntentException) {
-
-                }
+                } catch (sendEx: IntentSender.SendIntentException) {}
         }
     }
 
@@ -226,7 +260,7 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
 
     override fun onResume() {
         super.onResume()
-        if(!locationUpdateState) {
+        if (!locationUpdateState) {
             locationUpdates()
         }
     }

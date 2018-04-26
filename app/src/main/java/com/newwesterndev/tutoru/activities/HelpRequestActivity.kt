@@ -110,31 +110,29 @@ class HelpRequestActivity : AppCompatActivity(), LocationProxy.LocationDelegate 
                             arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), 1)
                 }
 
-                fusedLocationClient.lastLocation
-                        .addOnSuccessListener { location : Location? ->
-                            // Got last known location. In some rare situations this can be null.
-                            if (location != null) {
-                                Log.e("Lastknown", location.toString())
-                                geoFireHelpRequest.setLocation(fbAuth.currentUser?.uid, GeoLocation(location.latitude, location.longitude), { key, error ->
-                                    if (error != null) {
-                                        // fails omg no
-                                        Log.e("GEOFIRE", error.details)
-                                    } else {
-                                        // success
-                                        Log.e("GEOFIRE", "yahhhhhhhhh")
-                                        val intent = Intent(this, MapsActivity::class.java)
-                                        Log.e("Lat", currentLocation?.latitude.toString())
-                                        intent.putExtra("lat", location.latitude.toString())
-                                        intent.putExtra("lon", location.longitude.toString())
-                                        startActivity(intent)
-                                    }
-                                })
+                fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+                    // Got last known location. In some rare situations this can be null.
+                    if (location != null) {
+                        Log.e("Lastknown", location.toString())
+
+                        geoFireHelpRequest.setLocation(fbAuth.currentUser?.uid, GeoLocation(location.latitude, location.longitude), { key, error ->
+                            if (error != null) {
+                                Log.e("GEOFIRE", error.details)
                             } else {
-                                // we need to have this just grab the location or like tell them ot do stuff but this works for now ;)
-                                Toast.makeText(this, "Is your location enabled?  try again please...", Toast.LENGTH_LONG).show()
-                                Log.e("NO LOCAL", "no location yet fam, try again when you aint a bitch.")
+                                Log.e("GEOFIRE", "yahhhhhhhhh")
+                                val intent = Intent(this, MapsActivity::class.java)
+                                Log.e("Lat", currentLocation?.latitude.toString())
+                                intent.putExtra("lat", location.latitude.toString())
+                                intent.putExtra("lon", location.longitude.toString())
+                                startActivity(intent)
                             }
-                        }
+                        })
+                    } else {
+                        // we need to have this just grab the location or like tell them ot do stuff but this works for now ;)
+                        Toast.makeText(this, "Is your location enabled?  try again please...", Toast.LENGTH_LONG).show()
+                        Log.e("NO LOCAL", "no location yet fam, try again when you aint a bitch.")
+                    }
+                }
             }
         }
     }
