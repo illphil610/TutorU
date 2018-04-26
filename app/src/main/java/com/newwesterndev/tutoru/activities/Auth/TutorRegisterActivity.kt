@@ -35,6 +35,7 @@ class TutorRegisterActivity : AppCompatActivity() {
     private val dbManager = DbManager(this)
 
     private val listOfCheckedSubjects = ArrayList<String>()
+    private val listOfCheckedCourses = ArrayList<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -94,12 +95,10 @@ class TutorRegisterActivity : AppCompatActivity() {
             .setTitle("Select Subjects")
             .setIcon(R.mipmap.ic_books)
             .setMultiChoiceItems(subjectNames.toTypedArray(), null) { _, indexSelected, isChecked ->
-
                 if (isChecked) {
                     Toast.makeText(this, "Checked", Toast.LENGTH_SHORT).show()
 
                     val checkedSubject: String = subjectNames[indexSelected]
-                    Log.e("CHECKED SUBJECT", checkedSubject)
                     listOfCheckedSubjects.add(checkedSubject)
 
                     val sharedPreferences: SharedPreferences by lazy {
@@ -110,51 +109,58 @@ class TutorRegisterActivity : AppCompatActivity() {
                         putString(checkedSubject, checkedSubject)
                         apply()
                     }
-
-                    val fromPref = sharedPreferences.getString(checkedSubject, checkedSubject)
-                    println(fromPref)
-
                 } else {
                     return@setMultiChoiceItems
                 }
             }
             .setPositiveButton("Now Select Courses") { _, _ ->
-                Toast.makeText(this, "Subjects Selected", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Subjects Selected", Toast.LENGTH_SHORT).show()
                 openCourseSelectDialog(listOfCheckedSubjects)
 
             }
             .setNegativeButton("Cancel") { _, _ ->
-                Toast.makeText(this, "Canceled", Toast.LENGTH_LONG).show()
+                finish()
+                Toast.makeText(this, "Canceled", Toast.LENGTH_SHORT).show()
             }
             .create()
             .show()
     }
 
-    private fun openCourseSelectDialog(listOfCourses: ArrayList<String>) {
-        val relatedCourseNames = ArrayList<String>()
+    private fun openCourseSelectDialog(subjects: ArrayList<String>) {
+        val courseNames = ArrayList<String>()
+        courseNames.clear()
 
-        for (relatedCourse in listOfCourses) {
-            val coursesFromDB = dbManager.getCourses(relatedCourse)
-            relatedCourseNames.add(coursesFromDB.toString())
+        for (i in 0 until (subjects.size)) {
+            val subject = subjects[i]
+            val coursesFromDB = dbManager.getCourses(subject)
+            for (course in coursesFromDB) {
+                courseNames.add(course.name)
+            }
         }
+        //Loop through the subjects and pass in subject name to getCourses
+        //Add courses to coursesFromDb array
+//        for (subjectName in subjects) {
+//            val coursesFromDB = dbManager.getCourses(subjectName)
+//        }
 
-//        val coursesFromDB = dbManager.getSubjects()
+//        val coursesFromDB = dbManager.getCourses("Computer Science")
 //        val courseNames = ArrayList<String>()
-//
+
 //        for (course in coursesFromDB) {
 //            courseNames.add(course.name)
+//            Log.e("COURSENAME", course.name)
 //        }
 
         AlertDialog.Builder(this)
             .setTitle("Select Courses")
             .setIcon(R.mipmap.ic_books)
-            .setMultiChoiceItems(relatedCourseNames.toTypedArray(), null) { _, indexSelected, isChecked ->
+            .setMultiChoiceItems(courseNames.toTypedArray(), null) { _, indexSelected, isChecked ->
                 if (isChecked) {
                     Toast.makeText(this, "Checked", Toast.LENGTH_SHORT).show()
 
-                    val checkedCourse: String = relatedCourseNames[indexSelected]
+                    val checkedCourse: String = courseNames[indexSelected]
                     Log.e("CHECKED COURSE", checkedCourse)
-                    listOfCheckedSubjects.add(checkedCourse)
+                    listOfCheckedCourses.add(checkedCourse)
 
                     val sharedPreferences: SharedPreferences by lazy {
                         this.getSharedPreferences(Contract.SHARED_PREF_COURSES, Context.MODE_PRIVATE)
@@ -173,10 +179,12 @@ class TutorRegisterActivity : AppCompatActivity() {
                 }
             }
             .setPositiveButton("Ok") { _, _ ->
-                Toast.makeText(this, "Courses Selected", Toast.LENGTH_LONG).show()
+                finish()
+                Toast.makeText(this, "Courses Selected", Toast.LENGTH_SHORT).show()
             }
             .setNegativeButton("Cancel") { _, _ ->
-                Toast.makeText(this, "Canceled", Toast.LENGTH_LONG).show()
+                finish()
+                Toast.makeText(this, "Canceled", Toast.LENGTH_SHORT).show()
             }
             .create()
             .show()

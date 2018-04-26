@@ -228,7 +228,7 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
         AlertDialog.Builder(this)
                 .setTitle("Select Courses")
                 .setIcon(R.mipmap.ic_books)
-                .setMultiChoiceItems(courseNames.toTypedArray(), null) { dialogInterface, indexSelected, isChecked ->
+                .setMultiChoiceItems(courseNames.toTypedArray(), null) { _, indexSelected, isChecked ->
                     if (isChecked) {
 
                     } else {
