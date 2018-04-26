@@ -56,7 +56,7 @@ class MainActivity : Activity() {
         //check if the user is a tutor/tutee and route accordingly
         // check the type of user and route to either HelpBroadcast or TutorProfile
         val preferences = getSharedPreferences(getString(R.string.sharedPrefs), Context.MODE_PRIVATE)
-        val user = preferences.getString("user_type", "unknown")
+        val user = preferences.getString(fbAuth.currentUser?.email, "unknown")
         when (user) {
             "tutee" -> {
                 val intent = Intent(this, HelpRequestActivity::class.java)
