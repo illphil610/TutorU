@@ -53,7 +53,6 @@ class TutorRegisterActivity : AppCompatActivity() {
         cancelButton = findViewById(R.id.button_tutor_reg_cancel)
         val name = findViewById<EditText>(R.id.edit_text_tutor_reg_firstname)
 
-
         subjectCourseButton.setOnClickListener { openSubjectSelectDialog() }
 
         submitButton.setOnClickListener { view ->
@@ -70,7 +69,7 @@ class TutorRegisterActivity : AppCompatActivity() {
                         }
 
                         // this will include the necessary course / subject lists but for right now its nothing but blank lists
-                        FirebaseManager.instance.createTutor(Model.Tutor(name.text.toString(), false, ArrayList(), ArrayList()))
+                        FirebaseManager.instance.createTutor(Model.Tutor(mAuth?.currentUser!!.uid, name.text.toString(), false))
 
                         // Send the user to the MainScreen for now
                         val intent = Intent(this, TutorProfileActivity::class.java)
