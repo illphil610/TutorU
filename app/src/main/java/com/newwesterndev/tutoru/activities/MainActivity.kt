@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.support.v4.app.ActivityCompat
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.newwesterndev.tutoru.R
@@ -59,28 +60,31 @@ class MainActivity : Activity() {
         Log.e("MATH_LIST", mathList.toString())
         Log.e("COMP_LIST", compSciList.toString())
 
-        //check if the user is a tutor/tutee and route accordingly
-        // check the type of user and route to either HelpBroadcast or TutorProfile
-        val preferences = getSharedPreferences(getString(R.string.sharedPrefs), Context.MODE_PRIVATE)
-        val user = preferences.getString(fbAuth.currentUser?.email, "unknown")
-        when (user) {
-            "tutee" -> {
-                val intent = Intent(this, HelpRequestActivity::class.java)
-                intent.putExtra("email", fbAuth.currentUser?.email)
-                startActivity(intent)
-                finishAffinity()
-            }
-            "tutor" -> {
-                val intent = Intent(this, TutorProfileActivity::class.java)
-                intent.putExtra("email", fbAuth.currentUser?.email)
-                startActivity(intent)
-                finishAffinity()
-            }
-            else -> {
-                val intent = Intent(this, HelpRequestActivity::class.java)
-                intent.putExtra("email", fbAuth.currentUser?.email)
-                startActivity(intent)
-                finishAffinity()
+
+        if (fbAuth.currentUser != null) {
+            //check if the user is a tutor/tutee and route accordingly
+            // check the type of user and route to either HelpBroadcast or TutorProfile
+            val preferences = getSharedPreferences(getString(R.string.sharedPrefs), Context.MODE_PRIVATE)
+            val user = preferences.getString(fbAuth.currentUser?.email, "unknown")
+            when (user) {
+                "tutee" -> {
+                    val intent = Intent(this, HelpRequestActivity::class.java)
+                    intent.putExtra("email", fbAuth.currentUser?.email)
+                    startActivity(intent)
+                    finishAffinity()
+                }
+                "tutor" -> {
+                    val intent = Intent(this, TutorProfileActivity::class.java)
+                    intent.putExtra("email", fbAuth.currentUser?.email)
+                    startActivity(intent)
+                    finishAffinity()
+                }
+                else -> {
+                    val intent = Intent(this, LoginActivity::class.java)
+                    intent.putExtra("email", fbAuth.currentUser?.email)
+                    startActivity(intent)
+                    finishAffinity()
+                }
             }
         }
 

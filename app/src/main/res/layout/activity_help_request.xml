@@ -1,25 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="5dp"
+    android:orientation="vertical"
     tools:context=".activities.HelpRequestActivity">
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/user_name_greeting"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:fontFamily="monospace"
+        android:layout_marginTop="28dp"
+        android:fontFamily="cursive"
         android:padding="10dp"
         android:text="Hello, Username!"
         android:textAlignment="center"
-        android:textSize="30sp"
+        android:textSize="45sp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -27,54 +30,120 @@
         android:id="@+id/subject_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:fontFamily="serif"
+        android:gravity="center"
         android:padding="5dp"
         android:text="What subject do you need help with?"
-        app:layout_constraintTop_toBottomOf="@+id/textView2"
-        tools:layout_editor_absoluteX="0dp" />
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.223" />
 
     <Spinner
         android:id="@+id/subject_spinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="66dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
         android:padding="20dp"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="90dp">
-    </Spinner>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/user_name_greeting"
+        app:layout_constraintVertical_bias="0.116"></Spinner>
 
     <TextView
         android:id="@+id/course_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="34dp"
-        android:text="Select specific course name" />
+        android:layout_width="match_parent"
+        android:layout_height="49dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:fontFamily="serif"
+        android:gravity="center"
+        android:text="Select specific course name"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/course_spinner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/subject_spinner"
+        app:layout_constraintVertical_bias="1.0" />
 
     <Spinner
         android:id="@+id/course_spinner"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="20dp">
-    </Spinner>
+        android:layout_height="65dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="80dp"
+        android:gravity="center"
+        android:padding="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/subject_spinner"></Spinner>
 
     <TextView
         android:id="@+id/question_text_view"
-        android:text="What issue are you having?"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="84dp"
+        android:fontFamily="serif"
+        android:gravity="center"
+        android:text="@string/what_issue_string"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/course_text_view"
+        app:layout_constraintVertical_bias="0.0" />
 
     <EditText
         android:id="@+id/question_edit_text"
         android:layout_width="match_parent"
-        android:layout_height="207dp"
+        android:layout_height="114dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="44dp"
+        android:background="@android:color/transparent"
         android:ems="10"
-        android:gravity="top"
+        android:gravity="center_horizontal"
+        android:hint="@string/type_your_question_here"
         android:inputType="textPersonName"
-        android:hint="Type your question here..."
-        tools:layout_editor_absoluteX="9dp"
-        tools:layout_editor_absoluteY="134dp" />
+        android:maxLines="10"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/question_text_view"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/submit_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Submit" />
-</LinearLayout>
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Submit"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/question_edit_text" />
+
+</android.support.constraint.ConstraintLayout>
