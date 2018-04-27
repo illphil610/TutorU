@@ -17,7 +17,7 @@ class TuteeSessionActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_java_tutor_session)
+        setContentView(R.layout.activity_tutee_session)
 
 
         val intent = Intent(this@TuteeSessionActivity, TuteeSessionActivity::class.java)
@@ -38,6 +38,9 @@ class TuteeSessionActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         //Read payload containing TutorID from Tutor, via NFC
+        if(NfcAdapter.ACTION_NDEF_DISCOVERED.equals(intent.action)) {
+            readPayload(intent)
+        }
 
     }
 

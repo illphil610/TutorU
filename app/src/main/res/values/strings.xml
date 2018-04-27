@@ -44,4 +44,8 @@
     <string name="name">Name</string>
     <string name="sharedPrefs">com.newwesterndev.TutorU.prefs</string>
     <string name="view_my_courses_subjects">View My Subjects/Courses</string>
+    <string name="tutor_display">Tutee ID: </string>
+    <string name="tutor_id">tutor Id here</string>
+    <string name="end_session"> End Session</string>
+    <string name="tutee_display">Tutor ID:</string>
 </resources>
