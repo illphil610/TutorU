@@ -53,6 +53,12 @@ class MainActivity : Activity() {
         }
         Log.e("COURSE", mDbManager.getSubjects().toString())
 
+        // Just showing you how you can use the methods from dbManager to easily grab data
+        val mathList = mDbManager.getCourses("Mathematics")
+        val compSciList = mDbManager.getCourses("Computer Science")
+        Log.e("MATH_LIST", mathList.toString())
+        Log.e("COMP_LIST", compSciList.toString())
+
         //check if the user is a tutor/tutee and route accordingly
         // check the type of user and route to either HelpBroadcast or TutorProfile
         val preferences = getSharedPreferences(getString(R.string.sharedPrefs), Context.MODE_PRIVATE)

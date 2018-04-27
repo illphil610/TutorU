@@ -36,7 +36,7 @@ class TuteeRegisterActivity : AppCompatActivity() {
 
         // set content view and find xml values variables
         setContentView(R.layout.activity_tutee_register)
-        name = findViewById(R.id.edit_text_tutee_reg_firstname)
+        name = findViewById(R.id.edit_text_tutee_reg_name)
         email = findViewById(R.id.edit_text_tutee_reg_email)
         password = findViewById(R.id.edit_text_tutee_reg_password)
         confirmPassword = findViewById(R.id.edit_text_tutee_reg_password)

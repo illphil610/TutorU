@@ -6,6 +6,7 @@ import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.location.Location
@@ -42,11 +43,6 @@ import kotlinx.android.synthetic.main.activity_tutor_profile.*
 import kotlinx.android.synthetic.main.custom_add_subject_dialog.*
 
 class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
-    //Temporary static selection items
-    private val subjects = arrayOf(" Programming ", " Math ", " Science ", " Writing ")
-    private val selectedSubjects = arrayListOf<Int>()
-    private val courses = arrayOf(" Java 1 ", " Calculus 1 ", " Biology ", " Technical Writing ")
-    private val selectedCourses = arrayListOf<Int>()
     private lateinit var map: GoogleMap
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private  var lastLocation: Location? = null
@@ -59,6 +55,9 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
     private lateinit var mFirebaseDatabase: FirebaseDatabase
     private lateinit var firebaseManager: FirebaseManager
     private lateinit var dbManager: DbManager
+
+    private val listOfCheckedSubjects = ArrayList<String>()
+    private val listOfCheckedCourses = ArrayList<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -269,19 +268,42 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
     }
 
     private fun openSubjectSelectDialog() {
+        val subjectsFromDB = dbManager.getSubjects()
+        val subjectNames = ArrayList<String>()
+
+        for (subject in subjectsFromDB) {
+            subjectNames.add(subject.name)
+        }
+
         AlertDialog.Builder(this)
                 .setTitle("Select Subjects")
                 .setIcon(R.mipmap.ic_books)
-                .setMultiChoiceItems(subjects, null) { _, indexSelected, isChecked ->
+                .setMultiChoiceItems(subjectNames.toTypedArray(), null) { _, indexSelected, isChecked ->
+
                     if (isChecked) {
-                        selectedSubjects.add(indexSelected)
-                    } else if (selectedSubjects.contains(indexSelected)) {
-                        selectedSubjects.remove(Integer.valueOf(indexSelected))
+                        val checkedSubject: String = subjectNames[indexSelected]
+                        listOfCheckedSubjects.add(checkedSubject)
+
+                        val sharedPreferences: SharedPreferences by lazy {
+                            this.getSharedPreferences(Contract.SHARED_PREF_SUBJECTS, Context.MODE_PRIVATE)
+                        }
+
+                        with (sharedPreferences.edit()) {
+                            putString(checkedSubject, checkedSubject)
+                            apply()
+                        }
+
+                        val fromPref = sharedPreferences.getString(checkedSubject, checkedSubject)
+                        println(fromPref)
+
+                    } else {
+                        return@setMultiChoiceItems
                     }
                 }
                 .setPositiveButton("Now Select Courses") { _, _ ->
                     Toast.makeText(this, "Subjects Selected", Toast.LENGTH_LONG).show()
-                    openCourseSelectDialog()
+                    openCourseSelectDialog(listOfCheckedSubjects)
+
                 }
                 .setNegativeButton("Cancel") { _, _ ->
                     Toast.makeText(this, "Canceled", Toast.LENGTH_LONG).show()
@@ -290,22 +312,48 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
                 .show()
     }
 
-    private fun openCourseSelectDialog() {
+    private fun openCourseSelectDialog(subjects: ArrayList<String>) {
+        val courseNames = ArrayList<String>()
+        courseNames.clear()
+
+        for (i in 0 until (subjects.size)) {
+            val subject = subjects[i]
+            val coursesFromDB = dbManager.getCourses(subject)
+            for (course in coursesFromDB) {
+                courseNames.add(course.name)
+            }
+        }
+
         AlertDialog.Builder(this)
                 .setTitle("Select Courses")
                 .setIcon(R.mipmap.ic_books)
-                .setMultiChoiceItems(courses, null) { _, indexSelected, isChecked ->
+                .setCancelable(false)
+                .setMultiChoiceItems(courseNames.toTypedArray(), null) { _, indexSelected, isChecked ->
                     if (isChecked) {
-                        selectedCourses.add(indexSelected)
-                    } else if (selectedCourses.contains(indexSelected)) {
-                        selectedCourses.remove(Integer.valueOf(indexSelected))
+                        val checkedCourse: String = courseNames[indexSelected]
+                        listOfCheckedCourses.add(checkedCourse)
+
+                        val sharedPreferences: SharedPreferences by lazy {
+                            this.getSharedPreferences(Contract.SHARED_PREF_COURSES, Context.MODE_PRIVATE)
+                        }
+
+                        with (sharedPreferences.edit()) {
+                            putString(checkedCourse, checkedCourse)
+                            apply()
+                        }
+
+                        val fromPref = sharedPreferences.getString(checkedCourse, checkedCourse)
+                        println(fromPref)
+
+                    } else {
+                        return@setMultiChoiceItems
                     }
                 }
                 .setPositiveButton("Ok") { _, _ ->
-                    Toast.makeText(this, "Courses Selected", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Courses Selected", Toast.LENGTH_SHORT).show()
                 }
                 .setNegativeButton("Cancel") { _, _ ->
-                    Toast.makeText(this, "Canceled", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Canceled", Toast.LENGTH_SHORT).show()
                 }
                 .create()
                 .show()
