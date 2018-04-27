@@ -29,6 +29,10 @@ import com.newwesterndev.tutoru.utilities.FirebaseManager
 import com.newwesterndev.tutoru.utilities.LocationProxy
 import kotlinx.android.synthetic.main.activity_help_request.*
 import com.newwesterndev.tutoru.utilities.Utility
+import android.view.Gravity
+import android.widget.TextView
+
+
 
 class HelpRequestActivity : AppCompatActivity(), LocationProxy.LocationDelegate {
 
@@ -45,12 +49,22 @@ class HelpRequestActivity : AppCompatActivity(), LocationProxy.LocationDelegate 
         setContentView(R.layout.activity_help_request)
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
+        ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_COARSE_LOCATION,
+                android.Manifest.permission.ACCESS_FINE_LOCATION), 10)
+
         // location stuff and things...
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
         val locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
         locationProxy = LocationProxy(this, locationManager)
         locationProxy.mLocationDelegate = this
-        locationProxy.requestUsersLocation()
+
+        if (ActivityCompat.checkSelfPermission(this,
+                        android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), 1)
+        } else {
+            locationProxy.requestUsersLocation()
+        }
 
         // firebase and databse stuff and things...
         fbManager = FirebaseManager.instance
@@ -74,15 +88,37 @@ class HelpRequestActivity : AppCompatActivity(), LocationProxy.LocationDelegate 
         val spinnerAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, subjectSpinnerList)
         spinnerJawn.adapter = spinnerAdapter
 
+        // Hide views until the user selects a subject
+        course_spinner.visibility = (View.GONE)
+        course_text_view.visibility = (View.GONE)
+        question_text_view.visibility = (View.GONE)
+        question_edit_text.visibility = (View.GONE)
+        submit_button.visibility = (View.GONE)
+
         spinnerJawn.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                (parent?.getChildAt(0) as TextView).gravity = Gravity.CENTER
                 if (position != 0) {
+                    // Show the views to get courses that are hidden
+                    course_text_view.visibility = (View.VISIBLE)
+                    course_spinner.visibility = (View.VISIBLE)
+                    question_text_view.visibility = (View.VISIBLE)
+                    question_edit_text.visibility = (View.VISIBLE)
+                    submit_button.visibility = (View.VISIBLE)
+
                     val subjectName = subjectList[position - 1]
                     val coursesFromSubject = dbManager.getCoursesAsString(subjectName)
                     val courseSpinnerList = dbManager.getCourseListForSpinner(coursesFromSubject)
                     val courseSpinnerJawn = findViewById<Spinner>(R.id.course_spinner)
                     val courseSpinnerAdapter = ArrayAdapter<String>(applicationContext, android.R.layout.simple_spinner_item, courseSpinnerList)
                     courseSpinnerJawn.adapter = courseSpinnerAdapter
+
+                    courseSpinnerJawn.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                            (parent?.getChildAt(0) as TextView).gravity = Gravity.CENTER
+                        }
+                        override fun onNothingSelected(parent: AdapterView<*>?) {}
+                    }
                 }
             }
             override fun onNothingSelected(parent: AdapterView<*>?) {}
