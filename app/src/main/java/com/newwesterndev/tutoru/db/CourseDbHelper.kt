@@ -21,7 +21,7 @@ class CourseDbHelper(context: Context): ManagedSQLiteOpenHelper(context, "curren
 
         @Synchronized
         fun getInstance(context: Context): CourseDbHelper{
-            if (instance == null){
+            if (instance == null) {
                 instance = CourseDbHelper(context.applicationContext)
             }
             return instance!!

@@ -1,0 +1,2 @@
+# TutorU
+TutorU is an application designed for students who need quick help with their school work. The goal is to provide students with an easy and efficient way to find help when the Tutoring Center or their Professors’ office hours are not convenient to their schedules. Students who need help, Tutees, will be able to find assistance from their peers who register as a Tutor within the application.  

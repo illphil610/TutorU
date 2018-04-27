@@ -47,6 +47,20 @@ class DbManager(private val context: Context) {
         return subjectModel
     }
 
+    fun getSubjectNamesAsString(): ArrayList<String> {
+        val subjects = getSubjects()
+        val subjectNames = ArrayList<String>()
+        for (subject in subjects) { subjectNames.add(subject.name) }
+        return subjectNames
+    }
+
+    fun getSubjectsReturnedAsArray(): Array<String> {
+        val subjects = getSubjects()
+        val subjectNames = ArrayList<String>()
+        for (subject in subjects) { subjectNames.add(subject.name) }
+        return subjectNames.toTypedArray()
+    }
+
     fun getCourses(subjectName: String): ArrayList<Model.Course> {
         val rowParser = classParser<SQLModel.Course>()
         var courseList: List<SQLModel.Course> = ArrayList()

@@ -17,4 +17,10 @@
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
+    <style name="MySwitch" parent="Theme.AppCompat.Light">
+        <item name="colorControlActivated">@color/tealBlue</item>
+        <item name="colorSwitchThumbNormal">#eeeeee</item>
+        <item name="android:colorForeground">@color/tealBlue</item>
+    </style>
+
 </resources>

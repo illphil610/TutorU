@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.TutorRegisterActivity" >
+    tools:context=".activities.Auth.TutorRegisterActivity" >
 
     <TextView
         android:id="@+id/text_view_tutee_reg_title"
@@ -27,24 +27,16 @@
         android:orientation="vertical">
 
         <EditText
-            android:id="@+id/edit_text_tutor_reg_firstname"
+            android:id="@+id/edit_text_tutor_reg_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:hint="@string/first_name"
-            android:inputType="text" />
-
-        <EditText
-            android:id="@+id/edit_text_tutor_reg_lastname"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:hint="@string/last_name"
-            android:inputType="text" />
+            android:hint="@string/name"
+            android:inputType="text"
+            android:imeOptions="actionDone"
+            android:singleLine="true"/>
 
         <EditText
             android:id="@+id/edit_text_tutor_reg_email"
@@ -54,7 +46,9 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:hint="@string/email"
-            android:inputType="textEmailAddress" />
+            android:inputType="textEmailAddress"
+            android:imeOptions="actionDone"
+            android:singleLine="true"/>
 
         <EditText
             android:id="@+id/edit_text_tutor_reg_password"
@@ -64,7 +58,9 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="12dp"
             android:hint="@string/password"
-            android:inputType="textPassword"/>
+            android:inputType="textPassword"
+            android:imeOptions="actionDone"
+            android:singleLine="true"/>
 
         <EditText
             android:id="@+id/edit_text_tutor_reg_confirm_password"
@@ -74,8 +70,9 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="12dp"
             android:hint="@string/confirm_password"
-            android:inputType="textPassword"/>
-
+            android:inputType="textPassword"
+            android:imeOptions="actionDone"
+            android:singleLine="true"/>
     </LinearLayout>
 
     <LinearLayout
@@ -84,7 +81,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="430dp"
+        android:layout_marginTop="380dp"
         android:orientation="vertical">
 
         <Button
@@ -97,7 +94,6 @@
             android:textColor="#eeeeee"
             android:textSize="18sp"
             android:text="@string/select_subjects_courses"/>
-
     </LinearLayout>
 
     <LinearLayout
@@ -133,7 +129,5 @@
                 android:text="@string/register_account" />
 
         </RelativeLayout>
-
     </LinearLayout>
-
 </RelativeLayout>
