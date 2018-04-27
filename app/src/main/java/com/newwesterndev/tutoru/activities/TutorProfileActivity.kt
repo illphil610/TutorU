@@ -44,10 +44,10 @@ import kotlinx.android.synthetic.main.custom_add_subject_dialog.*
 
 class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private lateinit var map: GoogleMap
-    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    private var fusedLocationProviderClient: FusedLocationProviderClient? = null
     private  var lastLocation: Location? = null
     private lateinit var locationCallback: LocationCallback
-    private lateinit var locationRequest: LocationRequest
+    private var locationRequest: LocationRequest? = null
     private var locationUpdateState = false
 
     // Firebase Stuff
@@ -99,17 +99,24 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
         //val mapFragment = supportFragmentManager.findFragmentById(R.id.profile_map) as SupportMapFragment
         //mapFragment.getMapAsync(this)
 
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-        locationCallback = object : LocationCallback() {
-            override fun onLocationResult(p0: LocationResult) {
-                super.onLocationResult(p0)
-                //map.clear()
-                lastLocation = p0.lastLocation
-                //placeMarkerOnMap(LatLng(p0.lastLocation.latitude, p0.lastLocation.longitude ))
+        if (ActivityCompat.checkSelfPermission(this,
+                        android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), 1)
+        } else {
+            fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
+            locationCallback = object : LocationCallback() {
+                override fun onLocationResult(p0: LocationResult) {
+                    super.onLocationResult(p0)
+                    //map.clear()
+                    lastLocation = p0.lastLocation
+                    //placeMarkerOnMap(LatLng(p0.lastLocation.latitude, p0.lastLocation.longitude ))
+                    createLocationRequest()
+                }
             }
         }
 
-        createLocationRequest()
+        //createLocationRequest()
 
         button_add_subject.setOnClickListener { openSubjectSelectDialog() }
 
@@ -185,20 +192,20 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
     override fun onMarkerClick(p0: Marker?) = false
 
     private fun setupMap() {
-        if(ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
                     LOCATION_PERMISSION_REQUEST_CODE)
             return
-        }
-
-        map.isMyLocationEnabled = true
-        fusedLocationProviderClient.lastLocation.addOnSuccessListener(this) { location ->
-            if (location != null) {
-                lastLocation = location
-                val currentLatLng = LatLng(location.latitude, location.longitude)
-                //placeMarkerOnMap(currentLatLng)
-                map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 16.0f))
+        } else {
+            map.isMyLocationEnabled = true
+            fusedLocationProviderClient?.lastLocation?.addOnSuccessListener(this) { location ->
+                if (location != null) {
+                    lastLocation = location
+                    val currentLatLng = LatLng(location.latitude, location.longitude)
+                    //placeMarkerOnMap(currentLatLng)
+                    map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 16.0f))
+                }
             }
         }
     }
@@ -219,17 +226,17 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
                     LOCATION_PERMISSION_REQUEST_CODE)
             return
         }
-        fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null)
+        fusedLocationProviderClient?.requestLocationUpdates(locationRequest, locationCallback, null)
     }
 
     @SuppressLint("RestrictedApi")
     private fun createLocationRequest() {
         locationRequest = LocationRequest()
-        locationRequest.interval = 10000
-        locationRequest.fastestInterval = 5000
-        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+        locationRequest?.interval = 10000
+        locationRequest?.fastestInterval = 5000
+        locationRequest?.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
 
-        val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
+        val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest!!)
         val client = LocationServices.getSettingsClient(this)
         val task = client.checkLocationSettings(builder.build())
 
@@ -257,7 +264,7 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
 
     override fun onPause() {
         super.onPause()
-        fusedLocationProviderClient.removeLocationUpdates(locationCallback)
+        fusedLocationProviderClient?.removeLocationUpdates(locationCallback)
     }
 
     override fun onResume() {
