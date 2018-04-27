@@ -78,4 +78,29 @@ class DbManager(private val context: Context) {
         }
         return courseModel
     }
+
+    fun getCoursesAsString(subjectName: String) : ArrayList<String> {
+        val courses = getCourses(subjectName)
+        val courseNames = ArrayList<String>()
+        for (course in courses) { courseNames.add(course.name) }
+        return courseNames
+    }
+
+    fun getSubjectListForSpinner(subjectList: ArrayList<String>): ArrayList<String> {
+        var newUpdatedList = ArrayList<String>()
+        newUpdatedList.add("Please select a subject...")
+        for (subject in subjectList) {
+            newUpdatedList.add(subject)
+        }
+        return newUpdatedList
+    }
+
+    fun getCourseListForSpinner(courseList: ArrayList<String>): ArrayList<String> {
+        var newUpdatedList = ArrayList<String>()
+        newUpdatedList.add("Please select a course...")
+        for (course in courseList) {
+            newUpdatedList.add(course)
+        }
+        return newUpdatedList
+    }
 }

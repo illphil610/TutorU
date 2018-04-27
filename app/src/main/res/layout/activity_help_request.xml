@@ -8,7 +8,7 @@
     tools:context=".activities.HelpRequestActivity">
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/user_name_greeting"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -57,7 +57,7 @@
 
     <TextView
         android:id="@+id/question_text_view"
-        android:text="What issue are you having?"
+        android:text="@string/what_issue_string"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
@@ -68,7 +68,7 @@
         android:ems="10"
         android:gravity="top"
         android:inputType="textPersonName"
-        android:hint="Type your question here..."
+        android:hint="@string/type_your_question_here"
         tools:layout_editor_absoluteX="9dp"
         tools:layout_editor_absoluteY="134dp" />
 
