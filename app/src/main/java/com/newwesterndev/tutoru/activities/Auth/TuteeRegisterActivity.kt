@@ -10,6 +10,7 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.UserProfileChangeRequest
 import com.newwesterndev.tutoru.R
 import com.newwesterndev.tutoru.activities.HelpRequestActivity
 import com.newwesterndev.tutoru.activities.MainActivity
@@ -25,7 +26,7 @@ class TuteeRegisterActivity : AppCompatActivity() {
     private lateinit var submitButton: Button
     private lateinit var cancelButton: Button
 
-    private lateinit var mAuth:FirebaseAuth
+    private lateinit var mAuth: FirebaseAuth
     private var mUtility: Utility? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,31 +50,34 @@ class TuteeRegisterActivity : AppCompatActivity() {
         mUtility = Utility()
 
         submitButton.setOnClickListener { view ->
-            if (!TextUtils.isEmpty(email.text.toString()) && !TextUtils.isEmpty(password.text.toString())) {
+            if (!TextUtils.isEmpty(email.text.toString()) && !TextUtils.isEmpty(password.text.toString())
+                    && !TextUtils.isEmpty(name.text.toString())) {
                 mUtility?.showMessage(view, "Creating your account, Mr. Tutee!")
                 mAuth.createUserWithEmailAndPassword(email.text.toString(),
-                        password.text.toString())?.addOnCompleteListener(this, { task ->
-                            if (task.isSuccessful) {
-
-                                // save user type to shared preferences to use throughout the application
-                                val sharedPref = getSharedPreferences(getString(R.string.sharedPrefs), Context.MODE_PRIVATE)
-                                with (sharedPref.edit()) {
-                                    putString(mAuth.currentUser?.email.toString(), "tutee")
-                                    apply()
-                                }
-
-                                // Create / Save the Tutee in Firebase RD
-                                FirebaseManager.instance.createTutee(Model.Tutee(mAuth.currentUser?.uid!!, name.text.toString(), true))
-
-                                // Send the user to the MainScreen for now
-                                val intent = Intent(this, HelpRequestActivity::class.java)
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                                startActivity(intent)
-                                finish()
-                            } else {
-                                mUtility?.showMessage(view, task.exception.toString())
-                                Log.e("Sign up error", task.exception.toString())
+                        password.text.toString()).addOnCompleteListener(this, { task ->
+                    if (task.isSuccessful) {
+                        val userProfileUpdates = UserProfileChangeRequest.Builder().setDisplayName(name.text.toString()).build()
+                        mAuth.currentUser?.updateProfile(userProfileUpdates)?.addOnCompleteListener {
+                            // save user type to shared preferences to use throughout the application
+                            val sharedPref = getSharedPreferences(getString(R.string.sharedPrefs), Context.MODE_PRIVATE)
+                            with(sharedPref.edit()) {
+                                putString(mAuth.currentUser?.email.toString(), "tutee")
+                                apply()
                             }
+
+                            // Create / Save the Tutee in Firebase RD
+                            FirebaseManager.instance.createTutee(Model.Tutee(mAuth.currentUser?.uid!!, name.text.toString(), true))
+
+                            // Send the user to the MainScreen for now
+                            val intent = Intent(this, HelpRequestActivity::class.java)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                            startActivity(intent)
+                            finish()
+                        }
+                    } else {
+                        mUtility?.showMessage(view, task.exception.toString())
+                        Log.e("Sign up error", task.exception.toString())
+                    }
                 })
             }
         }
