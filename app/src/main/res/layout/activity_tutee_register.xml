@@ -28,25 +28,13 @@
         android:orientation="vertical" >
 
         <EditText
-            android:id="@+id/edit_text_tutee_reg_firstname"
+            android:id="@+id/edit_text_tutee_reg_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
-            android:hint="@string/first_name"
-            android:inputType="text"
-            android:imeOptions="actionDone"
-            android:singleLine="true"/>
-
-        <EditText
-            android:id="@+id/edit_text_tutee_reg_lastname"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:hint="@string/last_name"
+            android:hint="@string/name"
             android:inputType="text"
             android:imeOptions="actionDone"
             android:singleLine="true"/>

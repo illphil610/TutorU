@@ -41,7 +41,9 @@
     <string name="sign_out">Sign Out</string>
     <string name="add_new_subject_courses">Add New Subject / Courses</string>
     <string name="availible_to_tutor">Available to Tutor:</string>
+    <string name="name">Name</string>
     <string name="sharedPrefs">com.newwesterndev.TutorU.prefs</string>
     <string name="type_your_question_here">Type your question here...</string>
     <string name="what_issue_string">What issue are you having?</string>
+    <string name="view_my_courses_subjects">View My Subjects/Courses</string>
 </resources>
