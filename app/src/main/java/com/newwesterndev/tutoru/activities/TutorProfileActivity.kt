@@ -49,13 +49,15 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
     private lateinit var locationCallback: LocationCallback
     private lateinit var locationRequest: LocationRequest
     private var locationUpdateState = false
-    private val listOfCheckedSubjects = ArrayList<String>()
 
     // Firebase Stuff
     private lateinit var fbAuth: FirebaseAuth
     private lateinit var mFirebaseDatabase: FirebaseDatabase
     private lateinit var firebaseManager: FirebaseManager
     private lateinit var dbManager: DbManager
+
+    private val listOfCheckedSubjects = ArrayList<String>()
+    private val listOfCheckedCourses = ArrayList<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -279,10 +281,7 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
                 .setMultiChoiceItems(subjectNames.toTypedArray(), null) { _, indexSelected, isChecked ->
 
                     if (isChecked) {
-                        Toast.makeText(this, "Checked", Toast.LENGTH_SHORT).show()
-
                         val checkedSubject: String = subjectNames[indexSelected]
-                        Log.e("CHECKED SUBJECT", checkedSubject)
                         listOfCheckedSubjects.add(checkedSubject)
 
                         val sharedPreferences: SharedPreferences by lazy {
@@ -303,7 +302,7 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
                 }
                 .setPositiveButton("Now Select Courses") { _, _ ->
                     Toast.makeText(this, "Subjects Selected", Toast.LENGTH_LONG).show()
-                    openCourseSelectDialog()
+                    openCourseSelectDialog(listOfCheckedSubjects)
 
                 }
                 .setNegativeButton("Cancel") { _, _ ->
@@ -313,24 +312,48 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
                 .show()
     }
 
-    private fun openCourseSelectDialog() {
+    private fun openCourseSelectDialog(subjects: ArrayList<String>) {
         val courseNames = ArrayList<String>()
+        courseNames.clear()
+
+        for (i in 0 until (subjects.size)) {
+            val subject = subjects[i]
+            val coursesFromDB = dbManager.getCourses(subject)
+            for (course in coursesFromDB) {
+                courseNames.add(course.name)
+            }
+        }
 
         AlertDialog.Builder(this)
                 .setTitle("Select Courses")
                 .setIcon(R.mipmap.ic_books)
+                .setCancelable(false)
                 .setMultiChoiceItems(courseNames.toTypedArray(), null) { _, indexSelected, isChecked ->
                     if (isChecked) {
+                        val checkedCourse: String = courseNames[indexSelected]
+                        listOfCheckedCourses.add(checkedCourse)
+
+                        val sharedPreferences: SharedPreferences by lazy {
+                            this.getSharedPreferences(Contract.SHARED_PREF_COURSES, Context.MODE_PRIVATE)
+                        }
+
+                        with (sharedPreferences.edit()) {
+                            putString(checkedCourse, checkedCourse)
+                            apply()
+                        }
+
+                        val fromPref = sharedPreferences.getString(checkedCourse, checkedCourse)
+                        println(fromPref)
 
                     } else {
-
+                        return@setMultiChoiceItems
                     }
                 }
                 .setPositiveButton("Ok") { _, _ ->
-                    Toast.makeText(this, "Courses Selected", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Courses Selected", Toast.LENGTH_SHORT).show()
                 }
                 .setNegativeButton("Cancel") { _, _ ->
-                    Toast.makeText(this, "Canceled", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "Canceled", Toast.LENGTH_SHORT).show()
                 }
                 .create()
                 .show()

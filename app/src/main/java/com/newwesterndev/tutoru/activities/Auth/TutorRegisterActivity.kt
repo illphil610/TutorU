@@ -2,6 +2,7 @@ package com.newwesterndev.tutoru.activities.Auth
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -104,10 +105,9 @@ class TutorRegisterActivity : AppCompatActivity() {
         AlertDialog.Builder(this)
             .setTitle("Select Subjects")
             .setIcon(R.mipmap.ic_books)
+            .setCancelable(false)
             .setMultiChoiceItems(subjectNames.toTypedArray(), null) { _, indexSelected, isChecked ->
                 if (isChecked) {
-                    Toast.makeText(this, "Checked", Toast.LENGTH_SHORT).show()
-
                     val checkedSubject: String = subjectNames[indexSelected]
                     listOfCheckedSubjects.add(checkedSubject)
 
@@ -150,12 +150,10 @@ class TutorRegisterActivity : AppCompatActivity() {
         AlertDialog.Builder(this)
             .setTitle("Select Courses")
             .setIcon(R.mipmap.ic_books)
+            .setCancelable(false)
             .setMultiChoiceItems(courseNames.toTypedArray(), null) { _, indexSelected, isChecked ->
                 if (isChecked) {
-                    Toast.makeText(this, "Checked", Toast.LENGTH_SHORT).show()
-
                     val checkedCourse: String = courseNames[indexSelected]
-                    Log.e("CHECKED COURSE", checkedCourse)
                     listOfCheckedCourses.add(checkedCourse)
 
                     val sharedPreferences: SharedPreferences by lazy {
@@ -176,9 +174,9 @@ class TutorRegisterActivity : AppCompatActivity() {
             }
             .setPositiveButton("Ok") { _, _ ->
                 Toast.makeText(this, "Courses Selected", Toast.LENGTH_SHORT).show()
+                subjectCourseButton.isEnabled = false
             }
             .setNegativeButton("Cancel") { _, _ ->
-                courseNames.clear()
                 Toast.makeText(this, "Canceled", Toast.LENGTH_SHORT).show()
             }
             .create()
