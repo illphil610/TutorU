@@ -23,7 +23,7 @@ class Model {
                      var requestingHelp: Boolean)
 
     data class HelpBroadCast(var tutee: Model.Tutee,
-                             var courseList: ArrayList<Course>,
+                             var course: String,
                              var stillAwaitingHelp: Boolean,
                              var questionDetails: String)
 
