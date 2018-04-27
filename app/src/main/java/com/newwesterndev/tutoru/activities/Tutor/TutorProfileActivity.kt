@@ -1,4 +1,4 @@
-package com.newwesterndev.tutoru.activities
+package com.newwesterndev.tutoru.activities.Tutor
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -16,7 +16,6 @@ import android.support.v4.app.ActivityCompat
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Button
 import android.widget.Toast
 import com.firebase.geofire.GeoFire
 import com.firebase.geofire.GeoLocation
@@ -40,7 +39,6 @@ import com.newwesterndev.tutoru.db.DbManager
 import com.newwesterndev.tutoru.model.Contract
 import com.newwesterndev.tutoru.utilities.FirebaseManager
 import kotlinx.android.synthetic.main.activity_tutor_profile.*
-import kotlinx.android.synthetic.main.custom_add_subject_dialog.*
 
 class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private lateinit var map: GoogleMap

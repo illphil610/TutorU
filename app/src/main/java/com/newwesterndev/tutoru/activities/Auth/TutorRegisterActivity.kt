@@ -2,7 +2,6 @@ package com.newwesterndev.tutoru.activities.Auth
 
 import android.app.AlertDialog
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
@@ -15,10 +14,9 @@ import android.widget.EditText
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.newwesterndev.tutoru.R
-import com.newwesterndev.tutoru.activities.MainActivity
 import com.newwesterndev.tutoru.db.DbManager
 import com.newwesterndev.tutoru.model.Contract
-import com.newwesterndev.tutoru.activities.TutorProfileActivity
+import com.newwesterndev.tutoru.activities.Tutor.TutorProfileActivity
 import com.newwesterndev.tutoru.model.Model
 import com.newwesterndev.tutoru.utilities.FirebaseManager
 import com.newwesterndev.tutoru.utilities.Utility
