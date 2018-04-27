@@ -46,4 +46,6 @@
     <string name="type_your_question_here">Type your question here...</string>
     <string name="what_issue_string">What issue are you having?</string>
     <string name="view_my_courses_subjects">View My Subjects/Courses</string>
+    <string name="tuteeMain">tutee</string>
+    <string name="tutorMain">tutor</string>
 </resources>
