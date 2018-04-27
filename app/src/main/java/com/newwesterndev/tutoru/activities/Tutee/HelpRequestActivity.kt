@@ -31,7 +31,6 @@ import kotlinx.android.synthetic.main.activity_help_request.*
 import com.newwesterndev.tutoru.utilities.Utility
 import android.view.Gravity
 import android.widget.TextView
-import com.newwesterndev.tutoru.activities.MapsActivity
 
 
 class HelpRequestActivity : AppCompatActivity(), LocationProxy.LocationDelegate {

@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.NFC" android:required="true"/>
 
     <application
         android:allowBackup="true"
@@ -34,7 +35,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".activities.MapsActivity"
+            android:name=".activities.Tutee.MapsActivity"
             android:label="@string/title_activity_maps"
             android:screenOrientation="portrait" />
         <activity
@@ -56,7 +57,7 @@
             android:label="Tutee Registration"
             android:screenOrientation="portrait" />
         <activity android:name=".activities.Tutor.TutorSessionActivity" />
-        <activity android:name=".activities.Tutee.TuteeSessionActivity" />
+        <activity android:name=".activities.SessionActivity" />
         <activity android:name=".activities.Tutor.RatingsActivity" />
         <activity android:name=".activities.MessageActivity"></activity>
     </application>
