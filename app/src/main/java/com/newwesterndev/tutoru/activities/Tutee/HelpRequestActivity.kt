@@ -1,4 +1,4 @@
-package com.newwesterndev.tutoru.activities
+package com.newwesterndev.tutoru.activities.Tutee
 
 import android.content.Context
 import android.content.Intent
@@ -31,7 +31,6 @@ import kotlinx.android.synthetic.main.activity_help_request.*
 import com.newwesterndev.tutoru.utilities.Utility
 import android.view.Gravity
 import android.widget.TextView
-
 
 
 class HelpRequestActivity : AppCompatActivity(), LocationProxy.LocationDelegate {
@@ -117,10 +116,12 @@ class HelpRequestActivity : AppCompatActivity(), LocationProxy.LocationDelegate 
                         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                             (parent?.getChildAt(0) as TextView).gravity = Gravity.CENTER
                         }
+
                         override fun onNothingSelected(parent: AdapterView<*>?) {}
                     }
                 }
             }
+
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
@@ -129,17 +130,16 @@ class HelpRequestActivity : AppCompatActivity(), LocationProxy.LocationDelegate 
             var mDatabaseReference = mFirebaseDatabase.getReference(Contract.REQUESTING_HELP)
             val geoFireHelpRequest = GeoFire(mDatabaseReference)
 
+            // need to grab property fields here and use them below
+
             if (currentLocation != null) {
-
-                // need to grab info from edit texts and spinners
-
                 var list = ArrayList<Model.Course>()
                 list.add(Model.Course("Geometry", "Math"))
                 fbManager.sendHelpBroadcastRequest(
                         Model.HelpBroadCast(
-                                // change this!!!!! just hacking it with the ! but check this please
-                                Model.Tutee(fbAuth.currentUser!!.uid, "Phil McKracken", true),
-                                list, true, "I have a math question because i suck at math"))
+                                Model.Tutee(fbAuth.currentUser!!.uid,
+                                            fbAuth.currentUser?.displayName.toString(), true),
+                                            list, true, question_edit_text.text.toString()))
 
                 geoFireHelpRequest.setLocation(fbAuth.currentUser?.uid, GeoLocation(currentLocation!!.latitude, currentLocation!!.longitude), { key, error ->
                     if (error != null) {
@@ -160,28 +160,28 @@ class HelpRequestActivity : AppCompatActivity(), LocationProxy.LocationDelegate 
                                 android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     ActivityCompat.requestPermissions(this,
                             arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), 1)
-                }
-
-                fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
-                    if (location != null) {
-                        Log.e("Lastknown", location.toString())
-                        geoFireHelpRequest.setLocation(fbAuth.currentUser?.uid, GeoLocation(location.latitude, location.longitude), { key, error ->
-                            if (error != null) {
-                                Log.e("GEOFIRE", error.details)
-                            } else {
-                                Log.e("GEOFIRE", "success")
-                                val intent = Intent(this, MapsActivity::class.java)
-                                Log.e("Lat", currentLocation?.latitude.toString())
-                                intent.putExtra("lat", location.latitude.toString())
-                                intent.putExtra("lon", location.longitude.toString())
-                                startActivity(intent)
-                            }
-                        })
-                    } else {
-                        // we need to have this just grab the location or like tell them ot do stuff but this works for now ;)
-                        Toast.makeText(this, "Is your location enabled?  try again please...", Toast.LENGTH_LONG).show()
-                        Log.e("NO LOCAL", "no location yet fam, try again when you aint a bitch.")
-                        locationProxy.requestUsersLocation()
+                } else {
+                    fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+                        if (location != null) {
+                            Log.e("Lastknown", location.toString())
+                            geoFireHelpRequest.setLocation(fbAuth.currentUser?.uid, GeoLocation(location.latitude, location.longitude), { key, error ->
+                                if (error != null) {
+                                    Log.e("GEOFIRE", error.details)
+                                } else {
+                                    Log.e("GEOFIRE", "success")
+                                    val intent = Intent(this, MapsActivity::class.java)
+                                    Log.e("Lat", currentLocation?.latitude.toString())
+                                    intent.putExtra("lat", location.latitude.toString())
+                                    intent.putExtra("lon", location.longitude.toString())
+                                    startActivity(intent)
+                                }
+                            })
+                        } else {
+                            // we need to have this just grab the location or like tell them ot do stuff but this works for now ;)
+                            Toast.makeText(this, "Is your location enabled?  try again please...", Toast.LENGTH_LONG).show()
+                            Log.e("NO LOCAL", "no location yet fam, try again when you aint a bitch.")
+                            locationProxy.requestUsersLocation()
+                        }
                     }
                 }
             }
@@ -199,7 +199,9 @@ class HelpRequestActivity : AppCompatActivity(), LocationProxy.LocationDelegate 
             fbAuth.signOut()
             true
         }
-        else -> { super.onOptionsItemSelected(item) }
+        else -> {
+            super.onOptionsItemSelected(item)
+        }
     }
 
     override fun getUsersCurrentLocation(location: Location) {

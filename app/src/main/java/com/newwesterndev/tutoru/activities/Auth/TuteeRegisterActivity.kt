@@ -12,8 +12,7 @@ import android.widget.EditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 import com.newwesterndev.tutoru.R
-import com.newwesterndev.tutoru.activities.HelpRequestActivity
-import com.newwesterndev.tutoru.activities.MainActivity
+import com.newwesterndev.tutoru.activities.Tutee.HelpRequestActivity
 import com.newwesterndev.tutoru.model.Model
 import com.newwesterndev.tutoru.utilities.FirebaseManager
 import com.newwesterndev.tutoru.utilities.Utility
@@ -33,8 +32,6 @@ class TuteeRegisterActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
 
-        mAuth = FirebaseAuth.getInstance()
-
         // set content view and find xml values variables
         setContentView(R.layout.activity_tutee_register)
         name = findViewById(R.id.edit_text_tutee_reg_name)
@@ -44,9 +41,8 @@ class TuteeRegisterActivity : AppCompatActivity() {
         submitButton = findViewById(R.id.button_tutee_reg_submit)
         cancelButton = findViewById(R.id.button_tutee_reg_cancel)
 
-        // Dependency injection would be a good idea for these but whatevs
         mAuth = FirebaseAuth.getInstance()
-        //val mFirebaseManager = FirebaseManager.instance
+        val mFirebaseManager = FirebaseManager.instance
         mUtility = Utility()
 
         submitButton.setOnClickListener { view ->

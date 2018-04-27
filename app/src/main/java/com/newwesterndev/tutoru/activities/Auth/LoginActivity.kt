@@ -6,7 +6,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
-import android.support.v7.app.AppCompatActivity
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
@@ -14,11 +13,9 @@ import android.view.WindowManager
 import android.widget.Button
 import com.google.firebase.auth.FirebaseAuth
 import com.newwesterndev.tutoru.R
-import com.newwesterndev.tutoru.activities.HelpRequestActivity
-import com.newwesterndev.tutoru.activities.TutorProfileActivity
+import com.newwesterndev.tutoru.activities.Tutee.HelpRequestActivity
+import com.newwesterndev.tutoru.activities.Tutor.TutorProfileActivity
 import com.newwesterndev.tutoru.db.DbManager
-import com.newwesterndev.tutoru.db.PopulateDatabase
-import com.newwesterndev.tutoru.model.Contract
 import com.newwesterndev.tutoru.utilities.Utility
 import kotlinx.android.synthetic.main.activity_login.*
 

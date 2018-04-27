@@ -46,8 +46,6 @@
     <string name="type_your_question_here">Type your question here...</string>
     <string name="what_issue_string">What issue are you having?</string>
     <string name="view_my_courses_subjects">View My Subjects/Courses</string>
-    <string name="tutor_display">Tutee ID: </string>
-    <string name="tutor_id">tutor Id here</string>
-    <string name="end_session"> End Session</string>
-    <string name="tutee_display">Tutor ID:</string>
+    <string name="tuteeMain">tutee</string>
+    <string name="tutorMain">tutor</string>
 </resources>
