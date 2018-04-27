@@ -16,7 +16,6 @@ import android.support.v4.app.ActivityCompat
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Button
 import android.widget.Toast
 import com.firebase.geofire.GeoFire
 import com.firebase.geofire.GeoLocation
@@ -40,12 +39,11 @@ import com.newwesterndev.tutoru.db.DbManager
 import com.newwesterndev.tutoru.model.Contract
 import com.newwesterndev.tutoru.utilities.FirebaseManager
 import kotlinx.android.synthetic.main.activity_tutor_profile.*
-import kotlinx.android.synthetic.main.custom_add_subject_dialog.*
 
 class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private lateinit var map: GoogleMap
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    private  var lastLocation: Location? = null
+    private var lastLocation: Location? = null
     private lateinit var locationCallback: LocationCallback
     private lateinit var locationRequest: LocationRequest
     private var locationUpdateState = false
@@ -55,9 +53,6 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
     private lateinit var mFirebaseDatabase: FirebaseDatabase
     private lateinit var firebaseManager: FirebaseManager
     private lateinit var dbManager: DbManager
-
-    private val listOfCheckedSubjects = ArrayList<String>()
-    private val listOfCheckedCourses = ArrayList<String>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -111,7 +106,8 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
 
         createLocationRequest()
 
-        button_add_subject.setOnClickListener { openSubjectSelectDialog() }
+
+        button_view_subjects_courses.setOnClickListener { loadTutorsSubjectsCoursesFromSharedPref() }
 
         togglebutton_availibility.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
@@ -267,98 +263,6 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
         }
     }
 
-    private fun openSubjectSelectDialog() {
-        val subjectsFromDB = dbManager.getSubjects()
-        val subjectNames = ArrayList<String>()
-
-        for (subject in subjectsFromDB) {
-            subjectNames.add(subject.name)
-        }
-
-        AlertDialog.Builder(this)
-                .setTitle("Select Subjects")
-                .setIcon(R.mipmap.ic_books)
-                .setMultiChoiceItems(subjectNames.toTypedArray(), null) { _, indexSelected, isChecked ->
-
-                    if (isChecked) {
-                        val checkedSubject: String = subjectNames[indexSelected]
-                        listOfCheckedSubjects.add(checkedSubject)
-
-                        val sharedPreferences: SharedPreferences by lazy {
-                            this.getSharedPreferences(Contract.SHARED_PREF_SUBJECTS, Context.MODE_PRIVATE)
-                        }
-
-                        with (sharedPreferences.edit()) {
-                            putString(checkedSubject, checkedSubject)
-                            apply()
-                        }
-
-                        val fromPref = sharedPreferences.getString(checkedSubject, checkedSubject)
-                        println(fromPref)
-
-                    } else {
-                        return@setMultiChoiceItems
-                    }
-                }
-                .setPositiveButton("Now Select Courses") { _, _ ->
-                    Toast.makeText(this, "Subjects Selected", Toast.LENGTH_LONG).show()
-                    openCourseSelectDialog(listOfCheckedSubjects)
-
-                }
-                .setNegativeButton("Cancel") { _, _ ->
-                    Toast.makeText(this, "Canceled", Toast.LENGTH_LONG).show()
-                }
-                .create()
-                .show()
-    }
-
-    private fun openCourseSelectDialog(subjects: ArrayList<String>) {
-        val courseNames = ArrayList<String>()
-        courseNames.clear()
-
-        for (i in 0 until (subjects.size)) {
-            val subject = subjects[i]
-            val coursesFromDB = dbManager.getCourses(subject)
-            for (course in coursesFromDB) {
-                courseNames.add(course.name)
-            }
-        }
-
-        AlertDialog.Builder(this)
-                .setTitle("Select Courses")
-                .setIcon(R.mipmap.ic_books)
-                .setCancelable(false)
-                .setMultiChoiceItems(courseNames.toTypedArray(), null) { _, indexSelected, isChecked ->
-                    if (isChecked) {
-                        val checkedCourse: String = courseNames[indexSelected]
-                        listOfCheckedCourses.add(checkedCourse)
-
-                        val sharedPreferences: SharedPreferences by lazy {
-                            this.getSharedPreferences(Contract.SHARED_PREF_COURSES, Context.MODE_PRIVATE)
-                        }
-
-                        with (sharedPreferences.edit()) {
-                            putString(checkedCourse, checkedCourse)
-                            apply()
-                        }
-
-                        val fromPref = sharedPreferences.getString(checkedCourse, checkedCourse)
-                        println(fromPref)
-
-                    } else {
-                        return@setMultiChoiceItems
-                    }
-                }
-                .setPositiveButton("Ok") { _, _ ->
-                    Toast.makeText(this, "Courses Selected", Toast.LENGTH_SHORT).show()
-                }
-                .setNegativeButton("Cancel") { _, _ ->
-                    Toast.makeText(this, "Canceled", Toast.LENGTH_SHORT).show()
-                }
-                .create()
-                .show()
-    }
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.menu, menu)
@@ -382,5 +286,11 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1
         private const val REQUEST_CHECK_SETTINGS = 2
+    }
+
+    private fun loadTutorsSubjectsCoursesFromSharedPref() {
+        val viewSubjectsIntent = Intent(this, TutorViewSubjectsCoursesActivity::class.java)
+        startActivity(viewSubjectsIntent)
+        finish()
     }
 }

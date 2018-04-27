@@ -22,13 +22,13 @@ import com.newwesterndev.tutoru.activities.TutorProfileActivity
 import com.newwesterndev.tutoru.model.Model
 import com.newwesterndev.tutoru.utilities.FirebaseManager
 import com.newwesterndev.tutoru.utilities.Utility
+import kotlinx.android.synthetic.main.activity_tutor_register.*
 
 class TutorRegisterActivity : AppCompatActivity() {
 
     private lateinit var email: EditText
     private lateinit var password: EditText
     private lateinit var confirmPassword: EditText
-    private lateinit var subjectCourseButton: Button
     private lateinit var submitButton: Button
     private lateinit var cancelButton: Button
 
@@ -50,12 +50,11 @@ class TutorRegisterActivity : AppCompatActivity() {
         email = findViewById(R.id.edit_text_tutor_reg_email)
         password = findViewById(R.id.edit_text_tutor_reg_password)
         confirmPassword = findViewById(R.id.edit_text_tutor_reg_password)
-        subjectCourseButton = findViewById(R.id.button_subject_course)
         submitButton = findViewById(R.id.button_tutor_reg_submit)
         cancelButton = findViewById(R.id.button_tutor_reg_cancel)
         val name = findViewById<EditText>(R.id.edit_text_tutor_reg_name)
 
-        subjectCourseButton.setOnClickListener { openSubjectSelectDialog() }
+        button_subject_course.setOnClickListener { openSubjectSelectDialog() }
 
         submitButton.setOnClickListener { view ->
             if (!TextUtils.isEmpty(email.text.toString()) && !TextUtils.isEmpty(password.text.toString())) {
@@ -174,7 +173,7 @@ class TutorRegisterActivity : AppCompatActivity() {
             }
             .setPositiveButton("Ok") { _, _ ->
                 Toast.makeText(this, "Courses Selected", Toast.LENGTH_SHORT).show()
-                subjectCourseButton.isEnabled = false
+                button_subject_course.isEnabled = false
             }
             .setNegativeButton("Cancel") { _, _ ->
                 Toast.makeText(this, "Canceled", Toast.LENGTH_SHORT).show()

@@ -17,13 +17,14 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".activities.MainActivity"
-            android:screenOrientation="portrait"
             android:configChanges="orientation"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -35,21 +36,24 @@
         <activity
             android:name=".activities.MapsActivity"
             android:label="@string/title_activity_maps" />
-
         <activity
             android:name=".activities.Auth.LoginActivity"
             android:label="@string/title_activity_login"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity android:name=".activities.HelpRequestActivity" />
         <activity android:name=".activities.TutorProfileActivity" />
-
-        <activity android:name=".activities.Auth.TutorRegisterActivity"
+        <activity
+            android:name=".activities.Auth.TutorRegisterActivity"
             android:label="Tutor Registration"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".activities.Auth.TuteeRegisterActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.Auth.TuteeRegisterActivity"
             android:label="Tutee Registration"
-            android:screenOrientation="portrait"/>
-
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.TutorViewSubjectsCoursesActivity"
+            android:label="Subjects and Courses"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
+
 </manifest>
