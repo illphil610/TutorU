@@ -67,8 +67,10 @@ class TutorRegisterActivity : AppCompatActivity() {
                             apply()
                         }
 
+                        val fcm_id = sharedPref.getString(getString(R.string.FCM_ID), "no fcm_id")
+
                         // this will include the necessary course / subject lists but for right now its nothing but blank lists
-                        FirebaseManager.instance.createTutor(Model.Tutor(mAuth?.currentUser!!.uid, name.text.toString(), "0.0", "0", false))
+                        FirebaseManager.instance.createTutor(Model.Tutor(mAuth?.currentUser!!.uid, fcm_id, name.text.toString(), "0.0", "0", false))
 
                         // Send the user to the MainScreen for now
                         val intent = Intent(this, TutorProfileActivity::class.java)

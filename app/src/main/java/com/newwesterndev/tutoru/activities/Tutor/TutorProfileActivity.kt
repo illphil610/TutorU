@@ -35,6 +35,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.newwesterndev.tutoru.R
 import com.newwesterndev.tutoru.activities.Auth.LoginActivity
+import com.newwesterndev.tutoru.activities.MessageActivity
 import com.newwesterndev.tutoru.activities.SessionActivity
 import com.newwesterndev.tutoru.activities.TutorViewSubjectsCoursesActivity
 import com.newwesterndev.tutoru.db.DbManager
@@ -142,7 +143,9 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
                         override fun onKeyEntered(key: String, location: GeoLocation) {
                             Log.e("TAG", String.format("Provider %s is within your search range [%f,%f]", key, location.latitude, location.longitude))
                             firebaseManager.getTutee(key) { tutee ->
-                                placeMarkerOnMap(LatLng(location.latitude, location.longitude))
+                                val tuteeMapPin = map.addMarker(MarkerOptions().position(LatLng(location.latitude, location.longitude)).title(tutee.name))
+                                tuteeMapPin.isDraggable = true
+                                tuteeMapPin.tag = key
                             }
                         }
 
@@ -183,6 +186,15 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
         map = googleMap
         map.uiSettings.isZoomControlsEnabled = true
         map.setOnMarkerClickListener(this)
+        map.setOnMarkerDragListener(object : GoogleMap.OnMarkerDragListener {
+            override fun onMarkerDragStart(marker: Marker?) {
+                val intent = Intent(applicationContext, MessageActivity::class.java)
+                intent.putExtra("userKey", marker?.tag.toString())
+                startActivity(intent)
+            }
+            override fun onMarkerDrag(p0: Marker?) {}
+            override fun onMarkerDragEnd(p0: Marker?) {}
+        })
         setupMap()
     }
 
@@ -284,6 +296,11 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
         }
         R.id.action_start_session -> {
             val intent = Intent(this, SessionActivity::class.java)
+            startActivity(intent)
+            true
+        }
+        R.id.action_chat_session -> {
+            val intent = Intent(this, MessageActivity::class.java)
             startActivity(intent)
             true
         }

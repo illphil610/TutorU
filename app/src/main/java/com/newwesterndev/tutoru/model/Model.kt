@@ -13,6 +13,7 @@ class Model {
                     var locaton: LatLng)
 
     data class Tutor(var uid: String,
+                     var fcm_id: String,
                      var name: String,
                      var ratingAvg: String,
                      var numOfRatings: String,
@@ -43,7 +44,7 @@ class Model {
     data class Course(var name: String,
                       var fromSubjectName: String)
 
-    data class ChatMessage(var messageText: String,
-                           var messageFromUser: String,
-                           var messageTime: Long)
+    data class Chat(var to: String,
+                    var from: String,
+                    var message: String)
 }

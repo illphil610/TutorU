@@ -71,9 +71,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         locationCallback = object : LocationCallback() {
             override fun onLocationResult(p0: LocationResult) {
                 super.onLocationResult(p0)
-                //map.clear()
                 lastLocation = p0.lastLocation
-                //placeMarkerOnMap(LatLng(lastLocation.latitude, lastLocation.longitude))
             }
         }
         createLocationRequest()
@@ -115,20 +113,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         map = googleMap
         map.uiSettings.isZoomControlsEnabled = true
         map.setOnMarkerClickListener(this)
-
         map.setOnMarkerDragListener(object : GoogleMap.OnMarkerDragListener {
             override fun onMarkerDragStart(marker: Marker?) {
                 val intent = Intent(applicationContext, MessageActivity::class.java)
                 intent.putExtra("userKey", marker?.tag.toString())
                 startActivity(intent)
             }
-
-            override fun onMarkerDrag(p0: Marker?) {
-            }
-            override fun onMarkerDragEnd(p0: Marker?) {
-            }
+            override fun onMarkerDrag(p0: Marker?) {}
+            override fun onMarkerDragEnd(p0: Marker?) {}
         })
-
         setupMap()
     }
 
