@@ -21,6 +21,7 @@ class Model {
                      //var courseList : ArrayList<String>)
 
     data class Tutee(var uid: String,
+                     var fcm_id: String,
                      var name: String,
                      var ratingAvg: String,
                      var numOfRatings: String,

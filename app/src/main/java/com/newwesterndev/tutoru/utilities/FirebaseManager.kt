@@ -83,6 +83,7 @@ class FirebaseManager private constructor() {
                 if (snapshot != null) {
                     Log.e("Tutee Deets", snapshot.child("name").value as String)
                     callback(Model.Tutee(uid,
+                            snapshot.child("fcm_id").value as String,
                             snapshot.child("name").value as String,
                             snapshot.child("ratingAvg").value as String,
                             snapshot.child("numOfRatings").value as String, true))

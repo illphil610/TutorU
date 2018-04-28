@@ -36,7 +36,9 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.newwesterndev.tutoru.R
+import com.newwesterndev.tutoru.activities.MessageActivity
 import com.newwesterndev.tutoru.model.Contract
+import com.newwesterndev.tutoru.model.Model
 import com.newwesterndev.tutoru.utilities.FirebaseManager
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
@@ -47,6 +49,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private lateinit var locationRequest: LocationRequest
     private lateinit var mFirebaseManager: FirebaseManager
     private var locationUpdateState = false
+    private var availableTutorList = ArrayList<Model.Tutor>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,7 +57,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         this.supportActionBar?.hide()
         setContentView(R.layout.activity_maps)
 
-        intent = intent
+        //intent = intent
         val lat = intent.getStringExtra("lat")
         val lon = intent.getStringExtra("lon")
 
@@ -85,7 +88,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             override fun onKeyEntered(key: String, location: GeoLocation) {
                 Log.e("TAG", String.format("Provider %s is within your search range [%f,%f]", key, location.latitude, location.longitude))
                 mFirebaseManager.getTutor(key) { tutor ->
-                    map.addMarker(MarkerOptions().position(LatLng(location.latitude, location.longitude)).title(tutor.name))
+                    availableTutorList.add(tutor)
+                    val tutorMapPin = map.addMarker(MarkerOptions().
+                            position(LatLng(location.latitude, location.longitude)).
+                            title(tutor.name))
+                    tutorMapPin.isDraggable = true
+                    tutorMapPin.tag = key
                 }
             }
             override fun onKeyExited(key: String) {
@@ -107,10 +115,24 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         map = googleMap
         map.uiSettings.isZoomControlsEnabled = true
         map.setOnMarkerClickListener(this)
+
+        map.setOnMarkerDragListener(object : GoogleMap.OnMarkerDragListener {
+            override fun onMarkerDragStart(marker: Marker?) {
+                val intent = Intent(applicationContext, MessageActivity::class.java)
+                intent.putExtra("userKey", marker?.tag.toString())
+                startActivity(intent)
+            }
+
+            override fun onMarkerDrag(p0: Marker?) {
+            }
+            override fun onMarkerDragEnd(p0: Marker?) {
+            }
+        })
+
         setupMap()
     }
 
-    override fun onMarkerClick(p0: Marker?) = false
+
 
     private fun setupMap() {
         if(ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
@@ -180,6 +202,10 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 locationUpdates()
             }
         }
+    }
+
+    override fun onMarkerClick(p0: Marker?): Boolean {
+        return false
     }
 
     override fun onPause() {

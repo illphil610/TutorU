@@ -36,6 +36,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.newwesterndev.tutoru.R
 import com.newwesterndev.tutoru.activities.Auth.LoginActivity
 import com.newwesterndev.tutoru.activities.SessionActivity
+import com.newwesterndev.tutoru.activities.TutorViewSubjectsCoursesActivity
 import com.newwesterndev.tutoru.db.DbManager
 import com.newwesterndev.tutoru.model.Contract
 import com.newwesterndev.tutoru.utilities.FirebaseManager
@@ -75,7 +76,6 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
         // tutees requesting help
         val mRequestingHelpReference = mFirebaseDatabase.getReference(Contract.REQUESTING_HELP)
         val geoFireHelpRequest = GeoFire(mRequestingHelpReference)
-
 
         val sharedPreferences = getSharedPreferences(getString(R.string.sharedPrefs), Context.MODE_PRIVATE)
         val isAvailToggleChecked = sharedPreferences.getString("isChecked", "false")!!.toBoolean()

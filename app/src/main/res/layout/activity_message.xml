@@ -1,9 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:chatview="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.MessageActivity">
+
+    <co.intentservice.chatui.ChatView
+        android:id="@+id/chat_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        chatview:bubbleElevation="elevated"
+        chatview:bubbleBackgroundRcv="@color/colorPrimary"
+        chatview:bubbleBackgroundSend="@color/white"
+        chatview:messageTextColorRcv="@color/black"
+        chatview:sendBtnBackgroundTint="@color/blue"
+        chatview:inputTextColor="@color/black"
+        chatview:backgroundRcv="@color/main_color_gray"
+        chatview:backgroundSend="@color/blue"
+        chatview:backgroundColor="@color/white"
+
+        />
 
 </android.support.constraint.ConstraintLayout>
