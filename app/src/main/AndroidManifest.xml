@@ -56,10 +56,19 @@
             android:name=".activities.Auth.TuteeRegisterActivity"
             android:label="Tutee Registration"
             android:screenOrientation="portrait" />
-        <activity android:name=".activities.Tutor.TutorSessionActivity" />
-        <activity android:name=".activities.SessionActivity" />
+        <activity
+            android:name=".activities.SessionActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+        </activity>
         <activity android:name=".activities.Tutor.RatingsActivity" />
-        <activity android:name=".activities.MessageActivity"></activity>
+        <activity android:name=".activities.MessageActivity">
+        </activity>
     </application>
 
 </manifest>
