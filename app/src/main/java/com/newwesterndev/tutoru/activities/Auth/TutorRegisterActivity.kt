@@ -17,16 +17,18 @@ import com.newwesterndev.tutoru.R
 import com.newwesterndev.tutoru.db.DbManager
 import com.newwesterndev.tutoru.model.Contract
 import com.newwesterndev.tutoru.activities.Tutor.TutorProfileActivity
+import com.newwesterndev.tutoru.db.subjectdatabase
 import com.newwesterndev.tutoru.model.Model
 import com.newwesterndev.tutoru.utilities.FirebaseManager
 import com.newwesterndev.tutoru.utilities.Utility
+import kotlinx.android.synthetic.main.activity_help_request.*
+import kotlinx.android.synthetic.main.activity_tutor_register.*
 
 class TutorRegisterActivity : AppCompatActivity() {
 
     private lateinit var email: EditText
     private lateinit var password: EditText
     private lateinit var confirmPassword: EditText
-    private lateinit var subjectCourseButton: Button
     private lateinit var submitButton: Button
     private lateinit var cancelButton: Button
 
@@ -48,12 +50,9 @@ class TutorRegisterActivity : AppCompatActivity() {
         email = findViewById(R.id.edit_text_tutor_reg_email)
         password = findViewById(R.id.edit_text_tutor_reg_password)
         confirmPassword = findViewById(R.id.edit_text_tutor_reg_password)
-        subjectCourseButton = findViewById(R.id.button_subject_course)
         submitButton = findViewById(R.id.button_tutor_reg_submit)
         cancelButton = findViewById(R.id.button_tutor_reg_cancel)
         val name = findViewById<EditText>(R.id.edit_text_tutor_reg_name)
-
-        subjectCourseButton.setOnClickListener { openSubjectSelectDialog() }
 
         submitButton.setOnClickListener { view ->
             if (!TextUtils.isEmpty(email.text.toString()) && !TextUtils.isEmpty(password.text.toString())) {
@@ -90,47 +89,46 @@ class TutorRegisterActivity : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+
+        button_subject_course.setOnClickListener {
+            val subjectsFromDB = dbManager.getSubjects()
+            val subjectNames = ArrayList<String>()
+
+            for (subject in subjectsFromDB) {
+                subjectNames.add(subject.name)
+            }
+
+            openSubjectSelectDialog(subjectNames)
+        }
     }
 
-    private fun openSubjectSelectDialog() {
-        val subjectsFromDB = dbManager.getSubjects()
-        val subjectNames = ArrayList<String>()
-
-        for (subject in subjectsFromDB) {
-            subjectNames.add(subject.name)
-        }
+    private fun openSubjectSelectDialog(subjectList: ArrayList<String>) {
 
         AlertDialog.Builder(this)
             .setTitle("Select Subjects")
             .setIcon(R.mipmap.ic_books)
             .setCancelable(false)
-            .setMultiChoiceItems(subjectNames.toTypedArray(), null) { _, indexSelected, isChecked ->
+            .setMultiChoiceItems(subjectList.toTypedArray(), null) { _, indexSelected, isChecked ->
                 if (isChecked) {
-                    val checkedSubject: String = subjectNames[indexSelected]
+                    val checkedSubject: String = subjectList[indexSelected]
+                    println("CHECKED $checkedSubject")
                     listOfCheckedSubjects.add(checkedSubject)
-
-                    val sharedPreferences: SharedPreferences by lazy {
-                        this.getSharedPreferences(Contract.SHARED_PREF_SUBJECTS, Context.MODE_PRIVATE)
-                    }
-
-                    with (sharedPreferences.edit()) {
-                        putString(checkedSubject, checkedSubject)
-                        apply()
-                    }
                 } else {
                     return@setMultiChoiceItems
                 }
             }
             .setPositiveButton("Now Select Courses") { _, _ ->
-                Toast.makeText(this, "Subjects Selected", Toast.LENGTH_SHORT).show()
+                saveSubjectsToSharedPref(listOfCheckedSubjects)
                 openCourseSelectDialog(listOfCheckedSubjects)
-
+                Toast.makeText(this, "Subjects Selected", Toast.LENGTH_SHORT).show()
             }
             .setNegativeButton("Cancel") { _, _ ->
                 Toast.makeText(this, "Canceled", Toast.LENGTH_SHORT).show()
             }
             .create()
             .show()
+
+        println("CHECKED SUBJECTS " + listOfCheckedSubjects.toString())
     }
 
     private fun openCourseSelectDialog(subjects: ArrayList<String>) {
@@ -153,32 +151,49 @@ class TutorRegisterActivity : AppCompatActivity() {
                 if (isChecked) {
                     val checkedCourse: String = courseNames[indexSelected]
                     listOfCheckedCourses.add(checkedCourse)
-
-                    val sharedPreferences: SharedPreferences by lazy {
-                        this.getSharedPreferences(Contract.SHARED_PREF_COURSES, Context.MODE_PRIVATE)
-                    }
-
-                    with (sharedPreferences.edit()) {
-                        putString(checkedCourse, checkedCourse)
-                        apply()
-                    }
-
-                    val fromPref = sharedPreferences.getString(checkedCourse, checkedCourse)
-                    println(fromPref)
-
                 } else {
                     return@setMultiChoiceItems
                 }
             }
             .setPositiveButton("Ok") { _, _ ->
+                saveCoursesToSharedPref(listOfCheckedCourses)
                 Toast.makeText(this, "Courses Selected", Toast.LENGTH_SHORT).show()
-                subjectCourseButton.isEnabled = false
+                button_subject_course.isEnabled = false
             }
             .setNegativeButton("Cancel") { _, _ ->
                 Toast.makeText(this, "Canceled", Toast.LENGTH_SHORT).show()
             }
             .create()
             .show()
+
+        println("CHECKED COURSES " + listOfCheckedSubjects.toString())
+    }
+
+    private fun saveSubjectsToSharedPref(subjects: List<String>) {
+        val sharedPreferences: SharedPreferences by lazy {
+            this.getSharedPreferences(Contract.SHARED_PREF_SUBJECTS, Context.MODE_PRIVATE)
+        }
+        with(sharedPreferences.edit()) {
+            for (subjectIndex in 0 until subjects.size) {
+                putString("Subject$subjectIndex", subjects[subjectIndex])
+                println("SAVED SUBJECT " + subjects[subjectIndex])
+            }
+            apply()
+        }
+    }
+
+    private fun saveCoursesToSharedPref(courses: List<String>) {
+        val sharedPreferences: SharedPreferences by lazy {
+            this.getSharedPreferences(Contract.SHARED_PREF_COURSES, Context.MODE_PRIVATE)
+        }
+
+        with (sharedPreferences.edit()) {
+            for (courseIndex in 0 until courses.size) {
+                putString("Course$courseIndex", courses[courseIndex])
+                println("SAVED COURSE " + courses[courseIndex])
+            }
+            apply()
+        }
     }
 
     // disables back button so the user has to click cancel (life cycle stuff)

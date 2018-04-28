@@ -13,7 +13,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/app_logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/app_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
@@ -56,6 +56,10 @@
             android:name=".activities.Auth.TuteeRegisterActivity"
             android:label="Tutee Registration"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.TutorViewSubjectsCoursesActivity"
+            android:label="Subjects and Courses"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.SessionActivity"
             android:launchMode="singleTask"
