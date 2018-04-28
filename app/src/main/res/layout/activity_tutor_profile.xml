@@ -34,8 +34,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
-                android:textSize="26sp"
-                android:text="Karl Morris"/>
+                android:fontFamily="cursive"
+                android:text="Karl Morris"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="30sp" />
 
             <TextView
                 android:id="@+id/textview_availibility"
