@@ -58,8 +58,8 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.TutorViewSubjectsCoursesActivity"
-            android:label="Subjects and Courses"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="@string/your_courses"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.SessionActivity"
             android:launchMode="singleTask"

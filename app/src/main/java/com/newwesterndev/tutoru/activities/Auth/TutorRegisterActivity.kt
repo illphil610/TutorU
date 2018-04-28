@@ -14,14 +14,12 @@ import android.widget.EditText
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.newwesterndev.tutoru.R
+import com.newwesterndev.tutoru.activities.Tutor.TutorProfileActivity
 import com.newwesterndev.tutoru.db.DbManager
 import com.newwesterndev.tutoru.model.Contract
-import com.newwesterndev.tutoru.activities.Tutor.TutorProfileActivity
-import com.newwesterndev.tutoru.db.subjectdatabase
 import com.newwesterndev.tutoru.model.Model
 import com.newwesterndev.tutoru.utilities.FirebaseManager
 import com.newwesterndev.tutoru.utilities.Utility
-import kotlinx.android.synthetic.main.activity_help_request.*
 import kotlinx.android.synthetic.main.activity_tutor_register.*
 
 class TutorRegisterActivity : AppCompatActivity() {
@@ -111,7 +109,6 @@ class TutorRegisterActivity : AppCompatActivity() {
             .setMultiChoiceItems(subjectList.toTypedArray(), null) { _, indexSelected, isChecked ->
                 if (isChecked) {
                     val checkedSubject: String = subjectList[indexSelected]
-                    println("CHECKED $checkedSubject")
                     listOfCheckedSubjects.add(checkedSubject)
                 } else {
                     return@setMultiChoiceItems
@@ -127,8 +124,6 @@ class TutorRegisterActivity : AppCompatActivity() {
             }
             .create()
             .show()
-
-        println("CHECKED SUBJECTS " + listOfCheckedSubjects.toString())
     }
 
     private fun openCourseSelectDialog(subjects: ArrayList<String>) {
@@ -165,8 +160,6 @@ class TutorRegisterActivity : AppCompatActivity() {
             }
             .create()
             .show()
-
-        println("CHECKED COURSES " + listOfCheckedSubjects.toString())
     }
 
     private fun saveSubjectsToSharedPref(subjects: List<String>) {
@@ -176,7 +169,6 @@ class TutorRegisterActivity : AppCompatActivity() {
         with(sharedPreferences.edit()) {
             for (subjectIndex in 0 until subjects.size) {
                 putString("Subject$subjectIndex", subjects[subjectIndex])
-                println("SAVED SUBJECT " + subjects[subjectIndex])
             }
             apply()
         }
@@ -189,8 +181,7 @@ class TutorRegisterActivity : AppCompatActivity() {
 
         with (sharedPreferences.edit()) {
             for (courseIndex in 0 until courses.size) {
-                putString("Course$courseIndex", courses[courseIndex])
-                println("SAVED COURSE " + courses[courseIndex])
+                putString("Course $courseIndex", courses[courseIndex])
             }
             apply()
         }

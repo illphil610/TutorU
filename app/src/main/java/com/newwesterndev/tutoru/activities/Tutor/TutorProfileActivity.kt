@@ -36,6 +36,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.newwesterndev.tutoru.R
 import com.newwesterndev.tutoru.activities.Auth.LoginActivity
 import com.newwesterndev.tutoru.activities.SessionActivity
+import com.newwesterndev.tutoru.activities.TutorViewSubjectsCoursesActivity
 import com.newwesterndev.tutoru.db.DbManager
 import com.newwesterndev.tutoru.model.Contract
 import com.newwesterndev.tutoru.utilities.FirebaseManager
@@ -304,6 +305,5 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
     private fun loadTutorsSubjectsCoursesFromSharedPref() {
         val viewSubjectsIntent = Intent(this, TutorViewSubjectsCoursesActivity::class.java)
         startActivity(viewSubjectsIntent)
-        finish()
     }
 }
