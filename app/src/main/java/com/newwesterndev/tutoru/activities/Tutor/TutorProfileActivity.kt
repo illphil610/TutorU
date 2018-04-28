@@ -1,4 +1,4 @@
-package com.newwesterndev.tutoru.activities
+package com.newwesterndev.tutoru.activities.Tutor
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -35,11 +35,11 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.newwesterndev.tutoru.R
 import com.newwesterndev.tutoru.activities.Auth.LoginActivity
+import com.newwesterndev.tutoru.activities.SessionActivity
 import com.newwesterndev.tutoru.db.DbManager
 import com.newwesterndev.tutoru.model.Contract
 import com.newwesterndev.tutoru.utilities.FirebaseManager
 import kotlinx.android.synthetic.main.activity_tutor_profile.*
-import kotlinx.android.synthetic.main.custom_add_subject_dialog.*
 
 class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private lateinit var map: GoogleMap
@@ -280,6 +280,11 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_signout -> {
             fbAuth.signOut()
+            true
+        }
+        R.id.action_start_session -> {
+            val intent = Intent(this, SessionActivity::class.java)
+            startActivity(intent)
             true
         }
         else -> {

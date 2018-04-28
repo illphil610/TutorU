@@ -14,16 +14,20 @@ class Model {
 
     data class Tutor(var uid: String,
                      var name: String,
+                     var ratingAvg: String,
+                     var numOfRatings: String,
                      var isAvailable: Boolean)
                      //var subjectList: ArrayList<String>,
                      //var courseList : ArrayList<String>)
 
     data class Tutee(var uid: String,
                      var name: String,
+                     var ratingAvg: String,
+                     var numOfRatings: String,
                      var requestingHelp: Boolean)
 
     data class HelpBroadCast(var tutee: Model.Tutee,
-                             var courseList: ArrayList<Course>,
+                             var course: String,
                              var stillAwaitingHelp: Boolean,
                              var questionDetails: String)
 

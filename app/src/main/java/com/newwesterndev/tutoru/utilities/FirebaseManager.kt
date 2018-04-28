@@ -25,6 +25,14 @@ class FirebaseManager private constructor() {
         }
     }
 
+    fun getUserUniqueId(): String {
+        return if (mAuth.currentUser?.uid != null) {
+            mAuth.currentUser!!.uid
+        } else {
+            Log.e("TAG", "sorry fam, no UID").toString()
+        }
+    }
+
     fun sendHelpBroadcastRequest(helpBroadCast: Model.HelpBroadCast) {
         val newHelpBroadcast = mDatabaseReference.child(Contract.HELP_BROADCAST).push()
         newHelpBroadcast.setValue(helpBroadCast)
@@ -40,13 +48,26 @@ class FirebaseManager private constructor() {
         newTutor.child(mAuth.currentUser?.uid).setValue(tutor)
     }
 
+    fun updateTutor(uid: String, tutor: Model.Tutor) {
+        val updatedTutorRef = mDatabaseReference.child(Contract.TUTOR)
+        updatedTutorRef.child(uid).setValue(tutor)
+    }
+
+    fun updateTutee(uid: String, tutee: Model.Tutee) {
+        val updatedTuteeRef = mDatabaseReference.child(Contract.TUTEE)
+        updatedTuteeRef.child(uid).setValue(tutee)
+    }
+
     fun getTutor(uid: String, callback: (Model.Tutor) -> Unit) {
         mTutorDbRef.child(uid).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot?) {
                 Log.e("Tutor", snapshot.toString())
                 if (snapshot != null) {
                     Log.e("Tutor Deets", snapshot.child("name").value as String)
-                    callback(Model.Tutor(uid, snapshot.child("name").value as String, true))
+                    callback(Model.Tutor(uid,
+                            snapshot.child("name").value as String,
+                            snapshot.child("ratingAvg").value as String,
+                            snapshot.child("numOfRatings").value as String, true))
                 }
             }
             override fun onCancelled(error: DatabaseError?) {
@@ -61,13 +82,36 @@ class FirebaseManager private constructor() {
                 Log.e("Tutee", snapshot.toString())
                 if (snapshot != null) {
                     Log.e("Tutee Deets", snapshot.child("name").value as String)
-                    callback(Model.Tutee(uid, snapshot.child("name").value as String, true))
+                    callback(Model.Tutee(uid,
+                            snapshot.child("name").value as String,
+                            snapshot.child("ratingAvg").value as String,
+                            snapshot.child("numOfRatings").value as String, true))
                 }
             }
             override fun onCancelled(error: DatabaseError?) {
                 Log.e("fireDbError", error.toString())
             }
         })
+    }
+
+    fun updateTutorRating(uid: String, rating: Double, callback: (Model.Tutor) -> Unit) {
+        getTutee(uid) { tutee ->
+
+
+        }
+
+    }
+
+    fun updateTuteeRating(uid: String, rating: Double, callback: (Model.Tutee) -> Unit) {
+        getTutor(uid) { tutor ->
+            val ratingCount = tutor.numOfRatings
+            val oldRatingAvg = tutor.ratingAvg
+
+
+
+
+        }
+
     }
 
     // save the Tutees location to the Geofire table

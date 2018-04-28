@@ -6,4 +6,9 @@
         android:orderInCategory="100"
         android:title="Sign Out"
         app:showAsAction="never" />
-</menu>
+
+    <item
+        android:id="@+id/action_start_session"
+        android:title="Start Session"
+        app:showAsAction="never" />
+ </menu>
