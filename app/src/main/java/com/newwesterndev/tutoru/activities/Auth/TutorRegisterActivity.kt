@@ -181,7 +181,7 @@ class TutorRegisterActivity : AppCompatActivity() {
 
         with (sharedPreferences.edit()) {
             for (courseIndex in 0 until courses.size) {
-                putString("Course $courseIndex", courses[courseIndex])
+                putString("Course$courseIndex", courses[courseIndex])
             }
             apply()
         }

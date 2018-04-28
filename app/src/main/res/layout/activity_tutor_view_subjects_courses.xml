@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.TutorViewSubjectsCoursesActivity" >
+    tools:context=".activities.Tutor.TutorViewSubjectsCoursesActivity" >
 
     <LinearLayout
         android:id="@+id/linearlayout_content"
@@ -27,7 +27,6 @@
 
     </LinearLayout>
 
-    <include layout="@layout/fab_layout"
-        app:layout_constraintTop_toBottomOf="@id/linearlayout_content"/>
+    <include layout="@layout/fab_layout" />
 
 </android.support.constraint.ConstraintLayout>

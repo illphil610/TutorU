@@ -57,7 +57,7 @@
             android:label="Tutee Registration"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.TutorViewSubjectsCoursesActivity"
+            android:name=".activities.Tutor.TutorViewSubjectsCoursesActivity"
             android:label="@string/your_courses"
             android:screenOrientation="portrait" />
         <activity
