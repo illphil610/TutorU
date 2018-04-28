@@ -8,10 +8,39 @@
     tools:context=".activities.TutorViewSubjectsCoursesActivity"
     tools:showIn="@layout/activity_tutor_view_subjects_courses">
 
-    <TextView
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/text_margin"
-        android:text="Course List" />
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:textSize="28sp"
+            android:text="Subjects" />
+
+        <ListView
+            android:id="@+id/listview_subjects"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+        </ListView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/text_margin"
+            android:textSize="28sp"
+            android:text="Courses" />
+
+        <ListView
+            android:id="@+id/listview_courses"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        </ListView>
+
+    </LinearLayout>
 
 </android.support.v4.widget.NestedScrollView>

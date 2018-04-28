@@ -1,11 +1,14 @@
 package com.newwesterndev.tutoru.activities
 
 import android.app.AlertDialog
+import android.app.ListActivity
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import android.widget.ArrayAdapter
+import android.widget.ListView
 import android.widget.Toast
 import com.newwesterndev.tutoru.R
 import com.newwesterndev.tutoru.db.DbManager
@@ -16,15 +19,44 @@ class TutorViewSubjectsCoursesActivity : AppCompatActivity() {
     private val dbManager = DbManager(this)
     private val listOfCheckedSubjects = ArrayList<String>()
     private val listOfCheckedCourses = ArrayList<String>()
+    private val subjectListFromPref = ArrayList<String>()
+    private val courseListFromPref = ArrayList<String>()
+    private var subjectListAdapter: ArrayAdapter<String>? = null
+    private var courseListAdapter: ArrayAdapter<String>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tutor_view_subjects_courses)
         setSupportActionBar(toolbar)
-//        fab.setOnClickListener { view ->
-//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-//                    .setAction("Action", null).show()
-//        }
+
+        val subjectListView = findViewById<ListView>(R.id.listview_subjects)
+        val courseListView = findViewById<ListView>(R.id.listview_courses)
+
+        //Subjects
+        subjectListAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, subjectListFromPref)
+        subjectListView.adapter = subjectListAdapter
+
+        val sharedPreferencesSubjects = getSharedPreferences(Contract.SHARED_PREF_SUBJECTS, Context.MODE_PRIVATE)
+        val subjectsFromPrefMap = sharedPreferencesSubjects.all
+
+        for (entry in subjectsFromPrefMap) {
+            subjectListFromPref.add(entry.value.toString())
+            println(entry)
+        }
+
+        subjectListAdapter!!.notifyDataSetChanged()
+
+        //Courses
+        courseListAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, subjectListFromPref)
+        courseListView.adapter = subjectListAdapter
+
+        val sharedPreferencesCourses = getSharedPreferences(Contract.SHARED_PREF_COURSES, Context.MODE_PRIVATE)
+        val coursesFromPrefMap = sharedPreferencesCourses.all
+
+        for (entry in coursesFromPrefMap) {
+            courseListFromPref.add(entry.value.toString())
+            println(entry)
+        }
 
         fab.setOnClickListener { openSubjectSelectDialog() }
     }
@@ -69,6 +101,7 @@ class TutorViewSubjectsCoursesActivity : AppCompatActivity() {
                 }
                 .setNegativeButton("Cancel") { _, _ ->
                     Toast.makeText(this, "Canceled", Toast.LENGTH_LONG).show()
+                    finish()
                 }
                 .create()
                 .show()
@@ -116,6 +149,7 @@ class TutorViewSubjectsCoursesActivity : AppCompatActivity() {
                 }
                 .setNegativeButton("Cancel") { _, _ ->
                     Toast.makeText(this, "Canceled", Toast.LENGTH_SHORT).show()
+                    finish()
                 }
                 .create()
                 .show()
