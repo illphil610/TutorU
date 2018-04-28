@@ -31,6 +31,7 @@ import kotlinx.android.synthetic.main.activity_help_request.*
 import com.newwesterndev.tutoru.utilities.Utility
 import android.view.Gravity
 import android.widget.TextView
+import com.newwesterndev.tutoru.activities.SessionActivity
 
 
 class HelpRequestActivity : AppCompatActivity(), LocationProxy.LocationDelegate {
@@ -198,6 +199,11 @@ class HelpRequestActivity : AppCompatActivity(), LocationProxy.LocationDelegate 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         R.id.action_signout -> {
             fbAuth.signOut()
+            true
+        }
+        R.id.action_start_session -> {
+            val intent = Intent(this, SessionActivity::class.java)
+            startActivity(intent)
             true
         }
         else -> {

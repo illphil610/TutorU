@@ -56,7 +56,7 @@ class MainActivity : Activity() {
 
         if (fbAuth.currentUser != null) {
             val preferences = getSharedPreferences(getString(R.string.sharedPrefs), Context.MODE_PRIVATE)
-            val user = preferences.getString(fbAuth.currentUser?.email, "unknown")
+            val user = preferences.getString(fbAuth.currentUser?.email, getString(R.string.unknown))
             when (user) {
                 getString(R.string.tuteeMain) -> {
                     val intent = Intent(this, HelpRequestActivity::class.java)

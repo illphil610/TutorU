@@ -25,6 +25,14 @@ class FirebaseManager private constructor() {
         }
     }
 
+    fun getUserUniqueId(): String {
+        return if (mAuth.currentUser?.uid != null) {
+            mAuth.currentUser!!.uid
+        } else {
+            Log.e("TAG", "sorry fam, no UID").toString()
+        }
+    }
+
     fun sendHelpBroadcastRequest(helpBroadCast: Model.HelpBroadCast) {
         val newHelpBroadcast = mDatabaseReference.child(Contract.HELP_BROADCAST).push()
         newHelpBroadcast.setValue(helpBroadCast)
