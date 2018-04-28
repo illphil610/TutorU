@@ -17,10 +17,6 @@
         chatview:messageTextColorRcv="@color/black"
         chatview:sendBtnBackgroundTint="@color/blue"
         chatview:inputTextColor="@color/black"
-        chatview:backgroundRcv="@color/main_color_gray"
-        chatview:backgroundSend="@color/blue"
-        chatview:backgroundColor="@color/white"
-
-        />
+        chatview:backgroundColor="@color/white" />
 
 </android.support.constraint.ConstraintLayout>

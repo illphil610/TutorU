@@ -299,11 +299,6 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
             startActivity(intent)
             true
         }
-        R.id.action_chat_session -> {
-            val intent = Intent(this, MessageActivity::class.java)
-            startActivity(intent)
-            true
-        }
         else -> {
             super.onOptionsItemSelected(item)
         }

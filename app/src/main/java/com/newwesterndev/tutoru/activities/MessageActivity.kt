@@ -1,9 +1,12 @@
 package com.newwesterndev.tutoru.activities
 
 import android.content.Context
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import co.intentservice.chatui.models.ChatMessage
 import com.google.firebase.auth.FirebaseAuth
 import com.newwesterndev.tutoru.R
@@ -42,7 +45,6 @@ class MessageActivity : AppCompatActivity() {
                 }))
 
         chat_view.setOnSentMessageListener {
-            // save chat to viewbase db
             if (user == "tutor") {
                 mFirebaseManager.getTutee(userUID) { tutee ->
                     Log.e("tutee", tutee.toString())
@@ -59,6 +61,41 @@ class MessageActivity : AppCompatActivity() {
             true
         }
     }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
+        R.id.action_signout -> {
+            FirebaseAuth.getInstance().signOut()
+            true
+        }
+        R.id.action_start_session -> {
+            val intent = Intent(this, SessionActivity::class.java)
+            startActivity(intent)
+            true
+        }
+        else -> {
+            super.onOptionsItemSelected(item)
+        }
+    }
+
+    /*
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        try {
+            val newMessage = intent?.getStringExtra("message")
+            val messageFrom = intent?.getStringExtra("from")
+            val messageTo = intent?.getStringExtra("to")
+            RxBus.publish(Model.Chat(messageFrom!!, messageTo!!, newMessage!!))
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+    */
 
     override fun onDestroy() {
         super.onDestroy()

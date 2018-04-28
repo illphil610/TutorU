@@ -11,10 +11,4 @@
         android:id="@+id/action_start_session"
         android:title="Start Session"
         app:showAsAction="never" />
-
-    <item
-        android:id="@+id/action_chat_session"
-        android:title="Send Message"
-        app:showAsAction="never"
-        />
  </menu>
