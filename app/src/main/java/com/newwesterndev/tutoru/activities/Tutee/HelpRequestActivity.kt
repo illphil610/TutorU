@@ -139,7 +139,7 @@ class HelpRequestActivity : AppCompatActivity(), LocationProxy.LocationDelegate 
                 fbManager.sendHelpBroadcastRequest(
                         Model.HelpBroadCast(
                                 Model.Tutee(fbAuth.currentUser!!.uid,
-                                            fbAuth.currentUser?.displayName.toString(), true),
+                                            fbAuth.currentUser?.displayName.toString(), "0.0", "0", true),
                                             course_spinner.selectedItem.toString(), true, question_edit_text.text.toString()))
 
                 geoFireHelpRequest.setLocation(fbAuth.currentUser?.uid, GeoLocation(currentLocation!!.latitude, currentLocation!!.longitude), { key, error ->

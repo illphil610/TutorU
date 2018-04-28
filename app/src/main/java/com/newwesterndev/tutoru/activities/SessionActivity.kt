@@ -43,19 +43,23 @@ class SessionActivity : AppCompatActivity(), NfcAdapter.CreateNdefMessageCallbac
         mNfcAdapter.setOnNdefPushCompleteCallback(this, this)
 
         var startTimer = 0L
+        start_session_button.isEnabled = false
+        end_session_button.visibility = (View.GONE)
         start_session_button.setOnClickListener {
-            //var startTimer = 0L
             if (start_session_button.text == "Start Session") {
                 startTimer { timeAtStart: Long ->
                     startTimer = timeAtStart
+                    start_session_button.visibility = (View.GONE)
+                    end_session_button.visibility = (View.VISIBLE)
                 }
             }
         }
         end_session_button.setOnClickListener {
             endTime(startTimer) { timeAtEnd: Double ->
+                start_session_button.visibility = (View.VISIBLE)
+                end_session_button.visibility = (View.GONE)
                 Log.e("Session Time", timeAtEnd.toString())
             }
-
         }
     }
 
@@ -88,7 +92,13 @@ class SessionActivity : AppCompatActivity(), NfcAdapter.CreateNdefMessageCallbac
         val rawMessages = intent?.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES)
         val message = rawMessages?.get(0) as NdefMessage
         val mReceivedUserName = message.records[0].payload
+
+        if (mReceivedUserName != null) {
+            mUserId = String(mReceivedUserName)
+        }
         Log.e("Received User Name:", String(mReceivedUserName))
+        nfc_check_box.isChecked = true
+        start_session_button.isEnabled = true
     }
 
     private fun startTimer(callback: (Long) -> Unit) {
@@ -113,15 +123,22 @@ class SessionActivity : AppCompatActivity(), NfcAdapter.CreateNdefMessageCallbac
         val noButton = dialogView.findViewById(R.id.button_rating_no) as Button
 
         yesButton.setOnClickListener {
-            val tutorIntent = Intent(this, RatingsActivity::class.java)
-            startActivity(tutorIntent)
-            createdDialogView.dismiss()
-            finish()
+            if (!mUserId.isEmpty()) {
+                val tutorIntent = Intent(this, RatingsActivity::class.java)
+                tutorIntent.putExtra("uid", mUserId)
+                startActivity(tutorIntent)
+                createdDialogView.dismiss()
+                finish()
+            }
         }
 
         noButton.setOnClickListener {
             createdDialogView.dismiss()
         }
         createdDialogView.show()
+    }
+
+    companion object {
+        private var mUserId = String()
     }
 }
