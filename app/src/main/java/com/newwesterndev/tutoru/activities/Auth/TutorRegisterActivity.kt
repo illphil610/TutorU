@@ -24,15 +24,17 @@ import kotlinx.android.synthetic.main.activity_tutor_register.*
 
 class TutorRegisterActivity : AppCompatActivity() {
 
-    private lateinit var email: EditText
-    private lateinit var password: EditText
-    private lateinit var confirmPassword: EditText
+    private lateinit var nameEditText: EditText
+    private lateinit var emailEditText: EditText
+    private lateinit var passwordEditText: EditText
+    private lateinit var confirmPasswordEditText: EditText
     private lateinit var submitButton: Button
     private lateinit var cancelButton: Button
 
     private var mAuth: FirebaseAuth? = null
     private var mUtility: Utility? = null
     private val dbManager = DbManager(this)
+    private var context: Context = this
 
     private val listOfCheckedSubjects = ArrayList<String>()
     private val listOfCheckedCourses = ArrayList<String>()
@@ -45,39 +47,56 @@ class TutorRegisterActivity : AppCompatActivity() {
         mAuth = FirebaseAuth.getInstance()
         mUtility = Utility()
 
-        email = findViewById(R.id.edit_text_tutor_reg_email)
-        password = findViewById(R.id.edit_text_tutor_reg_password)
-        confirmPassword = findViewById(R.id.edit_text_tutor_reg_password)
+        nameEditText = findViewById(R.id.edit_text_tutor_reg_name)
+        emailEditText = findViewById(R.id.edit_text_tutor_reg_email)
+        passwordEditText = findViewById(R.id.edit_text_tutor_reg_password)
+        confirmPasswordEditText = findViewById(R.id.edit_text_tutor_reg_confirm_password)
         submitButton = findViewById(R.id.button_tutor_reg_submit)
         cancelButton = findViewById(R.id.button_tutor_reg_cancel)
-        val name = findViewById<EditText>(R.id.edit_text_tutor_reg_name)
 
         submitButton.setOnClickListener { view ->
-            if (!TextUtils.isEmpty(email.text.toString()) && !TextUtils.isEmpty(password.text.toString())) {
-                mUtility?.showMessage(view, "Creating your account, Mr. Tutor!")
-                mAuth?.createUserWithEmailAndPassword(email.text.toString(), password.text.toString())?.addOnCompleteListener(this, { task ->
-                    if (task.isSuccessful) {
+            val name = nameEditText.text.toString().trim()
+            val email = emailEditText.text.toString().trim()
+            val password = passwordEditText.text.toString().trim()
+            val confirmPassword = confirmPasswordEditText.text.toString().trim()
 
-                        // save user type to shared preferences to use throughout the application
-                        val sharedPref = getSharedPreferences(getString(R.string.sharedPrefs), Context.MODE_PRIVATE)
-                        with (sharedPref.edit()) {
-                            putString(mAuth?.currentUser?.email.toString(), "tutor")
-                            apply()
-                        }
+            if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
+                if (mUtility!!.isValidEmail(email) && mUtility!!.isValidPassword(password)) {
+                    if (password == confirmPassword) {
+                        mUtility?.showMessage(view, "Creating your account, Mr. Tutor!")
+                        mAuth?.createUserWithEmailAndPassword(email, password)?.addOnCompleteListener(this, { task ->
+                            if (task.isSuccessful) {
 
-                        // this will include the necessary course / subject lists but for right now its nothing but blank lists
-                        FirebaseManager.instance.createTutor(Model.Tutor(mAuth?.currentUser!!.uid, name.text.toString(), "0.0", "0", false))
+                                // save user type to shared preferences to use throughout the application
+                                val sharedPref = getSharedPreferences(getString(R.string.sharedPrefs), Context.MODE_PRIVATE)
+                                with(sharedPref.edit()) {
+                                    putString(mAuth?.currentUser?.email.toString(), "tutor")
+                                    apply()
+                                }
 
-                        // Send the user to the MainScreen for now
-                        val intent = Intent(this, TutorProfileActivity::class.java)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent)
-                        finish()
+                                // this will include the necessary course / subject lists but for right now its nothing but blank lists
+                                FirebaseManager.instance.createTutor(Model.Tutor(mAuth?.currentUser!!.uid, name, "0.0", "0", false))
+
+                                // Send the user to the MainScreen for now
+                                val intent = Intent(this, TutorProfileActivity::class.java)
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent)
+                                finish()
+                            } else {
+                                mUtility?.showMessage(view, task.exception.toString())
+                                Log.e("Sign up error", task.exception.toString())
+                            }
+                        })
                     } else {
-                        mUtility?.showMessage(view, task.exception.toString())
-                        Log.e("Sign up error", task.exception.toString())
+                        Toast.makeText(this, "Passwords do not match", Toast.LENGTH_LONG).show()
                     }
-                })
+                } else if (!mUtility!!.isValidEmail(email)) {
+                    Toast.makeText(this, "Please enter a valid email address", Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(this, "Please enter a valid password", Toast.LENGTH_LONG).show()
+                }
+            } else {
+                Toast.makeText(this, "Please complete all fields", Toast.LENGTH_LONG).show()
             }
         }
 

@@ -106,6 +106,7 @@
                 android:layout_marginEnd="8dp"
                 android:layout_alignParentEnd="true"
                 android:background="#00ADEF"
+                android:textColor="#eeeeee"
                 android:text="@string/register_account" />
 
         </RelativeLayout>
