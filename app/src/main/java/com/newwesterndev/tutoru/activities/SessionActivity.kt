@@ -1,5 +1,6 @@
 package com.newwesterndev.tutoru.activities
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.nfc.NdefMessage
 import android.nfc.NdefRecord
@@ -9,17 +10,29 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import com.newwesterndev.tutoru.R
+import com.newwesterndev.tutoru.activities.Auth.TuteeRegisterActivity
+import com.newwesterndev.tutoru.activities.Auth.TutorRegisterActivity
+import com.newwesterndev.tutoru.activities.Tutor.RatingsActivity
+import com.newwesterndev.tutoru.model.Model
+import com.newwesterndev.tutoru.utilities.FirebaseManager
 import com.newwesterndev.tutoru.utilities.Utility
+import kotlinx.android.synthetic.main.activity_session.*
 
 class SessionActivity : AppCompatActivity(), NfcAdapter.CreateNdefMessageCallback, NfcAdapter.OnNdefPushCompleteCallback {
 
     private lateinit var mNfcAdapter: NfcAdapter
+    private lateinit var mFirebaseManager: FirebaseManager
     private lateinit var mUtility: Utility
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_tutee_session)
+        setContentView(R.layout.activity_session)
+
+        // firebase and utility stuff and things...
+        mUtility = Utility()
+        mFirebaseManager = FirebaseManager.instance
 
         // NFC stuff and things
         mNfcAdapter = NfcAdapter.getDefaultAdapter(this)
@@ -28,6 +41,26 @@ class SessionActivity : AppCompatActivity(), NfcAdapter.CreateNdefMessageCallbac
         }
         mNfcAdapter.setNdefPushMessageCallback(this, this)
         mNfcAdapter.setOnNdefPushCompleteCallback(this, this)
+
+        var startTimer = 0L
+        start_session_button.isEnabled = false
+        end_session_button.visibility = (View.GONE)
+        start_session_button.setOnClickListener {
+            if (start_session_button.text == "Start Session") {
+                startTimer { timeAtStart: Long ->
+                    startTimer = timeAtStart
+                    start_session_button.visibility = (View.GONE)
+                    end_session_button.visibility = (View.VISIBLE)
+                }
+            }
+        }
+        end_session_button.setOnClickListener {
+            endTime(startTimer) { timeAtEnd: Double ->
+                start_session_button.visibility = (View.VISIBLE)
+                end_session_button.visibility = (View.GONE)
+                Log.e("Session Time", timeAtEnd.toString())
+            }
+        }
     }
 
     override fun onResume() {
@@ -39,13 +72,13 @@ class SessionActivity : AppCompatActivity(), NfcAdapter.CreateNdefMessageCallbac
     }
 
     override fun onNdefPushComplete(event: NfcEvent?) {
-        //Log.e("ONDEFPUSHCOMPLETE", "FUCK YEAHHH")
+        Log.e("ONDEFPUSHCOMPLETE", "FUCK YEAHHH")
     }
 
     override fun createNdefMessage(event: NfcEvent?): NdefMessage {
-        // just a place holder
-        return NdefMessage(NdefRecord.createApplicationRecord("poop"))
-
+        val userId = mFirebaseManager.getUserUniqueId()
+        val userIdRecord = NdefRecord.createMime("text/plain", userId.toByteArray())
+        return NdefMessage(userIdRecord)
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -59,6 +92,53 @@ class SessionActivity : AppCompatActivity(), NfcAdapter.CreateNdefMessageCallbac
         val rawMessages = intent?.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES)
         val message = rawMessages?.get(0) as NdefMessage
         val mReceivedUserName = message.records[0].payload
+
+        if (mReceivedUserName != null) {
+            mUserId = String(mReceivedUserName)
+        }
         Log.e("Received User Name:", String(mReceivedUserName))
+        nfc_check_box.isChecked = true
+        start_session_button.isEnabled = true
+    }
+
+    private fun startTimer(callback: (Long) -> Unit) {
+        callback(System.currentTimeMillis())
+    }
+
+    private fun endTime(startTime: Long, callback: (Double) -> Unit) {
+        val tEnd = System.currentTimeMillis()
+        val tDelta = tEnd - startTime
+        callback(tDelta / 1000.0)
+        showRatingsQuestionAlertDialog()
+    }
+
+    private fun showRatingsQuestionAlertDialog() {
+        val dialogBuilder = AlertDialog.Builder(this)
+        val inflater = this.layoutInflater
+        val dialogView = inflater.inflate(R.layout.custom_ask_for_rating_dialog, null)
+        val createdDialogView = dialogBuilder.create()
+        createdDialogView.setView(dialogView)
+
+        val yesButton = dialogView.findViewById(R.id.button_rating_yes) as Button
+        val noButton = dialogView.findViewById(R.id.button_rating_no) as Button
+
+        yesButton.setOnClickListener {
+            if (!mUserId.isEmpty()) {
+                val tutorIntent = Intent(this, RatingsActivity::class.java)
+                tutorIntent.putExtra("uid", mUserId)
+                startActivity(tutorIntent)
+                createdDialogView.dismiss()
+                finish()
+            }
+        }
+
+        noButton.setOnClickListener {
+            createdDialogView.dismiss()
+        }
+        createdDialogView.show()
+    }
+
+    companion object {
+        private var mUserId = String()
     }
 }

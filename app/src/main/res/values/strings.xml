@@ -48,4 +48,8 @@
     <string name="view_my_courses_subjects">View My Subjects/Courses</string>
     <string name="tuteeMain">tutee</string>
     <string name="tutorMain">tutor</string>
+    <string name="unknown">unknown</string>
+    <string name="title_activity_tutor_view_subjects_courses">TutorViewSubjectsCoursesActivity
+    </string>
+    <string name="action_settings">Settings</string>
 </resources>
