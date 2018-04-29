@@ -88,7 +88,7 @@ class DbManager(private val context: Context) {
 
     fun getSubjectListForSpinner(subjectList: ArrayList<String>): ArrayList<String> {
         var newUpdatedList = ArrayList<String>()
-        newUpdatedList.add("Please select a subject...")
+        newUpdatedList.add("Select...")
         for (subject in subjectList) {
             newUpdatedList.add(subject)
         }
@@ -97,7 +97,7 @@ class DbManager(private val context: Context) {
 
     fun getCourseListForSpinner(courseList: ArrayList<String>): ArrayList<String> {
         var newUpdatedList = ArrayList<String>()
-        newUpdatedList.add("Please select a course...")
+        newUpdatedList.add("Select...")
         for (course in courseList) {
             newUpdatedList.add(course)
         }

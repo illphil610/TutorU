@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:background="#00ADEF"
+            android:background="@color/tealBlue"
             android:textColor="@android:color/white"
             android:padding="10dp"
             android:text="@string/registration"
@@ -53,7 +53,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:text="@string/tutor"
-            android:background="#00ADEF"
+            android:background="@color/tealBlue"
             android:textColor="@android:color/white"
             />
 
@@ -68,7 +68,7 @@
             android:paddingRight="10dp"
             android:text="@string/tutee"
             android:textColor="@android:color/white"
-            android:background="#00ADEF" />
+            android:background="@color/tealBlue" />
 
     </LinearLayout>
 
