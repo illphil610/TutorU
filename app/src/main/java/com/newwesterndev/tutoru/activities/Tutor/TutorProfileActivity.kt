@@ -14,6 +14,7 @@ import android.support.v4.app.ActivityCompat
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import com.firebase.geofire.GeoFire
 import com.firebase.geofire.GeoLocation
 import com.firebase.geofire.GeoQueryEventListener
@@ -274,18 +275,12 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
             true
         }
         R.id.action_start_session -> {
-            val intent = Intent(this, SessionActivity::class.java)
-            startActivity(intent)
+            Toast.makeText(this, "Please select a user first!", Toast.LENGTH_LONG).show()
             true
         }
         else -> {
             super.onOptionsItemSelected(item)
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        togglebutton_availibility.isChecked = false
     }
 
     override fun onBackPressed() {
