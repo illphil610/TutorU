@@ -31,6 +31,7 @@ import kotlinx.android.synthetic.main.activity_help_request.*
 import com.newwesterndev.tutoru.utilities.Utility
 import android.view.Gravity
 import android.widget.TextView
+import com.newwesterndev.tutoru.activities.MessageActivity
 import com.newwesterndev.tutoru.activities.SessionActivity
 
 
@@ -88,6 +89,9 @@ class HelpRequestActivity : AppCompatActivity(), LocationProxy.LocationDelegate 
         val spinnerAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, subjectSpinnerList)
         spinnerJawn.adapter = spinnerAdapter
 
+        // Disable button until course is selected to prevent issues
+        submit_button.isEnabled = false
+
         // Hide views until the user selects a subject
         course_spinner.visibility = (View.GONE)
         course_text_view.visibility = (View.GONE)
@@ -98,14 +102,8 @@ class HelpRequestActivity : AppCompatActivity(), LocationProxy.LocationDelegate 
         spinnerJawn.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 (parent?.getChildAt(0) as TextView).gravity = Gravity.CENTER
+                (parent?.getChildAt(0) as TextView).textSize = 20.0F
                 if (position != 0) {
-                    // Show the views to get courses that are hidden
-                    course_text_view.visibility = (View.VISIBLE)
-                    course_spinner.visibility = (View.VISIBLE)
-                    question_text_view.visibility = (View.VISIBLE)
-                    question_edit_text.visibility = (View.VISIBLE)
-                    submit_button.visibility = (View.VISIBLE)
-
                     val subjectName = subjectList[position - 1]
                     val coursesFromSubject = dbManager.getCoursesAsString(subjectName)
                     val courseSpinnerList = dbManager.getCourseListForSpinner(coursesFromSubject)
@@ -113,16 +111,26 @@ class HelpRequestActivity : AppCompatActivity(), LocationProxy.LocationDelegate 
                     val courseSpinnerAdapter = ArrayAdapter<String>(applicationContext, android.R.layout.simple_spinner_item, courseSpinnerList)
                     courseSpinnerJawn.adapter = courseSpinnerAdapter
 
+                    // Show the views to get courses that are hidden
+                    course_text_view.visibility = (View.VISIBLE)
+                    question_text_view.visibility = (View.VISIBLE)
+                    question_edit_text.visibility = (View.VISIBLE)
+                    submit_button.visibility = (View.VISIBLE)
+                    course_spinner.visibility = (View.VISIBLE)
+
                     courseSpinnerJawn.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                         override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                             (parent?.getChildAt(0) as TextView).gravity = Gravity.CENTER
-                        }
+                            (parent?.getChildAt(0) as TextView).textSize = 20.0F
 
+                            if (position != 0) {
+                                submit_button.isEnabled = true
+                            }
+                        }
                         override fun onNothingSelected(parent: AdapterView<*>?) {}
                     }
                 }
             }
-
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
@@ -131,58 +139,61 @@ class HelpRequestActivity : AppCompatActivity(), LocationProxy.LocationDelegate 
             var mDatabaseReference = mFirebaseDatabase.getReference(Contract.REQUESTING_HELP)
             val geoFireHelpRequest = GeoFire(mDatabaseReference)
 
-            // need to grab property fields here and use them below
+            val preferences = getSharedPreferences(getString(R.string.sharedPrefs), Context.MODE_PRIVATE)
+            val userFcmId = preferences.getString(getString(R.string.FCM_ID), "no fcm")
 
             if (currentLocation != null) {
-                //var list = ArrayList<Model.Course>()
-                //list.add(Model.Course("Geometry", "Math"))
-                fbManager.sendHelpBroadcastRequest(
-                        Model.HelpBroadCast(
-                                Model.Tutee(fbAuth.currentUser!!.uid,
-                                            fbAuth.currentUser?.displayName.toString(), "0.0", "0", true),
-                                            course_spinner.selectedItem.toString(), true, question_edit_text.text.toString()))
+                if (course_spinner.selectedItem != 0) {
+                    //var list = ArrayList<Model.Course>()
+                    //list.add(Model.Course("Geometry", "Math"))
+                    fbManager.sendHelpBroadcastRequest(
+                            Model.HelpBroadCast(fbAuth.currentUser!!.uid,
+                                    course_spinner.selectedItem.toString(), true,
+                                    question_edit_text.text.toString()))
 
-                geoFireHelpRequest.setLocation(fbAuth.currentUser?.uid, GeoLocation(currentLocation!!.latitude, currentLocation!!.longitude), { key, error ->
-                    if (error != null) {
-                        // fails omg no
-                        Log.e("GEOFIRE", error.details)
-                    } else {
-                        // success
-                        Log.e("GEOFIRE", "yahhhhhhhhh")
-                        val intent = Intent(this, MapsActivity::class.java)
-                        Log.e("Lat", currentLocation?.latitude.toString())
-                        intent.putExtra("lat", currentLocation?.latitude.toString())
-                        intent.putExtra("lon", currentLocation?.longitude.toString())
-                        intent.putExtra("course", course_spinner.selectedItem.toString())
-                        startActivity(intent)
-                    }
-                })
-            } else {
-                if (ActivityCompat.checkSelfPermission(this,
-                                android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(this,
-                            arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), 1)
-                } else {
-                    fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
-                        if (location != null) {
-                            Log.e("Lastknown", location.toString())
-                            geoFireHelpRequest.setLocation(fbAuth.currentUser?.uid, GeoLocation(location.latitude, location.longitude), { key, error ->
-                                if (error != null) {
-                                    Log.e("GEOFIRE", error.details)
-                                } else {
-                                    Log.e("GEOFIRE", "success")
-                                    val intent = Intent(this, MapsActivity::class.java)
-                                    Log.e("Lat", currentLocation?.latitude.toString())
-                                    intent.putExtra("lat", location.latitude.toString())
-                                    intent.putExtra("lon", location.longitude.toString())
-                                    startActivity(intent)
-                                }
-                            })
+                    geoFireHelpRequest.setLocation(fbAuth.currentUser?.uid,
+                            GeoLocation(currentLocation!!.latitude, currentLocation!!.longitude), { key, error ->
+                        if (error != null) {
+                            // fails omg no
+                            Log.e("GEOFIRE", error.details)
                         } else {
-                            // we need to have this just grab the location or like tell them ot do stuff but this works for now ;)
-                            Toast.makeText(this, "Is your location enabled?  try again please...", Toast.LENGTH_LONG).show()
-                            Log.e("NO LOCAL", "no location yet fam, try again when you aint a bitch.")
-                            locationProxy.requestUsersLocation()
+                            // success
+                            Log.e("GEOFIRE", "yahhhhhhhhh")
+                            val intent = Intent(this, MapsActivity::class.java)
+                            Log.e("Lat", currentLocation?.latitude.toString())
+                            intent.putExtra("lat", currentLocation?.latitude.toString())
+                            intent.putExtra("lon", currentLocation?.longitude.toString())
+                            intent.putExtra("course", course_spinner.selectedItem.toString())
+                            startActivity(intent)
+                        }
+                    })
+                } else {
+                    if (ActivityCompat.checkSelfPermission(this,
+                                    android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                        ActivityCompat.requestPermissions(this,
+                                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), 1)
+                    } else {
+                        fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+                            if (location != null) {
+                                Log.e("Lastknown", location.toString())
+                                geoFireHelpRequest.setLocation(fbAuth.currentUser?.uid, GeoLocation(location.latitude, location.longitude), { key, error ->
+                                    if (error != null) {
+                                        Log.e("GEOFIRE", error.details)
+                                    } else {
+                                        Log.e("GEOFIRE", "success")
+                                        val intent = Intent(this, MapsActivity::class.java)
+                                        Log.e("Lat", currentLocation?.latitude.toString())
+                                        intent.putExtra("lat", location.latitude.toString())
+                                        intent.putExtra("lon", location.longitude.toString())
+                                        startActivity(intent)
+                                    }
+                                })
+                            } else {
+                                // we need to have this just grab the location or like tell them ot do stuff but this works for now ;)
+                                Toast.makeText(this, "Is your location enabled?  try again please...", Toast.LENGTH_LONG).show()
+                                Log.e("NO LOCAL", "no location yet fam, try again when you aint a bitch.")
+                                locationProxy.requestUsersLocation()
+                            }
                         }
                     }
                 }

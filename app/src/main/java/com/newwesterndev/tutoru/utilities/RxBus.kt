@@ -3,7 +3,7 @@ package com.newwesterndev.tutoru.utilities
 import io.reactivex.Observable
 import io.reactivex.subjects.PublishSubject
 
-class RxBus {
+object RxBus {
 
     private val publisher = PublishSubject.create<Any>()
 

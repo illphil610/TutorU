@@ -35,6 +35,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.newwesterndev.tutoru.R
 import com.newwesterndev.tutoru.activities.Auth.LoginActivity
+import com.newwesterndev.tutoru.activities.MessageActivity
 import com.newwesterndev.tutoru.activities.SessionActivity
 import com.newwesterndev.tutoru.activities.TutorViewSubjectsCoursesActivity
 import com.newwesterndev.tutoru.db.DbManager
@@ -43,6 +44,7 @@ import com.newwesterndev.tutoru.utilities.FirebaseManager
 import kotlinx.android.synthetic.main.activity_tutor_profile.*
 
 class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+
     private lateinit var map: GoogleMap
     private var fusedLocationProviderClient: FusedLocationProviderClient? = null
     private  var lastLocation: Location? = null
@@ -60,6 +62,7 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_tutor_profile)
 
+        // Dat map fragment doeeeeee
         val mapFragment = supportFragmentManager.findFragmentById(R.id.profile_map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
@@ -77,7 +80,7 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
         val mRequestingHelpReference = mFirebaseDatabase.getReference(Contract.REQUESTING_HELP)
         val geoFireHelpRequest = GeoFire(mRequestingHelpReference)
 
-
+        // Checking if the toggle was previously checked before leaving app
         val sharedPreferences = getSharedPreferences(getString(R.string.sharedPrefs), Context.MODE_PRIVATE)
         val isAvailToggleChecked = sharedPreferences.getString("isChecked", "false")!!.toBoolean()
         togglebutton_availibility.isChecked = isAvailToggleChecked
@@ -93,9 +96,6 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
             }
         }
 
-        //val mapFragment = supportFragmentManager.findFragmentById(R.id.profile_map) as SupportMapFragment
-        //mapFragment.getMapAsync(this)
-
         if (ActivityCompat.checkSelfPermission(this,
                         android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
@@ -105,19 +105,13 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
             locationCallback = object : LocationCallback() {
                 override fun onLocationResult(p0: LocationResult) {
                     super.onLocationResult(p0)
-                    //map.clear()
                     lastLocation = p0.lastLocation
-                    //placeMarkerOnMap(LatLng(p0.lastLocation.latitude, p0.lastLocation.longitude ))
                     createLocationRequest()
                 }
             }
         }
 
-        //createLocationRequest()
-
-
         button_view_subjects_courses.setOnClickListener { loadTutorsSubjectsCoursesFromSharedPref() }
-
         togglebutton_availibility.setOnCheckedChangeListener { buttonView, isChecked ->
             if (isChecked) {
                 // save that the toggle is set to checked in shared prefs
@@ -143,22 +137,20 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
                         override fun onKeyEntered(key: String, location: GeoLocation) {
                             Log.e("TAG", String.format("Provider %s is within your search range [%f,%f]", key, location.latitude, location.longitude))
                             firebaseManager.getTutee(key) { tutee ->
-                                placeMarkerOnMap(LatLng(location.latitude, location.longitude))
+                                val tuteeMapPin = map.addMarker(MarkerOptions().position(LatLng(location.latitude, location.longitude)).title(tutee.name))
+                                tuteeMapPin.isDraggable = true
+                                tuteeMapPin.tag = key
                             }
                         }
-
                         override fun onKeyExited(key: String) {
                             Log.i("TAG", String.format("Provider %s is no longer in the search area", key))
                         }
-
                         override fun onKeyMoved(key: String, location: GeoLocation) {
                             Log.i("TAG", String.format("Provider %s moved within the search area to [%f,%f]", key, location.latitude, location.longitude))
                         }
-
                         override fun onGeoQueryReady() {
                             Log.i("TAG", "onGeoQueryReady")
                         }
-
                         override fun onGeoQueryError(error: DatabaseError) {
                             Log.e("TAG", "error: " + error)
                         }
@@ -168,6 +160,7 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
             if (!isChecked) {
                 geoFireSaveAvailTutor.removeLocation(fbAuth.currentUser?.uid) { key, error ->
                     if (error == null) {
+                        map.clear()
                         with (sharedPreferences.edit()) {
                             putString("isChecked", "false")
                             apply()
@@ -184,6 +177,15 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
         map = googleMap
         map.uiSettings.isZoomControlsEnabled = true
         map.setOnMarkerClickListener(this)
+        map.setOnMarkerDragListener(object : GoogleMap.OnMarkerDragListener {
+            override fun onMarkerDragStart(marker: Marker?) {
+                val intent = Intent(applicationContext, MessageActivity::class.java)
+                intent.putExtra("userKey", marker?.tag.toString())
+                startActivity(intent)
+            }
+            override fun onMarkerDrag(p0: Marker?) {}
+            override fun onMarkerDragEnd(p0: Marker?) {}
+        })
         setupMap()
     }
 
@@ -206,14 +208,6 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
                 }
             }
         }
-    }
-
-    private fun placeMarkerOnMap(location: LatLng) {
-        val markerOptions = MarkerOptions().position(location)
-
-        map.addMarker(markerOptions)
-        markerOptions.icon(BitmapDescriptorFactory
-                .fromBitmap(BitmapFactory.decodeResource(resources, R.mipmap.ic_user_location)))
     }
 
     private fun locationUpdates() {
@@ -291,6 +285,11 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
         else -> {
             super.onOptionsItemSelected(item)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        togglebutton_availibility.isChecked = false
     }
 
     override fun onBackPressed() {
