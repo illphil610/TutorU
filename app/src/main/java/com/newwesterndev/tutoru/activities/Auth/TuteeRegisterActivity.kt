@@ -68,8 +68,10 @@ class TuteeRegisterActivity : AppCompatActivity() {
                                         apply()
                                     }
 
-                                    // Create / Save the Tutee in Firebase RD
-                                    FirebaseManager.instance.createTutee(Model.Tutee(mAuth.currentUser?.uid!!, name, "0.0", "0", true))
+                            val fcm_id = sharedPref.getString(getString(R.string.FCM_ID), "no fcm_id")
+
+                            // Create / Save the Tutee in Firebase RD
+                            FirebaseManager.instance.createTutee(Model.Tutee(mAuth.currentUser?.uid!!, fcm_id, name, "0.0", "0", true))
 
                                     // Send the user to the MainScreen for now
                                     val intent = Intent(this, HelpRequestActivity::class.java)
