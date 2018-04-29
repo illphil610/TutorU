@@ -17,9 +17,9 @@ class Model {
                      var name: String,
                      var ratingAvg: String,
                      var numOfRatings: String,
-                     var isAvailable: Boolean)
+                     var isAvailable: Boolean,
                      //var subjectList: ArrayList<String>,
-                     //var courseList : ArrayList<String>)
+                     var courseList : ArrayList<String>)
 
     data class Tutee(var uid: String,
                      var fcm_id: String,
@@ -28,7 +28,7 @@ class Model {
                      var numOfRatings: String,
                      var requestingHelp: Boolean)
 
-    data class HelpBroadCast(var tutee: Model.Tutee,
+    data class HelpBroadCast(var tuteeUid: String,
                              var course: String,
                              var stillAwaitingHelp: Boolean,
                              var questionDetails: String)

@@ -71,10 +71,11 @@ class FirebaseManager private constructor() {
                                          snapshot.child("fcm_id").value as String,
                                          snapshot.child("name").value as String,
                                          snapshot.child("ratingAvg").value as String,
-                                         snapshot.child("numOfRatings").value as String, true)
+                                         snapshot.child("numOfRatings").value as String, true,
+                                         snapshot.child("courseList").value as ArrayList<String>)
                                  callback(tutor)
                              } catch (e: Exception) {
-                                 e.printStackTrace()
+                                 Log.e("error", "something happened right here bruh")
                              }
                 }
             }
@@ -103,29 +104,10 @@ class FirebaseManager private constructor() {
         })
     }
 
-    fun updateTutorRating(uid: String, rating: Double, callback: (Model.Tutor) -> Unit) {
-        getTutee(uid) { tutee ->
-
-
-        }
-
-    }
-
-    fun updateTuteeRating(uid: String, rating: Double, callback: (Model.Tutee) -> Unit) {
-        getTutor(uid) { tutor ->
-            val ratingCount = tutor.numOfRatings
-            val oldRatingAvg = tutor.ratingAvg
-
-        }
-    }
-
     fun saveChatToFirebaseMessage(chatMessage: Model.Chat) {
         val key = mMessagesDbRef.push().key
         mMessagesDbRef.child(key).setValue(chatMessage)
     }
-
-    // save the Tutees location to the Geofire table
-    fun saveGeoFireDataForTutee(uid: String, location: Location) {}
 
     companion object {
         val instance: FirebaseManager by lazy { Holder.INSTANCE }

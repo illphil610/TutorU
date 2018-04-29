@@ -60,6 +60,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         //intent = intent
         val lat = intent.getStringExtra("lat")
         val lon = intent.getStringExtra("lon")
+        val course = intent.getStringExtra("course")
 
         // Get FirebaaseManager singleton
         mFirebaseManager = FirebaseManager.instance
@@ -87,11 +88,16 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 Log.e("TAG", String.format("Provider %s is within your search range [%f,%f]", key, location.latitude, location.longitude))
                 mFirebaseManager.getTutor(key) { tutor ->
                     availableTutorList.add(tutor)
-                    val tutorMapPin = map.addMarker(MarkerOptions().
-                            position(LatLng(location.latitude, location.longitude)).
-                            title(tutor.name))
-                    tutorMapPin.isDraggable = true
-                    tutorMapPin.tag = key
+
+                    if (tutor.courseList.contains(course)) {
+                        val tutorMapPin = map.addMarker(MarkerOptions().
+                                position(LatLng(location.latitude, location.longitude))
+                                .title(tutor.name))
+                        tutorMapPin.snippet = "Avg Rating " + tutor.ratingAvg
+                        //tutorMapPin.snippet = ("rating " + tutor.ratingAvg)
+                        tutorMapPin.isDraggable = true
+                        tutorMapPin.tag = key
+                    }
                 }
             }
             override fun onKeyExited(key: String) {

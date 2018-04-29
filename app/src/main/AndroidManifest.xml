@@ -83,7 +83,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.Tutor.RatingsActivity" />
-        <activity android:name=".activities.MessageActivity">
+        <activity
+            android:name=".activities.MessageActivity"
+            android:screenOrientation="portrait" >
         </activity>
     </application>
 

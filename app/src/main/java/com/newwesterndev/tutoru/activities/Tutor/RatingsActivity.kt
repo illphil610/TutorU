@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.newwesterndev.tutoru.R
+import com.newwesterndev.tutoru.activities.Tutee.HelpRequestActivity
 import com.newwesterndev.tutoru.utilities.FirebaseManager
 import kotlinx.android.synthetic.main.activity_ratings.*
 import nl.dionsegijn.konfetti.models.Shape
@@ -64,8 +65,6 @@ class RatingsActivity : AppCompatActivity() {
                         tutee.numOfRatings = (currentRatingCount + 1).toString()
                         mFirebaseManager.updateTutee(userUid, tutee)
                     }
-
-
                 }
                 else -> {
 
@@ -90,9 +89,16 @@ class RatingsActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         super.onBackPressed()
-
         //check if user is a Tutor or a tutee
-        finish()
+        if (userType == "tutee") {
+            val intent = Intent(this, HelpRequestActivity::class.java)
+            startActivity(intent)
+            finishAffinity()
+        } else {
+            val intent = Intent(this, TutorProfileActivity::class.java)
+            startActivity(intent)
+            finishAffinity()
+        }
     }
 
     companion object {
