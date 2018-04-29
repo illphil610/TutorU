@@ -88,13 +88,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 Log.e("TAG", String.format("Provider %s is within your search range [%f,%f]", key, location.latitude, location.longitude))
                 mFirebaseManager.getTutor(key) { tutor ->
                     availableTutorList.add(tutor)
-
                     if (tutor.courseList.contains(course)) {
                         val tutorMapPin = map.addMarker(MarkerOptions().
                                 position(LatLng(location.latitude, location.longitude))
                                 .title(tutor.name))
                         tutorMapPin.snippet = "Avg Rating " + tutor.ratingAvg
-                        //tutorMapPin.snippet = ("rating " + tutor.ratingAvg)
                         tutorMapPin.isDraggable = true
                         tutorMapPin.tag = key
                     }
