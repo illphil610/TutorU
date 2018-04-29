@@ -2,11 +2,9 @@ package com.newwesterndev.tutoru.activities.Tutor
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.location.Location
@@ -16,7 +14,6 @@ import android.support.v4.app.ActivityCompat
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.Toast
 import com.firebase.geofire.GeoFire
 import com.firebase.geofire.GeoLocation
 import com.firebase.geofire.GeoQueryEventListener
@@ -304,6 +301,5 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
     private fun loadTutorsSubjectsCoursesFromSharedPref() {
         val viewSubjectsIntent = Intent(this, TutorViewSubjectsCoursesActivity::class.java)
         startActivity(viewSubjectsIntent)
-        finish()
     }
 }

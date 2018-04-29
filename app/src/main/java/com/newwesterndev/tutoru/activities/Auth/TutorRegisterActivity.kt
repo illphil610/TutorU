@@ -14,27 +14,27 @@ import android.widget.EditText
 import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.newwesterndev.tutoru.R
+import com.newwesterndev.tutoru.activities.Tutor.TutorProfileActivity
 import com.newwesterndev.tutoru.db.DbManager
 import com.newwesterndev.tutoru.model.Contract
-import com.newwesterndev.tutoru.activities.Tutor.TutorProfileActivity
-import com.newwesterndev.tutoru.db.subjectdatabase
 import com.newwesterndev.tutoru.model.Model
 import com.newwesterndev.tutoru.utilities.FirebaseManager
 import com.newwesterndev.tutoru.utilities.Utility
-import kotlinx.android.synthetic.main.activity_help_request.*
 import kotlinx.android.synthetic.main.activity_tutor_register.*
 
 class TutorRegisterActivity : AppCompatActivity() {
 
-    private lateinit var email: EditText
-    private lateinit var password: EditText
-    private lateinit var confirmPassword: EditText
+    private lateinit var nameEditText: EditText
+    private lateinit var emailEditText: EditText
+    private lateinit var passwordEditText: EditText
+    private lateinit var confirmPasswordEditText: EditText
     private lateinit var submitButton: Button
     private lateinit var cancelButton: Button
 
     private var mAuth: FirebaseAuth? = null
     private var mUtility: Utility? = null
     private val dbManager = DbManager(this)
+    private var context: Context = this
 
     private val listOfCheckedSubjects = ArrayList<String>()
     private val listOfCheckedCourses = ArrayList<String>()
@@ -47,40 +47,57 @@ class TutorRegisterActivity : AppCompatActivity() {
         mAuth = FirebaseAuth.getInstance()
         mUtility = Utility()
 
-        email = findViewById(R.id.edit_text_tutor_reg_email)
-        password = findViewById(R.id.edit_text_tutor_reg_password)
-        confirmPassword = findViewById(R.id.edit_text_tutor_reg_password)
+        nameEditText = findViewById(R.id.edit_text_tutor_reg_name)
+        emailEditText = findViewById(R.id.edit_text_tutor_reg_email)
+        passwordEditText = findViewById(R.id.edit_text_tutor_reg_password)
+        confirmPasswordEditText = findViewById(R.id.edit_text_tutor_reg_confirm_password)
         submitButton = findViewById(R.id.button_tutor_reg_submit)
         cancelButton = findViewById(R.id.button_tutor_reg_cancel)
-        val name = findViewById<EditText>(R.id.edit_text_tutor_reg_name)
 
         submitButton.setOnClickListener { view ->
-            if (!TextUtils.isEmpty(email.text.toString()) && !TextUtils.isEmpty(password.text.toString())) {
-                mUtility?.showMessage(view, "Creating your account, Mr. Tutor!")
-                mAuth?.createUserWithEmailAndPassword(email.text.toString(), password.text.toString())?.addOnCompleteListener(this, { task ->
-                    if (task.isSuccessful) {
-                        // save user type to shared preferences to use throughout the application
-                        val sharedPref = getSharedPreferences(getString(R.string.sharedPrefs), Context.MODE_PRIVATE)
-                        with (sharedPref.edit()) {
-                            putString(mAuth?.currentUser?.email.toString(), "tutor")
-                            apply()
-                        }
+            val name = nameEditText.text.toString().trim()
+            val email = emailEditText.text.toString().trim()
+            val password = passwordEditText.text.toString().trim()
+            val confirmPassword = confirmPasswordEditText.text.toString().trim()
 
-                        val fcm_id = sharedPref.getString(getString(R.string.FCM_ID), "no fcm_id")
+            if (!TextUtils.isEmpty(name) && !TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
+                if (mUtility!!.isValidEmail(email) && mUtility!!.isValidPassword(password)) {
+                    if (password == confirmPassword) {
+                        mUtility?.showMessage(view, "Creating your account, Mr. Tutor!")
+                        mAuth?.createUserWithEmailAndPassword(email, password)?.addOnCompleteListener(this, { task ->
+                            if (task.isSuccessful) {
+                                // save user type to shared preferences to use throughout the application
+                                val sharedPref = getSharedPreferences(getString(R.string.sharedPrefs), Context.MODE_PRIVATE)
+                                with(sharedPref.edit()) {
+                                    putString(mAuth?.currentUser?.email.toString(), "tutor")
+                                    apply()
+                                }
 
-                        // this will include the necessary course / subject lists but for right now its nothing but blank lists
-                        FirebaseManager.instance.createTutor(Model.Tutor(mAuth?.currentUser!!.uid, fcm_id, name.text.toString(), "0.0", "0", false, listOfCheckedCourses))
+                                val fcm_id = sharedPref.getString(getString(R.string.FCM_ID), "no fcm_id")
 
-                        // Send the user to the MainScreen for now
-                        val intent = Intent(this, TutorProfileActivity::class.java)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent)
-                        finish()
+                                // this will include the necessary course / subject lists but for right now its nothing but blank lists
+                                FirebaseManager.instance.createTutor(Model.Tutor(mAuth?.currentUser!!.uid, fcm_id, name, "0.0", "0", false, listOfCheckedCourses))
+
+                                // Send the user to the MainScreen for now
+                                val intent = Intent(this, TutorProfileActivity::class.java)
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent)
+                                finish()
+                            } else {
+                                mUtility?.showMessage(view, task.exception.toString())
+                                Log.e("Sign up error", task.exception.toString())
+                            }
+                        })
                     } else {
-                        mUtility?.showMessage(view, task.exception.toString())
-                        Log.e("Sign up error", task.exception.toString())
+                        Toast.makeText(this, "Passwords do not match", Toast.LENGTH_LONG).show()
                     }
-                })
+                } else if (!mUtility!!.isValidEmail(email)) {
+                    Toast.makeText(this, "Please enter a valid email address", Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(this, "Please enter a valid password", Toast.LENGTH_LONG).show()
+                }
+            } else {
+                Toast.makeText(this, "Please complete all fields", Toast.LENGTH_LONG).show()
             }
         }
 
@@ -110,7 +127,6 @@ class TutorRegisterActivity : AppCompatActivity() {
             .setMultiChoiceItems(subjectList.toTypedArray(), null) { _, indexSelected, isChecked ->
                 if (isChecked) {
                     val checkedSubject: String = subjectList[indexSelected]
-                    println("CHECKED $checkedSubject")
                     listOfCheckedSubjects.add(checkedSubject)
                 } else {
                     return@setMultiChoiceItems
@@ -126,8 +142,6 @@ class TutorRegisterActivity : AppCompatActivity() {
             }
             .create()
             .show()
-
-        println("CHECKED SUBJECTS " + listOfCheckedSubjects.toString())
     }
 
     private fun openCourseSelectDialog(subjects: ArrayList<String>) {
@@ -164,8 +178,6 @@ class TutorRegisterActivity : AppCompatActivity() {
             }
             .create()
             .show()
-
-        println("CHECKED COURSES " + listOfCheckedSubjects.toString())
     }
 
     private fun saveSubjectsToSharedPref(subjects: List<String>) {
@@ -175,7 +187,6 @@ class TutorRegisterActivity : AppCompatActivity() {
         with(sharedPreferences.edit()) {
             for (subjectIndex in 0 until subjects.size) {
                 putString("Subject$subjectIndex", subjects[subjectIndex])
-                println("SAVED SUBJECT " + subjects[subjectIndex])
             }
             apply()
         }
@@ -189,7 +200,6 @@ class TutorRegisterActivity : AppCompatActivity() {
         with (sharedPreferences.edit()) {
             for (courseIndex in 0 until courses.size) {
                 putString("Course$courseIndex", courses[courseIndex])
-                println("SAVED COURSE " + courses[courseIndex])
             }
             apply()
         }
