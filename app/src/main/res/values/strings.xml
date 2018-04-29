@@ -54,4 +54,10 @@
     <string name="action_settings">Settings</string>
     <string name="FCM_ID">FCM_ID</string>
     <string name="your_courses">Your Courses</string>
+    <string name="hello_username">Hello, Username!</string>
+    <string name="choose_a_subject">Choose a subject</string>
+    <string name="let_s_find_you_a_tutor">Let\'s Find You A Tutor</string>
+    <string name="choose_a_course">Choose a course</string>
+    <string name="tell_us_your_problem">Tell us your problem:</string>
+    <string name="help_me">Help Me!</string>
 </resources>
