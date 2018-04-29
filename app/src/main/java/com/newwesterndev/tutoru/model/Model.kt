@@ -13,20 +13,22 @@ class Model {
                     var locaton: LatLng)
 
     data class Tutor(var uid: String,
+                     var fcm_id: String,
                      var name: String,
                      var ratingAvg: String,
                      var numOfRatings: String,
-                     var isAvailable: Boolean)
+                     var isAvailable: Boolean,
                      //var subjectList: ArrayList<String>,
-                     //var courseList : ArrayList<String>)
+                     var courseList : ArrayList<String>)
 
     data class Tutee(var uid: String,
+                     var fcm_id: String,
                      var name: String,
                      var ratingAvg: String,
                      var numOfRatings: String,
                      var requestingHelp: Boolean)
 
-    data class HelpBroadCast(var tutee: Model.Tutee,
+    data class HelpBroadCast(var tuteeUid: String,
                              var course: String,
                              var stillAwaitingHelp: Boolean,
                              var questionDetails: String)
@@ -42,7 +44,7 @@ class Model {
     data class Course(var name: String,
                       var fromSubjectName: String)
 
-    data class ChatMessage(var messageText: String,
-                           var messageFromUser: String,
-                           var messageTime: Long)
+    data class Chat(var to: String,
+                    var from: String,
+                    var message: String)
 }

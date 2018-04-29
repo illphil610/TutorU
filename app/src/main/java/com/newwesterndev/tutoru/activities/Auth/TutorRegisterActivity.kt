@@ -59,7 +59,6 @@ class TutorRegisterActivity : AppCompatActivity() {
                 mUtility?.showMessage(view, "Creating your account, Mr. Tutor!")
                 mAuth?.createUserWithEmailAndPassword(email.text.toString(), password.text.toString())?.addOnCompleteListener(this, { task ->
                     if (task.isSuccessful) {
-
                         // save user type to shared preferences to use throughout the application
                         val sharedPref = getSharedPreferences(getString(R.string.sharedPrefs), Context.MODE_PRIVATE)
                         with (sharedPref.edit()) {
@@ -67,8 +66,10 @@ class TutorRegisterActivity : AppCompatActivity() {
                             apply()
                         }
 
+                        val fcm_id = sharedPref.getString(getString(R.string.FCM_ID), "no fcm_id")
+
                         // this will include the necessary course / subject lists but for right now its nothing but blank lists
-                        FirebaseManager.instance.createTutor(Model.Tutor(mAuth?.currentUser!!.uid, name.text.toString(), "0.0", "0", false))
+                        FirebaseManager.instance.createTutor(Model.Tutor(mAuth?.currentUser!!.uid, fcm_id, name.text.toString(), "0.0", "0", false, listOfCheckedCourses))
 
                         // Send the user to the MainScreen for now
                         val intent = Intent(this, TutorProfileActivity::class.java)
@@ -97,13 +98,11 @@ class TutorRegisterActivity : AppCompatActivity() {
             for (subject in subjectsFromDB) {
                 subjectNames.add(subject.name)
             }
-
             openSubjectSelectDialog(subjectNames)
         }
     }
 
     private fun openSubjectSelectDialog(subjectList: ArrayList<String>) {
-
         AlertDialog.Builder(this)
             .setTitle("Select Subjects")
             .setIcon(R.mipmap.ic_books)
