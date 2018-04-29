@@ -200,7 +200,6 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
                 if (location != null) {
                     lastLocation = location
                     val currentLatLng = LatLng(location.latitude, location.longitude)
-                    //placeMarkerOnMap(currentLatLng)
                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 16.0f))
                 }
             }

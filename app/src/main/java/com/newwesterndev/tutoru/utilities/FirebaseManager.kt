@@ -63,9 +63,7 @@ class FirebaseManager private constructor() {
     fun getTutor(uid: String, callback: (Model.Tutor) -> Unit) {
         mTutorDbRef.child(uid).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot?) {
-                Log.e("Tutor", snapshot.toString())
                 if (snapshot != null) {
-                    Log.e("Tutor Deets", snapshot.child("name").value as String)
                              try {
                                  val tutor = Model.Tutor(uid,
                                          snapshot.child("fcm_id").value as String,
@@ -86,16 +84,20 @@ class FirebaseManager private constructor() {
     }
 
     fun getTutee(uid: String, callback: (Model.Tutee) -> Unit) {
-        mTuteeDbRef.child(uid).addListenerForSingleValueEvent(object : ValueEventListener {
+        mTuteeDbRef.child(uid)?.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot?) {
-                Log.e("Tutee", snapshot.toString())
                 if (snapshot != null) {
-                    Log.e("Tutee Deets", snapshot.child("name").value as String)
-                    callback(Model.Tutee(uid,
-                            snapshot.child("fcm_id").value as String,
-                            snapshot.child("name").value as String,
-                            snapshot.child("ratingAvg").value as String,
-                            snapshot.child("numOfRatings").value as String, true))
+                    try {
+                        callback(Model.Tutee(uid,
+                                snapshot.child("fcm_id")?.value as String,
+                                snapshot.child("name")?.value as String,
+                                snapshot.child("ratingAvg")?.value as String,
+                                snapshot.child("numOfRatings")?.value as String, true))
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    } finally {
+                        Log.e("fucked", "get fucked")
+                    }
                 }
             }
             override fun onCancelled(error: DatabaseError?) {
