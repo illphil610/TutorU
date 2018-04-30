@@ -30,15 +30,31 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/tutor_name_text"
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:fontFamily="cursive"
-                android:text="Karl Morris"
-                android:textColor="@color/colorPrimaryDark"
-                android:textSize="30sp" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tutor_name_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="5dp"
+                    android:fontFamily="cursive"
+                    android:text="Karl Morris"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="45sp" />
+
+                <ImageView
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginEnd="6dp"
+                    android:layout_marginTop="8dp"
+                    android:src="@drawable/owl"/>
+
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/textview_availibility"
@@ -95,17 +111,6 @@
                 android:textColor="@android:color/white"
                 android:background="#00ADEF"
                 android:text="@string/view_my_courses_subjects" />
-
-            <!--<Button-->
-                <!--android:id="@+id/button_add_subject_courses"-->
-                <!--android:layout_width="190dp"-->
-                <!--android:layout_height="50dp"-->
-                <!--android:layout_marginEnd="10dp"-->
-                <!--android:layout_alignParentEnd="true"-->
-                <!--android:textSize="12sp"-->
-                <!--android:textColor="@android:color/white"-->
-                <!--android:background="#00ADEF"-->
-                <!--android:text="@string/add_new_subject_courses" />-->
 
         </RelativeLayout>
 
