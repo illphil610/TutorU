@@ -83,6 +83,8 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
         val isAvailToggleChecked = sharedPreferences.getString("isChecked", "false")!!.toBoolean()
         togglebutton_availibility.isChecked = isAvailToggleChecked
 
+        tutor_name_text.text = fbAuth.currentUser?.displayName
+
         // checking if the user is logged in or not.............MEEK IS FREE!
         fbAuth.addAuthStateListener {
             if (fbAuth.currentUser == null) {

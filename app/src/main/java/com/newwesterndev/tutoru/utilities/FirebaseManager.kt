@@ -1,5 +1,6 @@
 package com.newwesterndev.tutoru.utilities
 
+import android.content.Context
 import android.location.Location
 import android.util.Log
 import co.intentservice.chatui.models.ChatMessage
@@ -55,6 +56,11 @@ class FirebaseManager private constructor() {
         updatedTutorRef.child(uid).setValue(tutor)
     }
 
+    fun updateTutorsCourseList(context: Context, uid: String, updatedCourses: ArrayList<String>) {
+        val updatedTutorRef = mDatabaseReference.child(Contract.TUTOR)
+        updatedTutorRef.child(uid).child("courseList").setValue(updatedCourses)
+    }
+
     fun updateTutee(uid: String, tutee: Model.Tutee) {
         val updatedTuteeRef = mDatabaseReference.child(Contract.TUTEE)
         updatedTuteeRef.child(uid).setValue(tutee)
@@ -66,6 +72,7 @@ class FirebaseManager private constructor() {
                 if (snapshot != null) {
                              try {
                                  val tutor = Model.Tutor(uid,
+                                         snapshot.child("acctType").value as String,
                                          snapshot.child("fcm_id").value as String,
                                          snapshot.child("name").value as String,
                                          snapshot.child("ratingAvg").value as String,
@@ -89,6 +96,7 @@ class FirebaseManager private constructor() {
                 if (snapshot != null) {
                     try {
                         callback(Model.Tutee(uid,
+                                snapshot.child("acctType").value as String,
                                 snapshot.child("fcm_id")?.value as String,
                                 snapshot.child("name")?.value as String,
                                 snapshot.child("ratingAvg")?.value as String,

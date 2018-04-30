@@ -13,12 +13,14 @@ import com.newwesterndev.tutoru.activities.Tutor.TutorProfileActivity
 import com.newwesterndev.tutoru.db.DbManager
 import com.newwesterndev.tutoru.db.PopulateDatabase
 import com.newwesterndev.tutoru.model.Contract
+import com.newwesterndev.tutoru.utilities.FirebaseManager
 import com.newwesterndev.tutoru.utilities.Utility
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : Activity() {
 
     private lateinit var fbAuth: FirebaseAuth
+    private lateinit var fbManager: FirebaseManager
     private lateinit var mDbManager: DbManager
     private lateinit var mUtil: Utility
 
@@ -29,6 +31,7 @@ class MainActivity : Activity() {
         // Create the stuff we need to do things
         mUtil = Utility()
         mDbManager = DbManager(this)
+        fbManager = FirebaseManager.instance
 
         // determine if the user is authenticated or not
         fbAuth = FirebaseAuth.getInstance()
@@ -57,6 +60,7 @@ class MainActivity : Activity() {
         if (fbAuth.currentUser != null) {
             val preferences = getSharedPreferences(getString(R.string.sharedPrefs), Context.MODE_PRIVATE)
             val user = preferences.getString(fbAuth.currentUser?.email, getString(R.string.unknown))
+
             when (user) {
                 getString(R.string.tuteeMain) -> {
                     val intent = Intent(this, HelpRequestActivity::class.java)
