@@ -213,8 +213,7 @@ class HelpRequestActivity : AppCompatActivity(), LocationProxy.LocationDelegate 
             true
         }
         R.id.action_start_session -> {
-            val intent = Intent(this, SessionActivity::class.java)
-            startActivity(intent)
+            Toast.makeText(this, "Please chat with a Tutor first!", Toast.LENGTH_LONG).show()
             true
         }
         else -> {

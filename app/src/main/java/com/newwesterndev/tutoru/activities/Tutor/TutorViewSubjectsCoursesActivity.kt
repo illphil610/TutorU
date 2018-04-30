@@ -8,13 +8,17 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import android.widget.Toast
+import com.google.firebase.auth.FirebaseAuth
 import com.newwesterndev.tutoru.R
 import com.newwesterndev.tutoru.db.DbManager
 import com.newwesterndev.tutoru.model.Contract
+import com.newwesterndev.tutoru.utilities.FirebaseManager
 import kotlinx.android.synthetic.main.fab_layout.*
 
 class TutorViewSubjectsCoursesActivity : AppCompatActivity() {
     private val dbManager = DbManager(this)
+    private val firebaseManager = FirebaseManager.instance
+    private var fbAuth: FirebaseAuth? = null
     private val listOfCheckedSubjects = ArrayList<String>()
     private val listOfCheckedCourses = ArrayList<String>()
     private val courseListFromPref = ArrayList<String>()
@@ -26,6 +30,7 @@ class TutorViewSubjectsCoursesActivity : AppCompatActivity() {
         setContentView(R.layout.activity_tutor_view_subjects_courses)
 
         courseListView = findViewById(R.id.listview_courses)
+        fbAuth = FirebaseAuth.getInstance()
 
         populateCourseListView()
 
@@ -93,6 +98,12 @@ class TutorViewSubjectsCoursesActivity : AppCompatActivity() {
                 }
                 .setPositiveButton("Ok") { _, _ ->
                     saveCoursesToSharedPref(listOfCheckedCourses)
+                    populateCourseListView()
+                    firebaseManager.updateTutorsCourseList(this, fbAuth?.currentUser!!.uid, listOfCheckedCourses)
+
+
+                    //update course list in firebase
+
                     Toast.makeText(this, "Courses Selected", Toast.LENGTH_SHORT).show()
                 }
                 .setNegativeButton("Cancel") { _, _ ->
@@ -132,16 +143,11 @@ class TutorViewSubjectsCoursesActivity : AppCompatActivity() {
     }
 
     private fun populateCourseListView() {
-        val sharedPreferencesCourses = getSharedPreferences(Contract.SHARED_PREF_COURSES, Context.MODE_PRIVATE)
-        val coursesFromPrefMap = sharedPreferencesCourses.all
-
-        for (entry in coursesFromPrefMap) {
-            courseListFromPref.add(entry.value.toString())
+        firebaseManager.getTutor(fbAuth?.currentUser!!.uid) { tutor ->
+            val courses = tutor.courseList
+            courseListAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, courses)
+            courseListView?.adapter = courseListAdapter
+            courseListAdapter?.notifyDataSetChanged()
         }
-
-        courseListAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, courseListFromPref)
-        courseListView!!.adapter = courseListAdapter
-
-        courseListAdapter!!.notifyDataSetChanged()
     }
 }
