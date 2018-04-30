@@ -19,7 +19,11 @@ class Utility {
     }
 
     fun isValidEmail(email: CharSequence?): Boolean {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+        return if (email.isNullOrEmpty()) {
+            false
+        } else {
+            android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()
+        }
     }
 
     fun isValidPassword(password: String?): Boolean {
