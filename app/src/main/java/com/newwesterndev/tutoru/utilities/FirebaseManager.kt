@@ -18,6 +18,7 @@ class FirebaseManager private constructor() {
     private var mFirebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
     private var mDatabaseReference: DatabaseReference = mFirebaseDatabase.reference
     private var mAuth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val mUserTypeRef: DatabaseReference = FirebaseDatabase.getInstance().reference.child("UserType")
     private val mTutorDbRef: DatabaseReference = FirebaseDatabase.getInstance().reference.child(Contract.TUTOR)
     private var mTuteeDbRef: DatabaseReference = FirebaseDatabase.getInstance().reference.child(Contract.TUTEE)
     private var mMessagesDbRef: DatabaseReference = FirebaseDatabase.getInstance().reference.child("Messages")
@@ -88,6 +89,26 @@ class FirebaseManager private constructor() {
                 Log.e("fireDbError", error.toString())
             }
         })
+    }
+
+    fun getUsersType(uid: String, callback: (String) -> Unit) {
+        mUserTypeRef.child(uid).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                if (snapshot != null) {
+                    try {
+                        Log.e("UserTupe", snapshot.child("acctType").value as String)
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+            override fun onCancelled(error: DatabaseError?) {}
+        })
+    }
+
+    fun saveUsersType(uid: String, acctType: String) {
+        val newTutor = mDatabaseReference.child("UserType")
+        newTutor.child(uid).setValue(acctType)
     }
 
     fun getTutee(uid: String, callback: (Model.Tutee) -> Unit) {
