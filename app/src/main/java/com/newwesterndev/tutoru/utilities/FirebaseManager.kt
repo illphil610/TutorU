@@ -97,6 +97,7 @@ class FirebaseManager private constructor() {
                 if (snapshot != null) {
                     try {
                         Log.e("UserTupe", snapshot.child("acctType").value as String)
+                        callback(snapshot.child("acctType").value.toString())
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
