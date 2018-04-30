@@ -56,6 +56,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.Tutee.HelpRequestActivity"
+            android:label="Tutoring Help Request"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.Tutor.TutorProfileActivity"
@@ -69,9 +70,9 @@
             android:label="Tutee Registration"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.TutorViewSubjectsCoursesActivity"
-            android:label="Subjects and Courses"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:name=".activities.Tutor.TutorViewSubjectsCoursesActivity"
+            android:label="@string/your_courses"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.SessionActivity"
             android:launchMode="singleTask"

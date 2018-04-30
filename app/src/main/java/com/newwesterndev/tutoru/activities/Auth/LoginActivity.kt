@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
+import android.widget.Toast
 import com.google.firebase.auth.FirebaseAuth
 import com.newwesterndev.tutoru.R
 import com.newwesterndev.tutoru.activities.Tutee.HelpRequestActivity
@@ -22,7 +23,7 @@ import kotlinx.android.synthetic.main.activity_login.*
 class LoginActivity : Activity() {
 
     private lateinit var fbAuth: FirebaseAuth
-    private lateinit var mUtil: Utility
+    private lateinit var mUtility: Utility
     private lateinit var mDbManager: DbManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,7 +36,7 @@ class LoginActivity : Activity() {
 
         fbAuth = FirebaseAuth.getInstance()
         mDbManager = DbManager(this)
-        mUtil = Utility()
+        mUtility = Utility()
 
         button_login.setOnClickListener { view ->
             signIn(view, edit_text_signin_email.text.toString(), edit_text_signin_password.text.toString())
@@ -74,42 +75,48 @@ class LoginActivity : Activity() {
 
     private fun signIn(view: View, email: String, password: String) {
         if (!TextUtils.isEmpty(email) && !TextUtils.isEmpty(password)) {
-            mUtil.showMessage(view, "Preparing your dashboard. Please wait...")
-            fbAuth.signInWithEmailAndPassword(email.toLowerCase(), password).addOnCompleteListener(this, { task ->
-                if (task.isSuccessful) {
-                    // check the type of user and route to either HelpBroadcast or TutorProfile
-                    val preferences = getSharedPreferences(getString(R.string.sharedPrefs), Context.MODE_PRIVATE)
-                    val user = preferences.getString(email, "unknown")
-                    Log.e("USER ACCT", user)
+            if (mUtility.isValidEmail(edit_text_signin_email.text.toString()) && mUtility.isValidPassword(edit_text_signin_password.text.toString())) {
+                mUtility.showMessage(view, "Preparing your dashboard. Please wait...")
+                fbAuth.signInWithEmailAndPassword(email.toLowerCase(), password).addOnCompleteListener(this, { task ->
+                    if (task.isSuccessful) {
+                        // check the type of user and route to either HelpBroadcast or TutorProfile
+                        val preferences = getSharedPreferences(getString(R.string.sharedPrefs), Context.MODE_PRIVATE)
+                        val user = preferences.getString(email, "unknown")
+                        Log.e("USER ACCT", user)
 
-                    when (user) {
-                        "tutee" -> {
-                            val intent = Intent(this, HelpRequestActivity::class.java)
-                            intent.putExtra("email", fbAuth.currentUser?.email)
-                            startActivity(intent)
-                            finishAffinity()
+                        when (user) {
+                            "tutee" -> {
+                                val intent = Intent(this, HelpRequestActivity::class.java)
+                                intent.putExtra("email", fbAuth.currentUser?.email)
+                                startActivity(intent)
+                                finishAffinity()
+                            }
+                            "tutor" -> {
+                                val intent = Intent(this, TutorProfileActivity::class.java)
+                                intent.putExtra("email", fbAuth.currentUser?.email)
+                                startActivity(intent)
+                                finishAffinity()
+                            }
+                            else -> {
+                                // Sending the default users here to the activity im working on ;)
+                                // This is a bug tho... im only saving the user type when they create the profile
+                                // so if they uninstall and reinstall the app it wont know what type they are.  Working on a
+                                // solution but this felt okay for now.
+                                val intent = Intent(this, HelpRequestActivity::class.java)
+                                intent.putExtra("email", fbAuth.currentUser?.email)
+                                startActivity(intent)
+                                finishAffinity()
+                            }
                         }
-                        "tutor" -> {
-                            val intent = Intent(this, TutorProfileActivity::class.java)
-                            intent.putExtra("email", fbAuth.currentUser?.email)
-                            startActivity(intent)
-                            finishAffinity()
-                        }
-                        else -> {
-                            // Sending the default users here to the activity im working on ;)
-                            // This is a bug tho... im only saving the user type when they create the profile
-                            // so if they uninstall and reinstall the app it wont know what type they are.  Working on a
-                            // solution but this felt okay for now.
-                            val intent = Intent(this, HelpRequestActivity::class.java)
-                            intent.putExtra("email", fbAuth.currentUser?.email)
-                            startActivity(intent)
-                            finishAffinity()
-                        }
+                    } else {
+                        mUtility.showMessage(view, "Error: ${task.exception?.message}")
                     }
-                } else {
-                    mUtil.showMessage(view, "Error: ${task.exception?.message}")
-                }
-            })
+                })
+            } else if (!mUtility!!.isValidEmail(edit_text_signin_email.text.toString())) {
+                Toast.makeText(this, "Please enter a valid email address.", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(this, "Please enter a valid password.", Toast.LENGTH_LONG).show()
+            }
         }
     }
 

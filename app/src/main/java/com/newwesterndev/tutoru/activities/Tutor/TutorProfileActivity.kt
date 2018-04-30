@@ -2,11 +2,9 @@ package com.newwesterndev.tutoru.activities.Tutor
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
 import android.content.IntentSender
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.location.Location
@@ -37,7 +35,7 @@ import com.newwesterndev.tutoru.R
 import com.newwesterndev.tutoru.activities.Auth.LoginActivity
 import com.newwesterndev.tutoru.activities.MessageActivity
 import com.newwesterndev.tutoru.activities.SessionActivity
-import com.newwesterndev.tutoru.activities.TutorViewSubjectsCoursesActivity
+import com.newwesterndev.tutoru.activities.Tutor.TutorViewSubjectsCoursesActivity
 import com.newwesterndev.tutoru.db.DbManager
 import com.newwesterndev.tutoru.model.Contract
 import com.newwesterndev.tutoru.utilities.FirebaseManager
@@ -84,6 +82,8 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
         val sharedPreferences = getSharedPreferences(getString(R.string.sharedPrefs), Context.MODE_PRIVATE)
         val isAvailToggleChecked = sharedPreferences.getString("isChecked", "false")!!.toBoolean()
         togglebutton_availibility.isChecked = isAvailToggleChecked
+
+        tutor_name_text.text = fbAuth.currentUser?.displayName
 
         // checking if the user is logged in or not.............MEEK IS FREE!
         fbAuth.addAuthStateListener {
@@ -203,7 +203,6 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
                 if (location != null) {
                     lastLocation = location
                     val currentLatLng = LatLng(location.latitude, location.longitude)
-                    //placeMarkerOnMap(currentLatLng)
                     map.animateCamera(CameraUpdateFactory.newLatLngZoom(currentLatLng, 16.0f))
                 }
             }
@@ -278,18 +277,12 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
             true
         }
         R.id.action_start_session -> {
-            val intent = Intent(this, SessionActivity::class.java)
-            startActivity(intent)
+            Toast.makeText(this, "Please select a user first!", Toast.LENGTH_LONG).show()
             true
         }
         else -> {
             super.onOptionsItemSelected(item)
         }
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        togglebutton_availibility.isChecked = false
     }
 
     override fun onBackPressed() {
@@ -304,6 +297,5 @@ class TutorProfileActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.
     private fun loadTutorsSubjectsCoursesFromSharedPref() {
         val viewSubjectsIntent = Intent(this, TutorViewSubjectsCoursesActivity::class.java)
         startActivity(viewSubjectsIntent)
-        finish()
     }
 }

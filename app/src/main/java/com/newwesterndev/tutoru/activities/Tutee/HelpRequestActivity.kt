@@ -86,7 +86,7 @@ class HelpRequestActivity : AppCompatActivity(), LocationProxy.LocationDelegate 
         val subjectList = dbManager.getSubjectNamesAsString()
         val subjectSpinnerList = dbManager.getSubjectListForSpinner(subjectList)
         val spinnerJawn = findViewById<Spinner>(R.id.subject_spinner)
-        val spinnerAdapter = ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, subjectSpinnerList)
+        val spinnerAdapter = ArrayAdapter<String>(this, R.layout.custom_spinner_item, subjectSpinnerList)
         spinnerJawn.adapter = spinnerAdapter
 
         // Disable button until course is selected to prevent issues
@@ -108,7 +108,7 @@ class HelpRequestActivity : AppCompatActivity(), LocationProxy.LocationDelegate 
                     val coursesFromSubject = dbManager.getCoursesAsString(subjectName)
                     val courseSpinnerList = dbManager.getCourseListForSpinner(coursesFromSubject)
                     val courseSpinnerJawn = findViewById<Spinner>(R.id.course_spinner)
-                    val courseSpinnerAdapter = ArrayAdapter<String>(applicationContext, android.R.layout.simple_spinner_item, courseSpinnerList)
+                    val courseSpinnerAdapter = ArrayAdapter<String>(applicationContext, R.layout.custom_spinner_item, courseSpinnerList)
                     courseSpinnerJawn.adapter = courseSpinnerAdapter
 
                     // Show the views to get courses that are hidden
@@ -191,7 +191,7 @@ class HelpRequestActivity : AppCompatActivity(), LocationProxy.LocationDelegate 
                             } else {
                                 // we need to have this just grab the location or like tell them ot do stuff but this works for now ;)
                                 Toast.makeText(this, "Is your location enabled?  try again please...", Toast.LENGTH_LONG).show()
-                                Log.e("NO LOCAL", "no location yet fam, try again when you aint a bitch.")
+                                Log.e("NO LOCAL", "no location yet, try again.")
                                 locationProxy.requestUsersLocation()
                             }
                         }
@@ -213,8 +213,7 @@ class HelpRequestActivity : AppCompatActivity(), LocationProxy.LocationDelegate 
             true
         }
         R.id.action_start_session -> {
-            val intent = Intent(this, SessionActivity::class.java)
-            startActivity(intent)
+            Toast.makeText(this, "Please chat with a Tutor first!", Toast.LENGTH_LONG).show()
             true
         }
         else -> {

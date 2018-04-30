@@ -1,5 +1,6 @@
 package com.newwesterndev.tutoru.utilities
 
+import android.content.Context
 import android.location.Location
 import android.util.Log
 import co.intentservice.chatui.models.ChatMessage
@@ -17,6 +18,7 @@ class FirebaseManager private constructor() {
     private var mFirebaseDatabase: FirebaseDatabase = FirebaseDatabase.getInstance()
     private var mDatabaseReference: DatabaseReference = mFirebaseDatabase.reference
     private var mAuth: FirebaseAuth = FirebaseAuth.getInstance()
+    private val mUserTypeRef: DatabaseReference = FirebaseDatabase.getInstance().reference.child("UserType")
     private val mTutorDbRef: DatabaseReference = FirebaseDatabase.getInstance().reference.child(Contract.TUTOR)
     private var mTuteeDbRef: DatabaseReference = FirebaseDatabase.getInstance().reference.child(Contract.TUTEE)
     private var mMessagesDbRef: DatabaseReference = FirebaseDatabase.getInstance().reference.child("Messages")
@@ -55,6 +57,11 @@ class FirebaseManager private constructor() {
         updatedTutorRef.child(uid).setValue(tutor)
     }
 
+    fun updateTutorsCourseList(context: Context, uid: String, updatedCourses: ArrayList<String>) {
+        val updatedTutorRef = mDatabaseReference.child(Contract.TUTOR)
+        updatedTutorRef.child(uid).child("courseList").setValue(updatedCourses)
+    }
+
     fun updateTutee(uid: String, tutee: Model.Tutee) {
         val updatedTuteeRef = mDatabaseReference.child(Contract.TUTEE)
         updatedTuteeRef.child(uid).setValue(tutee)
@@ -63,11 +70,10 @@ class FirebaseManager private constructor() {
     fun getTutor(uid: String, callback: (Model.Tutor) -> Unit) {
         mTutorDbRef.child(uid).addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot?) {
-                Log.e("Tutor", snapshot.toString())
                 if (snapshot != null) {
-                    Log.e("Tutor Deets", snapshot.child("name").value as String)
                              try {
                                  val tutor = Model.Tutor(uid,
+                                         snapshot.child("acctType").value as String,
                                          snapshot.child("fcm_id").value as String,
                                          snapshot.child("name").value as String,
                                          snapshot.child("ratingAvg").value as String,
@@ -85,17 +91,43 @@ class FirebaseManager private constructor() {
         })
     }
 
-    fun getTutee(uid: String, callback: (Model.Tutee) -> Unit) {
-        mTuteeDbRef.child(uid).addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot?) {
-                Log.e("Tutee", snapshot.toString())
+    fun getUsersType(uid: String, callback: (String) -> Unit) {
+        mUserTypeRef.child(uid).addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
                 if (snapshot != null) {
-                    Log.e("Tutee Deets", snapshot.child("name").value as String)
-                    callback(Model.Tutee(uid,
-                            snapshot.child("fcm_id").value as String,
-                            snapshot.child("name").value as String,
-                            snapshot.child("ratingAvg").value as String,
-                            snapshot.child("numOfRatings").value as String, true))
+                    try {
+                        Log.e("UserTupe", snapshot.child("acctType").value as String)
+                        callback(snapshot.child("acctType").value.toString())
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+            override fun onCancelled(error: DatabaseError?) {}
+        })
+    }
+
+    fun saveUsersType(uid: String, acctType: String) {
+        val newTutor = mDatabaseReference.child("UserType")
+        newTutor.child(uid).setValue(acctType)
+    }
+
+    fun getTutee(uid: String, callback: (Model.Tutee) -> Unit) {
+        mTuteeDbRef.child(uid)?.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot?) {
+                if (snapshot != null) {
+                    try {
+                        callback(Model.Tutee(uid,
+                                snapshot.child("acctType").value as String,
+                                snapshot.child("fcm_id")?.value as String,
+                                snapshot.child("name")?.value as String,
+                                snapshot.child("ratingAvg")?.value as String,
+                                snapshot.child("numOfRatings")?.value as String, true))
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    } finally {
+                        Log.e("fucked", "get fucked")
+                    }
                 }
             }
             override fun onCancelled(error: DatabaseError?) {

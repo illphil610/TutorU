@@ -13,15 +13,16 @@ class Model {
                     var locaton: LatLng)
 
     data class Tutor(var uid: String,
+                     var acctType: String,
                      var fcm_id: String,
                      var name: String,
                      var ratingAvg: String,
                      var numOfRatings: String,
                      var isAvailable: Boolean,
-                     //var subjectList: ArrayList<String>,
                      var courseList : ArrayList<String>)
 
     data class Tutee(var uid: String,
+                     var acctType: String,
                      var fcm_id: String,
                      var name: String,
                      var ratingAvg: String,
